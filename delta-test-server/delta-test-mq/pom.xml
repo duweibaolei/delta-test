@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ============================================================
+         delta-test-mq 消息队列模块
+         包含：RabbitMQ配置、生产者、消费者、消息DTO
+         Contains: RabbitMQ config, producers, consumers, message DTOs
+         ============================================================ -->
+
+    <parent>
+        <groupId>com.dwl</groupId>
+        <artifactId>delta-test-server</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>delta-test-mq</artifactId>
+    <packaging>jar</packaging>
+    <name>DeltaTest MQ</name>
+    <description>消息队列模块 - RabbitMQ配置、生产者、消费者、消息DTO</description>
+
+    <dependencies>
+        <!-- ==================== 内部模块 / Internal Modules ==================== -->
+        <dependency>
+            <groupId>com.dwl</groupId>
+            <artifactId>delta-test-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dwl</groupId>
+            <artifactId>delta-test-model</artifactId>
+        </dependency>
+
+        <!-- ==================== Spring AMQP / RabbitMQ ==================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <!-- ==================== Lombok ==================== -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeltaTest - 测试用例与业务链路管理</title>
+    <style>
+        :root {
+            --primary: #1677ff; --primary-light: #e6f4ff; --primary-hover: #4096ff;
+            --success: #52c41a; --warning: #faad14; --error: #ff4d4f;
+            --text-primary: #1f1f1f; --text-secondary: #666; --text-muted: #999;
+            --border: #e8e8e8; --bg-page: #f5f5f5; --bg-card: #fff;
+            --shadow: 0 1px 4px rgba(0,0,0,0.08); --shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
+            --radius: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg-page); color: var(--text-primary); }
+
+        .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 220px; background: #001529; color: #fff; z-index: 100; display: flex; flex-direction: column; }
+        .sidebar-logo { height: 64px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo h1 { font-size: 18px; font-weight: 600; letter-spacing: 1px; }
+        .sidebar-logo span { color: var(--primary); }
+        .sidebar-nav { flex: 1; padding: 8px 0; overflow-y: auto; }
+        .nav-section { padding: 16px 24px 8px; font-size: 12px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1px; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 24px; cursor: pointer; transition: all .2s; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; }
+        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-item.active { color: #fff; background: var(--primary); }
+        .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+        .nav-badge { margin-left: auto; background: var(--error); color: #fff; font-size: 11px; padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center; }
+
+        .main { margin-left: 220px; min-height: 100vh; }
+        .header { height: 64px; background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .header-breadcrumb { color: var(--text-secondary); font-size: 14px; }
+        .header-breadcrumb a { color: var(--primary); text-decoration: none; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+        .content { padding: 24px 32px; }
+        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); transition: all .2s; }
+        .btn:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+        .btn-sm { padding: 4px 10px; font-size: 12px; }
+        .btn-danger { color: var(--error); border-color: var(--error); }
+        .btn-danger:hover { background: #fff2f0; }
+
+        .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .toolbar-left { display: flex; align-items: center; gap: 12px; }
+        .toolbar-right { display: flex; align-items: center; gap: 12px; }
+        .tab-group { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+        .tab-item { padding: 8px 16px; font-size: 14px; cursor: pointer; background: var(--bg-card); border: none; color: var(--text-secondary); transition: all .2s; }
+        .tab-item.active { background: var(--primary); color: #fff; }
+        .tab-item:hover:not(.active) { color: var(--primary); }
+        .search-input { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; width: 240px; outline: none; }
+        .search-input:focus { border-color: var(--primary); }
+
+        .card { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); }
+        .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .card-header h3 { font-size: 15px; font-weight: 600; }
+
+        /* 用例列表 */
+        .case-table { width: 100%; border-collapse: collapse; }
+        .case-table th { padding: 12px 16px; font-size: 13px; color: var(--text-secondary); font-weight: 500; text-align: left; background: #fafafa; border-bottom: 1px solid var(--border); }
+        .case-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .case-table tr:hover td { background: #fafafa; }
+        .case-id { font-family: 'SF Mono', Consolas, monospace; color: var(--primary); font-size: 13px; }
+        .case-name { font-weight: 500; }
+        .source-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+        .source-auto { background: var(--primary-light); color: var(--primary); }
+        .source-manual { background: #f6ffed; color: var(--success); }
+        .source-hybrid { background: #fff7e6; color: var(--warning); }
+        .health-bar { width: 60px; height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 6px; }
+        .health-fill { height: 100%; border-radius: 3px; }
+        .health-good { background: var(--success); }
+        .health-warn { background: var(--warning); }
+        .health-bad { background: var(--error); }
+        .affected-badge { font-size: 11px; padding: 1px 6px; border-radius: 3px; background: #fff2f0; color: var(--error); }
+
+        /* 分页 */
+        .pagination { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; }
+        .pagination-info { font-size: 13px; color: var(--text-muted); }
+        .pagination-btns { display: flex; gap: 4px; }
+        .page-btn { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; background: var(--bg-card); }
+        .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* 步骤编排 */
+        .step-editor { padding: 20px; }
+        .step-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px dashed var(--border); }
+        .step-item:last-child { border-bottom: none; }
+        .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+        .step-content { flex: 1; }
+        .step-row { display: flex; gap: 12px; margin-bottom: 8px; }
+        .step-field { flex: 1; }
+        .step-field label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+        .step-field input, .step-field select { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; }
+        .step-actions { display: flex; gap: 4px; }
+        .add-step-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border: 2px dashed var(--border); border-radius: 6px; color: var(--text-muted); cursor: pointer; margin-top: 8px; transition: all .2s; font-size: 13px; }
+        .add-step-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* 业务链路 */
+        .link-flow { display: flex; align-items: center; gap: 8px; padding: 8px 0; overflow-x: auto; }
+        .link-node { padding: 8px 14px; border-radius: 6px; font-size: 13px; white-space: nowrap; border: 1px solid; }
+        .link-node.page { background: var(--primary-light); border-color: #91caff; color: var(--primary); }
+        .link-node.api { background: #f6ffed; border-color: #b7eb8f; color: var(--success); }
+        .link-node.db { background: #fff7e6; border-color: #ffe58f; color: var(--warning); }
+        .link-arrow { color: var(--text-muted); font-size: 16px; flex-shrink: 0; }
+
+        /* 元素库 */
+        .element-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 16px 20px; }
+        .element-item { padding: 12px; border: 1px solid var(--border); border-radius: 6px; }
+        .element-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+        .element-locator { font-family: 'SF Mono', Consolas, monospace; font-size: 12px; color: var(--text-secondary); background: #f6f8fa; padding: 4px 8px; border-radius: 4px; margin-bottom: 4px; }
+        .element-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 8px; }
+
+        /* 右侧面板标签切换 */
+        .panel-tabs { display: flex; border-bottom: 1px solid var(--border); }
+        .panel-tab { flex: 1; padding: 12px 16px; text-align: center; font-size: 14px; cursor: pointer; border-bottom: 2px solid transparent; color: var(--text-secondary); transition: all .2s; }
+        .panel-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 500; }
+        .panel-tab:hover:not(.active) { color: var(--primary); }
+
+        .layout { display: grid; grid-template-columns: 1fr 400px; gap: 20px; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo"><h1><span>Delta</span>Test</h1></div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">概览</div>
+            <a class="nav-item" href="index.html"><span class="icon">📊</span> 工作台</a>
+            <div class="nav-section">业务模块</div>
+            <a class="nav-item" href="change-analysis.html"><span class="icon">🔍</span> 变更分析<span class="nav-badge">3</span></a>
+            <a class="nav-item active" href="test-management.html"><span class="icon">🧪</span> 用例管理</a>
+            <a class="nav-item" href="task-center.html"><span class="icon">⚡</span> 任务中心<span class="nav-badge">1</span></a>
+            <a class="nav-item" href="report-center.html"><span class="icon">📋</span> 质量报告</a>
+            <div class="nav-section">系统</div>
+            <a class="nav-item" href="#"><span class="icon">⚙️</span> 系统设置</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="header">
+            <div class="header-left">
+                <span class="header-breadcrumb"><a href="index.html">工作台</a> / 测试用例与业务链路管理</span>
+            </div>
+            <div class="header-right"><div class="avatar">A</div></div>
+        </header>
+
+        <div class="content">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <div class="tab-group">
+                        <button class="tab-item active">测试用例</button>
+                        <button class="tab-item">业务链路</button>
+                        <button class="tab-item">元素对象库</button>
+                    </div>
+                    <input class="search-input" placeholder="🔍 搜索用例名称 / ID...">
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn">📥 导入用例</button>
+                    <button class="btn-primary btn">➕ 新增用例</button>
+                </div>
+            </div>
+
+            <div class="layout">
+                <!-- 左侧用例列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🧪 测试用例列表</h3>
+                        <span style="font-size:13px;color:var(--text-muted)">共 1,286 条</span>
+                    </div>
+                    <table class="case-table">
+                        <thead>
+                            <tr>
+                                <th style="width:40px"><input type="checkbox"></th>
+                                <th>用例ID</th>
+                                <th>用例名称</th>
+                                <th>来源</th>
+                                <th>所属模块</th>
+                                <th>健康度</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td class="case-id">TC-0001</td>
+                                <td class="case-name">用户名密码登录成功</td>
+                                <td><span class="source-tag source-auto">auto</span></td>
+                                <td>登录模块</td>
+                                <td>
+                                    <span class="health-bar"><span class="health-fill health-good" style="width:95%"></span></span>
+                                    <span style="font-size:12px">95%</span>
+                                </td>
+                                <td><span style="color:var(--success);font-size:13px">● 正常</span></td>
+                                <td>
+                                    <button class="btn btn-sm">编辑</button>
+                                    <button class="btn btn-sm btn-danger">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td class="case-id">TC-0002</td>
+                                <td class="case-name">OAuth2.0 第三方登录回调</td>
+                                <td><span class="source-tag source-hybrid">hybrid</span></td>
+                                <td>登录模块</td>
+                                <td>
+                                    <span class="health-bar"><span class="health-fill health-warn" style="width:72%"></span></span>
+                                    <span style="font-size:12px">72%</span>
+                                </td>
+                                <td><span style="color:var(--warning);font-size:13px">● 不稳定</span> <span class="affected-badge">受影响</span></td>
+                                <td>
+                                    <button class="btn btn-sm">编辑</button>
+                                    <button class="btn btn-sm btn-danger">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td class="case-id">TC-0003</td>
+                                <td class="case-name">订单创建-库存扣减并发验证</td>
+                                <td><span class="source-tag source-auto">auto</span></td>
+                                <td>订单模块</td>
+                                <td>
+                                    <span class="health-bar"><span class="health-fill health-good" style="width:88%"></span></span>
+                                    <span style="font-size:12px">88%</span>
+                                </td>
+                                <td><span style="color:var(--success);font-size:13px">● 正常</span> <span class="affected-badge">受影响</span></td>
+                                <td>
+                                    <button class="btn btn-sm">编辑</button>
+                                    <button class="btn btn-sm btn-danger">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td class="case-id">TC-0250</td>
+                                <td class="case-name">商品搜索-模糊匹配结果校验</td>
+                                <td><span class="source-tag source-manual">manual</span></td>
+                                <td>搜索模块</td>
+                                <td>
+                                    <span class="health-bar"><span class="health-fill health-good" style="width:100%"></span></span>
+                                    <span style="font-size:12px">100%</span>
+                                </td>
+                                <td><span style="color:var(--success);font-size:13px">● 正常</span></td>
+                                <td>
+                                    <button class="btn btn-sm">编辑</button>
+                                    <button class="btn btn-sm btn-danger">删除</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td class="case-id">TC-0251</td>
+                                <td class="case-name">Token 过期自动刷新</td>
+                                <td><span class="source-tag source-auto">auto</span></td>
+                                <td>登录模块</td>
+                                <td>
+                                    <span class="health-bar"><span class="health-fill health-bad" style="width:45%"></span></span>
+                                    <span style="font-size:12px">45%</span>
+                                </td>
+                                <td><span style="color:var(--error);font-size:13px">● 失效</span> <span class="affected-badge">受影响</span></td>
+                                <td>
+                                    <button class="btn btn-sm">编辑</button>
+                                    <button class="btn btn-sm btn-danger">删除</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <span class="pagination-info">共 1,286 条 · 第 1/129 页</span>
+                        <div class="pagination-btns">
+                            <div class="page-btn">‹</div>
+                            <div class="page-btn active">1</div>
+                            <div class="page-btn">2</div>
+                            <div class="page-btn">3</div>
+                            <div class="page-btn">...</div>
+                            <div class="page-btn">129</div>
+                            <div class="page-btn">›</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧详情/编辑 -->
+                <div>
+                    <div class="card" style="margin-bottom:16px">
+                        <div class="panel-tabs">
+                            <div class="panel-tab active">步骤编排</div>
+                            <div class="panel-tab">业务链路</div>
+                            <div class="panel-tab">元素库</div>
+                        </div>
+
+                        <!-- 步骤编排面板 -->
+                        <div class="step-editor">
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                                <div>
+                                    <span style="font-weight:600;font-size:15px">TC-0002 OAuth2.0 第三方登录回调</span>
+                                    <span class="source-tag source-hybrid" style="margin-left:8px">hybrid</span>
+                                </div>
+                                <span style="font-size:12px;color:var(--text-muted)">版本 v3 · 最后编辑: Admin</span>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-num">1</div>
+                                <div class="step-content">
+                                    <div class="step-row">
+                                        <div class="step-field">
+                                            <label>操作元素</label>
+                                            <input value="OAuth-GitHub-Button" readonly>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>动作</label>
+                                            <select>
+                                                <option selected>点击 (click)</option>
+                                                <option>输入 (fill)</option>
+                                                <option>等待 (waitFor)</option>
+                                                <option>选择 (select)</option>
+                                            </select>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>输入值</label>
+                                            <input value="-" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="step-row">
+                                        <div class="step-field">
+                                            <label>断言类型</label>
+                                            <select>
+                                                <option>URL 包含</option>
+                                                <option selected>元素可见</option>
+                                                <option>文本匹配</option>
+                                            </select>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>断言值</label>
+                                            <input value="github.com/login/oauth">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="step-actions">
+                                    <button class="btn btn-sm">↑</button>
+                                    <button class="btn btn-sm">↓</button>
+                                    <button class="btn btn-sm btn-danger">✕</button>
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-num">2</div>
+                                <div class="step-content">
+                                    <div class="step-row">
+                                        <div class="step-field">
+                                            <label>操作元素</label>
+                                            <input value="Auth-Callback-Page" readonly>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>动作</label>
+                                            <select>
+                                                <option>点击 (click)</option>
+                                                <option>输入 (fill)</option>
+                                                <option selected>等待 (waitFor)</option>
+                                                <option>选择 (select)</option>
+                                            </select>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>输入值</label>
+                                            <input value="3000ms" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="step-row">
+                                        <div class="step-field">
+                                            <label>断言类型</label>
+                                            <select>
+                                                <option selected>URL 包含</option>
+                                                <option>元素可见</option>
+                                                <option>文本匹配</option>
+                                            </select>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>断言值</label>
+                                            <input value="/dashboard">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="step-actions">
+                                    <button class="btn btn-sm">↑</button>
+                                    <button class="btn btn-sm">↓</button>
+                                    <button class="btn btn-sm btn-danger">✕</button>
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-num">3</div>
+                                <div class="step-content">
+                                    <div class="step-row">
+                                        <div class="step-field">
+                                            <label>操作元素</label>
+                                            <input value="User-Avatar" readonly>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>动作</label>
+                                            <select>
+                                                <option>点击 (click)</option>
+                                                <option>输入 (fill)</option>
+                                                <option selected>等待 (waitFor)</option>
+                                                <option>选择 (select)</option>
+                                            </select>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>输入值</label>
+                                            <input value="visible" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="step-row">
+                                        <div class="step-field">
+                                            <label>断言类型</label>
+                                            <select>
+                                                <option>URL 包含</option>
+                                                <option>元素可见</option>
+                                                <option selected>文本匹配</option>
+                                            </select>
+                                        </div>
+                                        <div class="step-field">
+                                            <label>断言值</label>
+                                            <input value="${username}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="step-actions">
+                                    <button class="btn btn-sm">↑</button>
+                                    <button class="btn btn-sm">↓</button>
+                                    <button class="btn btn-sm btn-danger">✕</button>
+                                </div>
+                            </div>
+
+                            <div class="add-step-btn">➕ 添加新步骤</div>
+
+                            <div style="display:flex;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+                                <button class="btn-primary btn" style="flex:1">💾 保存用例</button>
+                                <button class="btn" style="flex:1">▶ 试运行</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 关联的业务链路 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🔗 关联业务链路</h3>
+                            <button class="btn btn-sm">➕ 关联链路</button>
+                        </div>
+                        <div style="padding:16px 20px">
+                            <div style="margin-bottom:12px">
+                                <div style="font-size:13px;font-weight:500;margin-bottom:8px">BL-001 用户OAuth登录全流程</div>
+                                <div class="link-flow">
+                                    <span class="link-node page">🏠 登录页</span>
+                                    <span class="link-arrow">→</span>
+                                    <span class="link-node page">🔐 OAuth授权页</span>
+                                    <span class="link-arrow">→</span>
+                                    <span class="link-node api">POST /api/auth/callback</span>
+                                    <span class="link-arrow">→</span>
+                                    <span class="link-node db">💾 oauth_tokens</span>
+                                    <span class="link-arrow">→</span>
+                                    <span class="link-node page">📊 仪表盘</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="font-size:13px;font-weight:500;margin-bottom:8px">BL-005 权限校验链路</div>
+                                <div class="link-flow">
+                                    <span class="link-node api">GET /api/user/profile</span>
+                                    <span class="link-arrow">→</span>
+                                    <span class="link-node api">🛡️ PermissionGuard</span>
+                                    <span class="link-arrow">→</span>
+                                    <span class="link-node db">💾 user_roles</span>
+                                    <span class="link-arrow">→</span>
+                                    <span class="link-node page">📋 用户信息页</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

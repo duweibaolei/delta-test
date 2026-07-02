@@ -1,0 +1,37 @@
+# ============================================================
+# DeltaTest 开发环境配置
+# DeltaTest Development Profile Configuration
+# ============================================================
+
+spring:
+  # ==================== 开发环境数据源 / Dev DataSource ====================
+  datasource:
+    url: jdbc:mysql://localhost:3306/self-delta-test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password:
+
+  # ==================== 开发环境Redis / Dev Redis ====================
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+
+  # ==================== 开发环境RabbitMQ / Dev RabbitMQ ====================
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# ==================== gRPC引擎配置 / gRPC Engine Configuration ====================
+grpc:
+  client:
+    engine:
+      host: localhost
+      port: 9090
+
+# ==================== 开发环境日志级别 / Dev Log Level ====================
+logging:
+  level:
+    com.dwl: DEBUG

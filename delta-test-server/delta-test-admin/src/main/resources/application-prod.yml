@@ -1,0 +1,40 @@
+# ============================================================
+# DeltaTest 生产环境配置
+# DeltaTest Production Profile Configuration
+# ============================================================
+
+spring:
+  # ==================== 生产环境数据源 / Prod DataSource (K8s Service) ====================
+  datasource:
+    url: jdbc:mysql://mysql-svc.deltatest-prod:3306/deltatest?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+  # ==================== 生产环境Redis / Prod Redis (K8s Service) ====================
+  data:
+    redis:
+      host: redis-svc.deltatest-prod
+      port: 6379
+      password: ${REDIS_PASSWORD}
+      database: 0
+
+  # ==================== 生产环境RabbitMQ / Prod RabbitMQ (K8s Service) ====================
+  rabbitmq:
+    host: rabbitmq-svc.deltatest-prod
+    port: 5672
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+    virtual-host: /deltatest
+
+# ==================== gRPC引擎配置 / gRPC Engine Configuration (K8s Service) ====================
+grpc:
+  client:
+    engine:
+      host: engine-svc.deltatest-prod
+      port: 9090
+
+# ==================== 生产环境日志级别 / Prod Log Level ====================
+logging:
+  level:
+    root: WARN
+    com.dwl: INFO

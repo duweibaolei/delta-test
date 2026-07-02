@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeltaTest - 代码变更分析</title>
+    <style>
+        :root {
+            --primary: #1677ff; --primary-light: #e6f4ff; --primary-hover: #4096ff;
+            --success: #52c41a; --warning: #faad14; --error: #ff4d4f;
+            --text-primary: #1f1f1f; --text-secondary: #666; --text-muted: #999;
+            --border: #e8e8e8; --bg-page: #f5f5f5; --bg-card: #fff;
+            --shadow: 0 1px 4px rgba(0,0,0,0.08); --shadow-hover: 0 4px 12px rgba(0,0,0,0.12);
+            --radius: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--bg-page); color: var(--text-primary); }
+
+        .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 220px; background: #001529; color: #fff; z-index: 100; display: flex; flex-direction: column; }
+        .sidebar-logo { height: 64px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-logo h1 { font-size: 18px; font-weight: 600; letter-spacing: 1px; }
+        .sidebar-logo span { color: var(--primary); }
+        .sidebar-nav { flex: 1; padding: 8px 0; overflow-y: auto; }
+        .nav-section { padding: 16px 24px 8px; font-size: 12px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 1px; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 24px; cursor: pointer; transition: all .2s; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 14px; }
+        .nav-item:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .nav-item.active { color: #fff; background: var(--primary); }
+        .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+        .nav-badge { margin-left: auto; background: var(--error); color: #fff; font-size: 11px; padding: 1px 6px; border-radius: 10px; min-width: 18px; text-align: center; }
+
+        .main { margin-left: 220px; min-height: 100vh; }
+        .header { height: 64px; background: var(--bg-card); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .header-breadcrumb { color: var(--text-secondary); font-size: 14px; }
+        .header-breadcrumb a { color: var(--primary); text-decoration: none; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+        .content { padding: 24px 32px; }
+
+        /* 顶部操作栏 */
+        .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .toolbar-left { display: flex; align-items: center; gap: 12px; }
+        .toolbar-right { display: flex; align-items: center; gap: 12px; }
+        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 6px; font-size: 14px; cursor: pointer; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); transition: all .2s; }
+        .btn:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+        .tab-group { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+        .tab-item { padding: 8px 16px; font-size: 14px; cursor: pointer; background: var(--bg-card); border: none; color: var(--text-secondary); transition: all .2s; }
+        .tab-item.active { background: var(--primary); color: #fff; }
+        .tab-item:hover:not(.active) { color: var(--primary); }
+
+        /* 统计行 */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-card { background: var(--bg-card); border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow); }
+        .stat-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+        .stat-value { font-size: 24px; font-weight: 600; }
+
+        /* 主内容两栏 */
+        .layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
+
+        /* 提交列表 */
+        .card { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); }
+        .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .card-header h3 { font-size: 15px; font-weight: 600; }
+        .card-body { padding: 0; }
+
+        .commit-item { padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
+        .commit-item:hover { background: #fafafa; }
+        .commit-item:last-child { border-bottom: none; }
+        .commit-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+        .commit-hash { font-family: 'SF Mono', Consolas, monospace; font-size: 13px; color: var(--primary); background: var(--primary-light); padding: 1px 8px; border-radius: 4px; }
+        .commit-msg { font-size: 14px; font-weight: 500; flex: 1; }
+        .risk-badge { font-size: 12px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+        .risk-high { background: #fff2f0; color: var(--error); }
+        .risk-medium { background: #fff7e6; color: var(--warning); }
+        .risk-low { background: #f6ffed; color: var(--success); }
+        .commit-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 16px; }
+        .commit-meta span { display: inline-flex; align-items: center; gap: 4px; }
+
+        /* 右侧详情面板 */
+        .detail-panel .card { margin-bottom: 16px; }
+        .detail-section { padding: 16px 20px; }
+        .detail-section + .detail-section { border-top: 1px solid var(--border); }
+        .detail-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+        .detail-value { font-size: 14px; line-height: 1.6; }
+
+        .scope-list { list-style: none; }
+        .scope-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; }
+        .scope-icon { width: 20px; text-align: center; font-size: 14px; }
+        .scope-type { font-size: 11px; padding: 1px 6px; border-radius: 3px; background: var(--primary-light); color: var(--primary); margin-left: auto; }
+
+        .ai-summary { background: #f6f8fa; border-radius: 6px; padding: 12px 16px; font-size: 13px; line-height: 1.8; color: var(--text-secondary); }
+        .ai-summary strong { color: var(--text-primary); }
+
+        /* 手动分析对话框 */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: var(--bg-card); border-radius: 12px; width: 560px; max-height: 80vh; overflow-y: auto; box-shadow: 0 6px 30px rgba(0,0,0,0.2); }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .modal-header h3 { font-size: 16px; font-weight: 600; }
+        .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); padding: 4px; }
+        .modal-body { padding: 24px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+        .form-label .required { color: var(--error); margin-left: 2px; }
+        .form-input, .form-select, .form-textarea {
+            width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px;
+            font-size: 14px; color: var(--text-primary); outline: none; transition: border-color .2s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(22,119,255,0.1); }
+        .form-textarea { min-height: 80px; resize: vertical; }
+        .form-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; }
+
+        /* 影响范围选择 */
+        .scope-check { display: flex; align-items: center; gap: 8px; padding: 8px 0; font-size: 13px; cursor: pointer; }
+        .scope-check input[type="checkbox"] { accent-color: var(--primary); }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo"><h1><span>Delta</span>Test</h1></div>
+        <nav class="sidebar-nav">
+            <div class="nav-section">概览</div>
+            <a class="nav-item" href="index.html"><span class="icon">📊</span> 工作台</a>
+            <div class="nav-section">业务模块</div>
+            <a class="nav-item active" href="change-analysis.html"><span class="icon">🔍</span> 变更分析<span class="nav-badge">3</span></a>
+            <a class="nav-item" href="test-management.html"><span class="icon">🧪</span> 用例管理</a>
+            <a class="nav-item" href="task-center.html"><span class="icon">⚡</span> 任务中心<span class="nav-badge">1</span></a>
+            <a class="nav-item" href="report-center.html"><span class="icon">📋</span> 质量报告</a>
+            <div class="nav-section">系统</div>
+            <a class="nav-item" href="#"><span class="icon">⚙️</span> 系统设置</a>
+        </nav>
+    </aside>
+
+    <main class="main">
+        <header class="header">
+            <div class="header-left">
+                <span class="header-breadcrumb"><a href="index.html">工作台</a> / 代码变更分析</span>
+            </div>
+            <div class="header-right">
+                <div class="avatar">A</div>
+            </div>
+        </header>
+
+        <div class="content">
+            <!-- 操作栏 -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <div class="tab-group">
+                        <button class="tab-item active">全部变更</button>
+                        <button class="tab-item">自动触发</button>
+                        <button class="tab-item">手动触发</button>
+                    </div>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn" onclick="document.getElementById('riskModal').classList.add('show')">⚙️ 调整风险等级</button>
+                    <button class="btn-primary btn" onclick="document.getElementById('analysisModal').classList.add('show')">🔍 手动发起分析</button>
+                </div>
+            </div>
+
+            <!-- 统计 -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">今日新增提交</div>
+                    <div class="stat-value" style="color:var(--primary)">12</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">高风险变更</div>
+                    <div class="stat-value" style="color:var(--error)">2</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">影响用例数</div>
+                    <div class="stat-value" style="color:var(--warning)">34</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">已生成回归任务</div>
+                    <div class="stat-value" style="color:var(--success)">5</div>
+                </div>
+            </div>
+
+            <!-- 主内容 -->
+            <div class="layout">
+                <!-- 左侧提交列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 提交记录</h3>
+                        <span style="font-size:13px;color:var(--text-muted)">共 47 条</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="commit-item">
+                            <div class="commit-row">
+                                <span class="commit-hash">a3f2d1e</span>
+                                <span class="commit-msg">feat: 用户认证模块重构，支持OAuth2.0</span>
+                                <span class="risk-badge risk-high">高风险</span>
+                            </div>
+                            <div class="commit-meta">
+                                <span>👤 Zhang Wei</span>
+                                <span>🌿 feature/user-auth</span>
+                                <span>📦 +820 -340</span>
+                                <span>🕐 10分钟前</span>
+                            </div>
+                        </div>
+                        <div class="commit-item">
+                            <div class="commit-row">
+                                <span class="commit-hash">b7c4e9a</span>
+                                <span class="commit-msg">fix: 修复订单创建时库存扣减并发问题</span>
+                                <span class="risk-badge risk-high">高风险</span>
+                            </div>
+                            <div class="commit-meta">
+                                <span>👤 Li Ming</span>
+                                <span>🌿 fix/order-stock</span>
+                                <span>📦 +45 -12</span>
+                                <span>🕐 32分钟前</span>
+                            </div>
+                        </div>
+                        <div class="commit-item">
+                            <div class="commit-row">
+                                <span class="commit-hash">c1d8f2b</span>
+                                <span class="commit-msg">refactor: 抽取公共组件 PageHeader</span>
+                                <span class="risk-badge risk-medium">中风险</span>
+                            </div>
+                            <div class="commit-meta">
+                                <span>👤 Wang Fang</span>
+                                <span>🌿 refactor/common-components</span>
+                                <span>📦 +180 -95</span>
+                                <span>🕐 1小时前</span>
+                            </div>
+                        </div>
+                        <div class="commit-item">
+                            <div class="commit-row">
+                                <span class="commit-hash">d9e3a5c</span>
+                                <span class="commit-msg">style: 调整首页卡片间距与字体大小</span>
+                                <span class="risk-badge risk-low">低风险</span>
+                            </div>
+                            <div class="commit-meta">
+                                <span>👤 Chen Yu</span>
+                                <span>🌿 feature/home-ui</span>
+                                <span>📦 +28 -16</span>
+                                <span>🕐 2小时前</span>
+                            </div>
+                        </div>
+                        <div class="commit-item">
+                            <div class="commit-row">
+                                <span class="commit-hash">e2f7b6d</span>
+                                <span class="commit-msg">feat: 新增商品搜索接口，支持模糊匹配</span>
+                                <span class="risk-badge risk-medium">中风险</span>
+                            </div>
+                            <div class="commit-meta">
+                                <span>👤 Zhao Lei</span>
+                                <span>🌿 feature/search-api</span>
+                                <span>📦 +156 -8</span>
+                                <span>🕐 3小时前</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧详情 -->
+                <div class="detail-panel">
+                    <!-- 变更详情 -->
+                    <div class="card">
+                        <div class="card-header"><h3>🔎 变更详情</h3></div>
+                        <div class="detail-section">
+                            <div class="detail-label">提交信息</div>
+                            <div class="detail-value"><strong>feat: 用户认证模块重构，支持OAuth2.0</strong></div>
+                            <div style="font-size:12px;color:var(--text-muted);margin-top:4px">a3f2d1e · feature/user-auth · Zhang Wei</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-label">变更规模</div>
+                            <div class="detail-value">+820 行 / -340 行 · 涉及 12 个文件</div>
+                        </div>
+                        <div class="detail-section">
+                            <div class="detail-label">风险等级 <span style="font-size:11px;color:var(--primary);cursor:pointer">[手动调整]</span></div>
+                            <div class="detail-value"><span class="risk-badge risk-high" style="font-size:14px;padding:4px 12px">高风险</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 影响范围 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🌐 影响范围</h3>
+                            <label class="scope-check" style="margin:0"><input type="checkbox" checked> 全选生成回归范围</label>
+                        </div>
+                        <div class="detail-section" style="padding:12px 20px">
+                            <ul class="scope-list">
+                                <li class="scope-item">
+                                    <span class="scope-icon">🖥️</span> LoginPage.vue, AuthCallback.vue
+                                    <span class="scope-type">前端页面</span>
+                                </li>
+                                <li class="scope-item">
+                                    <span class="scope-icon">📦</span> AuthService, TokenManager
+                                    <span class="scope-type">后端服务</span>
+                                </li>
+                                <li class="scope-item">
+                                    <span class="scope-icon">🔌</span> /api/auth/login, /api/auth/callback
+                                    <span class="scope-type">后端接口</span>
+                                </li>
+                                <li class="scope-item">
+                                    <span class="scope-icon">🗄️</span> user_auth_config, oauth_tokens
+                                    <span class="scope-type">数据库表</span>
+                                </li>
+                                <li class="scope-item">
+                                    <span class="scope-icon">🧩</span> OAuthButton, PermissionGuard
+                                    <span class="scope-type">前端组件</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- AI 分析 -->
+                    <div class="card">
+                        <div class="card-header"><h3>🤖 AI 分析摘要</h3></div>
+                        <div class="detail-section">
+                            <div class="ai-summary">
+                                <strong>变更概述：</strong>用户认证模块从 Session 迁移到 OAuth2.0，涉及登录流程、Token管理、权限校验的核心路径重构。<br><br>
+                                <strong>测试建议：</strong>重点验证①登录/OAuth回调流程 ②Token刷新与过期 ③权限拦截器 ④并发登录场景<br><br>
+                                <strong>受影响用例：</strong>已匹配 <strong>18</strong> 条测试用例，其中 5 条需更新断言，3 条需新增
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 手动补充 -->
+                    <div class="card">
+                        <div class="card-header"><h3>📝 手动补充</h3></div>
+                        <div class="detail-section">
+                            <div class="detail-label">变更说明补充</div>
+                            <textarea class="form-textarea" placeholder="录入补充变更说明、业务背景，辅助AI分析与测试人员理解..." style="margin-bottom:12px"></textarea>
+                            <button class="btn-primary btn" style="width:100%">💾 保存补充信息</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 手动发起分析对话框 -->
+    <div class="modal-overlay" id="analysisModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🔍 手动发起代码影响分析</h3>
+                <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('show')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Git 仓库<span class="required">*</span></label>
+                        <select class="form-select">
+                            <option>delta-test-platform</option>
+                            <option>delta-test-engine</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">分支<span class="required">*</span></label>
+                        <select class="form-select">
+                            <option>feature/user-auth</option>
+                            <option>fix/order-stock</option>
+                            <option>main</option>
+                            <option>develop</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">起始 Commit<span class="required">*</span></label>
+                        <input class="form-input" placeholder="输入或选择起始 commit hash">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">截止 Commit<span class="required">*</span></label>
+                        <input class="form-input" placeholder="输入或选择截止 commit hash">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">变更说明（选填）</label>
+                    <textarea class="form-textarea" placeholder="手动录入变更说明、业务背景，辅助 AI 分析..."></textarea>
+                    <div class="form-hint">补充的信息将帮助 AI 生成更精准的风险评估与测试建议</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').classList.remove('show')">取消</button>
+                <button class="btn btn-primary" onclick="this.closest('.modal-overlay').classList.remove('show')">🔍 发起分析</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 风险等级调整对话框 -->
+    <div class="modal-overlay" id="riskModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>⚙️ 手动调整风险等级</h3>
+                <button class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('show')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">选择提交</label>
+                    <select class="form-select">
+                        <option>a3f2d1e - feat: 用户认证模块重构</option>
+                        <option>b7c4e9a - fix: 修复订单库存扣减</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">AI 评定等级</label>
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <span class="risk-badge risk-high" style="font-size:14px;padding:4px 12px">高风险</span>
+                        <span style="font-size:12px;color:var(--text-muted)">— AI 自动评定（参考值）</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">手动调整等级<span class="required">*</span></label>
+                    <div style="display:flex;gap:12px">
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="risk" value="high" checked> <span class="risk-badge risk-high">高风险</span></label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="risk" value="medium"> <span class="risk-badge risk-medium">中风险</span></label>
+                        <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="radio" name="risk" value="low"> <span class="risk-badge risk-low">低风险</span></label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">调整原因</label>
+                    <textarea class="form-textarea" placeholder="说明调整原因，如：该变更虽涉及认证核心路径，但已有完整的单元测试覆盖..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="this.closest('.modal-overlay').classList.remove('show')">取消</button>
+                <button class="btn btn-primary" onclick="this.closest('.modal-overlay').classList.remove('show')">确认调整</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

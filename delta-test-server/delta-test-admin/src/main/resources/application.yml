@@ -1,0 +1,109 @@
+# ============================================================
+# DeltaTest 应用配置
+# DeltaTest Application Configuration
+# ============================================================
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: delta-test-server
+
+  # ==================== 数据源 / DataSource ====================
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:deltatest}?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root}
+
+  # ==================== Redis配置 / Redis Configuration ====================
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DB:0}
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 5
+          max-wait: 3000ms
+
+  # ==================== RabbitMQ配置 / RabbitMQ Configuration ====================
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VHOST:/}
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 10
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 1000ms
+
+  # ==================== 文件上传配置 / File Upload Configuration ====================
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
+
+  # ==================== Jackson配置 / Jackson Configuration ====================
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+
+# ==================== MyBatis-Plus配置 / MyBatis-Plus Configuration ====================
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# ==================== JWT配置 / JWT Configuration ====================
+jwt:
+  secret: ${JWT_SECRET:deltatest-default-secret-key-must-be-at-least-256-bits-long-for-hmac-sha}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+# ==================== SpringDoc配置 / SpringDoc Configuration ====================
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+# ==================== Actuator配置 / Actuator Configuration ====================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+# ==================== 日志配置 / Logging Configuration ====================
+logging:
+  level:
+    root: INFO
+    com.dwl: DEBUG
+    com.baomidou.mybatisplus: DEBUG
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS

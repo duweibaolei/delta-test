@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ============================================================
+         delta-test-service 业务逻辑模块
+         包含：Service接口、Service实现类
+         Contains: Service interfaces, Service implementations
+         ============================================================ -->
+
+    <parent>
+        <groupId>com.dwl</groupId>
+        <artifactId>delta-test-server</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>delta-test-service</artifactId>
+    <packaging>jar</packaging>
+    <name>DeltaTest Service</name>
+    <description>业务逻辑模块 - Service接口、Service实现类</description>
+
+    <dependencies>
+        <!-- ==================== 内部模块 / Internal Modules ==================== -->
+        <dependency>
+            <groupId>com.dwl</groupId>
+            <artifactId>delta-test-dao</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dwl</groupId>
+            <artifactId>delta-test-common</artifactId>
+        </dependency>
+
+        <!-- ==================== Spring Security / 安全框架 ==================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- ==================== JWT / JSON Web Token ==================== -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ==================== Spring Security Crypto / 密码加密 ==================== -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
+        <!-- ==================== Lombok ==================== -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

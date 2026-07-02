@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ============================================================
+         delta-test-web Web层模块
+         包含：Controller、WebSocket、安全配置、OpenAPI配置
+         Contains: Controllers, WebSocket, Security config, OpenAPI config
+         ============================================================ -->
+
+    <parent>
+        <groupId>com.dwl</groupId>
+        <artifactId>delta-test-server</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>delta-test-web</artifactId>
+    <packaging>jar</packaging>
+    <name>DeltaTest Web</name>
+    <description>Web层模块 - Controller、WebSocket、安全配置、OpenAPI配置</description>
+
+    <dependencies>
+        <!-- ==================== 内部模块 / Internal Modules ==================== -->
+        <dependency>
+            <groupId>com.dwl</groupId>
+            <artifactId>delta-test-service</artifactId>
+        </dependency>
+
+        <!-- ==================== SpringDoc OpenAPI / Swagger文档 ==================== -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+
+        <!-- ==================== Spring Boot WebSocket ==================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <!-- ==================== Lombok ==================== -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

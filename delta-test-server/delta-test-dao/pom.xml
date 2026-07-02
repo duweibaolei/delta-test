@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ============================================================
+         delta-test-dao 数据访问模块
+         包含：Mapper接口、XML映射文件
+         Contains: Mapper interfaces, XML mapping files
+         ============================================================ -->
+
+    <parent>
+        <groupId>com.dwl</groupId>
+        <artifactId>delta-test-server</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>delta-test-dao</artifactId>
+    <packaging>jar</packaging>
+    <name>DeltaTest DAO</name>
+    <description>数据访问模块 - Mapper接口、XML映射文件</description>
+
+    <dependencies>
+        <!-- ==================== 内部模块 / Internal Modules ==================== -->
+        <dependency>
+            <groupId>com.dwl</groupId>
+            <artifactId>delta-test-model</artifactId>
+        </dependency>
+
+        <!-- ==================== MyBatis-Plus / ORM增强 ==================== -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+
+        <!-- ==================== Lombok ==================== -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

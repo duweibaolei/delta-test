@@ -1,0 +1,128 @@
+syntax = "proto3";
+package delta.engine.v1;
+
+option java_multiple_files = true;
+option java_package = "com.dwl.grpc.engine";
+
+// ============================================================
+// 代码分析服务 / Code Analysis Service
+// 提供代码差异计算和影响分析能力 / Provides code diff computation and impact analysis
+// ============================================================
+
+service CodeAnalysisService {
+  // 计算代码差异 / Compute code diff
+  rpc ComputeDiff(DiffRequest) returns (DiffResponse);
+
+  // 分析影响范围 / Analyze impact scope
+  rpc AnalyzeImpact(ImpactRequest) returns (ImpactResponse);
+
+  // 健康检查 / Health check
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+// ============================================================
+// 代码差异请求 / Diff Request
+// ============================================================
+message DiffRequest {
+  // 仓库ID / Repository ID
+  int64 repo_id = 1;
+  // 仓库URL / Repository URL
+  string repo_url = 2;
+  // 分支名称 / Branch name
+  string branch = 3;
+  // 起始提交 / Start commit
+  string start_commit = 4;
+  // 结束提交 / End commit
+  string end_commit = 5;
+  // 凭证类型 / Credential type
+  string credential_type = 6;
+  // 凭证密钥 / Credential key
+  string credential_key = 7;
+}
+
+// ============================================================
+// 代码差异响应 / Diff Response
+// ============================================================
+message DiffResponse {
+  // 响应码 / Response code
+  int32 code = 1;
+  // 响应消息 / Response message
+  string message = 2;
+  // 文件差异列表 / File diff list
+  repeated FileDiff file_diffs = 3;
+}
+
+// ============================================================
+// 文件差异 / File Diff
+// ============================================================
+message FileDiff {
+  // 文件路径 / File path
+  string file_path = 1;
+  // 变更类型 (added/modified/deleted/renamed) / Change type
+  string change_type = 2;
+  // 新增行数 / Additions count
+  int32 additions = 3;
+  // 删除行数 / Deletions count
+  int32 deletions = 4;
+  // 变更行号列表 / Changed line numbers
+  repeated int32 changed_lines = 5;
+}
+
+// ============================================================
+// 影响分析请求 / Impact Analysis Request
+// ============================================================
+message ImpactRequest {
+  // 仓库ID / Repository ID
+  int64 repo_id = 1;
+  // 仓库URL / Repository URL
+  string repo_url = 2;
+  // 分支名称 / Branch name
+  string branch = 3;
+  // 变更文件列表 / Changed files list
+  repeated string changed_files = 4;
+  // 凭证类型 / Credential type
+  string credential_type = 5;
+  // 凭证密钥 / Credential key
+  string credential_key = 6;
+}
+
+// ============================================================
+// 影响分析响应 / Impact Analysis Response
+// ============================================================
+message ImpactResponse {
+  // 响应码 / Response code
+  int32 code = 1;
+  // 响应消息 / Response message
+  string message = 2;
+  // 影响范围列表 / Impact scope list
+  repeated ScopeImpact impacts = 3;
+}
+
+// ============================================================
+// 范围影响 / Scope Impact
+// ============================================================
+message ScopeImpact {
+  // 范围类型 (frontend_page/backend_api/backend_service/database_table) / Scope type
+  string scope_type = 1;
+  // 范围名称 / Scope name
+  string scope_name = 2;
+  // 范围路径 / Scope path
+  string scope_path = 3;
+  // 关联文件列表 / Related files list
+  repeated string related_files = 4;
+}
+
+// ============================================================
+// 健康检查请求 / Health Check Request
+// ============================================================
+message HealthCheckRequest {}
+
+// ============================================================
+// 健康检查响应 / Health Check Response
+// ============================================================
+message HealthCheckResponse {
+  // 是否健康 / Is healthy
+  bool healthy = 1;
+  // 版本号 / Version
+  string version = 2;
+}
