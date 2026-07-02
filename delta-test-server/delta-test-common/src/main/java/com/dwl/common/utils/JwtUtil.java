@@ -28,7 +28,7 @@ public class JwtUtil {
      * JWT密钥（从配置文件读取）
      * JWT secret key (read from configuration file)
      */
-    @Value("${jwt.secret:DeltaTestDefaultSecretKeyForJwtTokenGeneration2025!}")
+    @Value("${jwt.secret:deltatest-default-secret-key-must-be-at-least-256-bits-long-for-hmac-sha}")
     private String secret;
 
     /**
@@ -65,7 +65,6 @@ public class JwtUtil {
         return Jwts.builder()
                 .subject(username)
                 .claim("userId", userId)
-                .claim("username", username)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getSigningKey())
@@ -130,6 +129,6 @@ public class JwtUtil {
      */
     public String getUsernameFromToken(String token) {
         Claims claims = parseToken(token);
-        return claims.get("username", String.class);
+        return claims.getSubject();
     }
 }

@@ -64,8 +64,8 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException(ErrorCode.USER_PASSWORD_ERROR, "用户名或密码错误 / Invalid username or password");
         }
 
-        // 检查用户状态 / Check user status
-        if (user.getStatus() != null && user.getStatus() == 1) {
+        // 检查用户状态（0-禁用 / 0-disabled）
+        if (user.getStatus() != null && user.getStatus() == 0) {
             throw new BusinessException(ErrorCode.USER_DISABLED);
         }
 
@@ -102,9 +102,9 @@ public class AuthServiceImpl implements AuthService {
             Long userId = claims.get("userId", Long.class);
             String username = claims.getSubject();
 
-            // 检查用户是否仍然有效 / Check if user is still valid
+            // 检查用户是否仍然有效（0-禁用 / 0-disabled）
             SysUser user = userService.getByUsername(username);
-            if (user == null || user.getStatus() == 1) {
+            if (user == null || user.getStatus() == 0) {
                 throw new BusinessException(ErrorCode.UNAUTHORIZED, "用户已禁用 / User is disabled");
             }
 
