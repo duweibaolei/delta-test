@@ -1,11 +1,11 @@
 ---
-name: project-specifications
-description: 项目技术规范索引，涵盖架构设计、代码规范、技术栈、开发流程、性能优化、安全方案等
+name: dev-knowledge-base
+description: DeltaTest 开发知识库，涵盖架构设计、代码规范、技术栈、开发流程、性能优化、安全方案、智能体架构等
 ---
 
-# DeltaTest 项目技术技能全景总结
+# DeltaTest 开发知识库
 
-> 本文件为项目规范技能的**主入口索引**，各专题详细内容已拆分至独立文件。
+> 本文件为开发知识库的**主入口索引**，各专题详细内容已拆分至独立文件。
 
 ## 文件索引
 

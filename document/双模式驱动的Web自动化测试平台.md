@@ -193,7 +193,7 @@ graph TB
 
 Python AI 服务、C 高性能计算引擎、Playwright 执行节点均**不感知触发模式**，只接收标准化输入、输出标准化结果，自动模式与手动模式完全复用同一套底层能力。
 
-Python AI 服务内部采用 **Master-Slave Agent 架构**：MasterAgent 负责意图路由与结果聚合，5 个 Sub-Agent（RiskAnalysis / ChangeSummary / RootCause / CaseGeneration / SemanticMatch）各自封装单一 AI 能力。Agent 间通过进程内 async call 通信，各 Agent 可通过 Tool 框架调用 Java 后端 API 获取上下文数据。详细设计参见 [agent.md](../.trae/skills/项目规范/agent.md)。
+Python AI 服务内部采用 **Master-Slave Agent 架构**：MasterAgent 负责意图路由与结果聚合，5 个 Sub-Agent（RiskAnalysis / ChangeSummary / RootCause / CaseGeneration / SemanticMatch）各自封装单一 AI 能力。Agent 间通过进程内 async call 通信，各 Agent 可通过 Tool 框架调用 Java 后端 API 获取上下文数据。详细设计参见 [agent.md](../.trae/skills/dev-knowledge-base/agent.md)。
 
 > **注意**：以下场景可能产生模式差异，需在业务层适配而非能力层改造——
 > - 手动模式需要**实时日志推送**（自动模式仅需完成通知），由 Java 层通过 WebSocket 转发执行节点日志
@@ -344,7 +344,7 @@ Python AI 服务采用 **Master-Slave Agent 架构**，一个 MasterAgent 统一
 | Python AI 不可用 | Java 后端返回降级结果（ErrorCode.AI_UNAVAILABLE） |
 | 工具调用超时 | 跳过该工具，使用已有上下文继续推理 |
 
-> 详细 Agent 设计规范参见 [agent.md](../.trae/skills/项目规范/agent.md)
+> 详细 Agent 设计规范参见 [agent.md](../.trae/skills/dev-knowledge-base/agent.md)
 
 ---
 

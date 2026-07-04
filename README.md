@@ -243,10 +243,10 @@ Phase 1 核心闭环（进行中）
 ---
 📚 文档体系
 完整项目文档位于仓库根目录 docs/ 目录：
-- [架构设计](./.trae/skills/项目规范/architecture.md)：模块划分、依赖关系、数据流设计
-- [代码规范](./.trae/skills/项目规范/code-standards.md)：多语言命名约定、格式化规则、注释规范
-- [技术栈说明](./.trae/skills/项目规范/tech-stack.md)：框架版本、中间件配置、核心集成方案
-- [开发流程](./.trae/skills/项目规范/dev-workflow.md)：构建命令、分层最佳实践、配置管理
-- [性能优化](./.trae/skills/项目规范/performance.md)：各层级性能优化策略与实现
-- [安全方案](./.trae/skills/项目规范/security.md)：认证体系、授权规则、数据安全
-- [待改进项](./.trae/skills/项目规范/improvements.md)：已知规划与演进方向
+- [架构设计](./.trae/skills/dev-knowledge-base/architecture.md)：模块划分、依赖关系、数据流设计
+- [代码规范](./.trae/skills/dev-knowledge-base/code-standards.md)：多语言命名约定、格式化规则、注释规范
+- [技术栈说明](./.trae/skills/dev-knowledge-base/tech-stack.md)：框架版本、中间件配置、核心集成方案
+- [开发流程](./.trae/skills/dev-knowledge-base/dev-workflow.md)：构建命令、分层最佳实践、配置管理
+- [性能优化](./.trae/skills/dev-knowledge-base/performance.md)：各层级性能优化策略与实现
+- [安全方案](./.trae/skills/dev-knowledge-base/security.md)：认证体系、授权规则、数据安全
+- [待改进项](./.trae/skills/dev-knowledge-base/improvements.md)：已知规划与演进方向
