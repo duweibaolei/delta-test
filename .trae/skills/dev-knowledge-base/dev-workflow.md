@@ -98,6 +98,62 @@ uv run mypy app/
 - Docker 多阶段构建：`uv pip install` → 复制 `.venv` → slim 运行镜像
 - `hatchling` 构建后端，`[tool.hatch.build.targets.wheel] packages = ["app"]`
 
+**C 计算引擎：**
+
+```bash
+# ===== 方式一：CMake Preset（推荐）=====
+
+# 仅构建 C 业务逻辑库 + 测试（无需 Conan）
+cmake --preset mingw-debug
+cmake --build --preset mingw-debug
+ctest --preset mingw-debug
+
+# Release 构建
+cmake --preset mingw-release
+cmake --build --preset mingw-release
+
+# ===== 方式二：手动 CMake 命令 =====
+
+# 配置（指定 MinGW64 编译器，禁用 gRPC）
+cmake -DCMAKE_BUILD_TYPE=Debug ^
+      -DCMAKE_C_COMPILER=G:/software/Development/mingw64/bin/gcc.exe ^
+      -DCMAKE_CXX_COMPILER=G:/software/Development/mingw64/bin/g++.exe ^
+      -DCMAKE_MAKE_PROGRAM=G:/software/Development/mingw64/bin/mingw32-make.exe ^
+      -DENABLE_GRPC=OFF ^
+      -G "MinGW Makefiles" ^
+      -B cmake-build-debug
+
+# 编译
+cmake --build cmake-build-debug
+
+# 运行测试
+cd cmake-build-debug && ctest --output-on-failure
+
+# ===== 方式三：Conan + gRPC 完整构建 =====
+
+# 检测编译器 Profile
+conan profile detect
+
+# 安装依赖
+conan install . --build=missing -s build_type=Release
+
+# CMake 配置 + 编译 + 测试
+cmake --preset conan-release
+cmake --build --preset conan-release
+ctest --preset conan-release --output-on-failure
+
+# ===== Docker 构建 =====
+docker build -t delta-test-engine:1.0.0-skeleton .
+docker run -d -p 9090:9090 delta-test-engine:1.0.0-skeleton
+```
+
+**构建配置要点**：
+- Windows 环境下 CLion 自带 MinGW 路径含空格会导致 `ld` 链接失败，需使用独立 MinGW64
+- `CMakePresets.json` 提供 3 个预设：`mingw-debug`、`mingw-release`、`conan-release`
+- `ENABLE_GRPC=OFF` 时仅构建 C 业务逻辑库 + 2 个 CTest，无需 Conan
+- Docker 多阶段构建：`conanio/gcc12`（Conan 安装依赖 + CMake 编译）→ `debian:bookworm-slim`（精简运行）
+- `conanfile.py` 中 `cmake` 工具依赖已注释（使用系统 CMake），避免 Conan 缓存问题
+
 ## 4.2 统一响应体规范
 
 所有 API 返回值包装为 `R<T>`：
@@ -211,3 +267,32 @@ class Settings(BaseSettings):
 - Java 回调：`JAVA_SERVICE_URL`
 - LLM 配置：`LLM_API_KEY` / `LLM_BASE_URL` / `LLM_MODEL` / `LLM_TIMEOUT`
 - `.env` 文件不提交 Git（`.gitignore` 中排除），`.env.example` 作为示例
+
+**C 计算引擎：**
+
+```bash
+# 环境变量配置（main.cpp 读取）
+ENGINE_PORT=9090           # gRPC 监听端口
+ENGINE_USE_TLS=false       # 是否启用 TLS（true/false）
+ENGINE_CERT_PATH=          # 服务端证书路径（TLS 启用时必填）
+ENGINE_KEY_PATH=           # 服务端私钥路径（TLS 启用时必填）
+```
+
+```toml
+# conanfile.py 依赖配置
+[requirements]
+grpc/1.69.0                 # gRPC Server 依赖
+spdlog/1.15.1               # 高性能异步日志
+
+[options]
+shared=False                # 静态链接 gRPC/Protobuf
+fPIC=True                   # 位置无关代码（Linux 共享库需要）
+grpc/*:shared=False         # gRPC 静态链接
+protobuf/*:shared=False     # Protobuf 静态链接
+```
+
+关键配置要点：
+- 环境变量通过 `std::getenv()` 读取，无配置文件，与 Docker/K8s 环境变量注入一致
+- Conan 依赖通过 `conan install` 生成 `CMakeToolchain` + `CMakeDeps`，CMake 通过 `--toolchain-file` 加载
+- `CMakePresets.json` 硬编码编译器路径（Windows MinGW64），Linux 环境无需指定
+- gRPC/Protobuf 静态链接，运行时无需额外 DLL/SO

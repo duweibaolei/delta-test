@@ -187,6 +187,67 @@ Java 后端（HTTP REST 调用 Python → Python 返回 R<T>）  Memory（记忆
 
 **通信协议**：Java → Python 使用 HTTP REST（JSON），连接超时 5s / 读取超时 60s（AI 耗时较长）
 
+### 1.2.4 C 计算引擎（delta-test-engine）
+
+```
+delta-test-engine/
+├── CMakeLists.txt          # 根 CMake 配置（gRPC 可选构建）
+├── CMakePresets.json       # CMake Preset（mingw-debug / mingw-release / conan-release）
+├── conanfile.py            # Conan 2.x 依赖声明
+├── Dockerfile              # 多阶段构建（conanio/gcc12 → debian:bookworm-slim）
+├── proto/
+│   └── code_analysis.proto # gRPC 服务定义（3 个 RPC 方法）
+├── include/
+│   ├── bridge.h            # C/C++ 桥接层（DiffResult/ImpactResult 结构体 + extern "C" 函数）
+│   ├── diff_engine.h       # Diff 计算模块头文件
+│   ├── impact_analyzer.h   # 影响分析模块头文件
+│   ├── dependency_graph.h  # 依赖图模块头文件
+│   └── grpc_server.h       # gRPC 服务头文件（C++ only）
+├── src/
+│   ├── main.cpp            # 程序入口（C++17，读取环境变量 + 启动 gRPC Server）
+│   ├── grpc_server.cpp     # CodeAnalysisServiceImpl 实现（C++17，桥接层 → gRPC 响应）
+│   ├── bridge.c            # 桥接层实现（委托 diff_engine / impact_analyzer）
+│   ├── diff_engine.c       # Diff 计算实现（C17，骨架占位）
+│   ├── impact_analyzer.c   # 影响分析实现（C17，骨架占位）
+│   └── dependency_graph.c  # 依赖图实现（C17，骨架占位）
+└── test/
+    ├── CMakeLists.txt      # 测试 CMake 配置（gRPC 测试条件构建）
+    ├── test_diff_engine.c      # Diff 引擎单元测试
+    ├── test_impact_analyzer.c  # 影响分析单元测试
+    └── test_grpc_server.cpp    # gRPC 编译验证测试
+```
+
+**C 引擎架构分层**：
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  gRPC Server Layer (C++17 / grpc++ / protobuf)              │
+│  接收 RPC 请求、Protobuf 序列化/反序列化、TLS 配置           │
+│  main.cpp → grpc_server.cpp → CodeAnalysisServiceImpl       │
+├──────────────────────────────────────────────────────────────┤
+│  C/C++ Bridge Layer (extern "C" 接口)                       │
+│  C++ → C 的类型转换和调用桥接                                 │
+│  bridge.h → bridge.c → DiffResult / ImpactResult 结构体      │
+├──────────────────────────────────────────────────────────────┤
+│  Business Logic Layer (C17 / 纯 C，零 C++ 依赖)             │
+│  diff_engine.c    — 代码差异计算（Phase 1 集成 libgit2）     │
+│  impact_analyzer.c — 影响范围分析（Phase 1 集成 tree-sitter）│
+│  dependency_graph.c — 依赖图构建（Phase 1 集成 tree-sitter） │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**C 引擎核心设计决策**：
+
+| 决策 | 原因 |
+|------|------|
+| C++17 写 gRPC Server 层 | protobuf-c 不支持 gRPC Service 代码生成，必须用 C++ protobuf |
+| C17 写业务逻辑 | 纯 C 零 C++ 依赖，最大化可移植性，C 业务逻辑库可独立编译 |
+| `extern "C"` 桥接层 | C++ 无法直接调用 C 函数（名称修饰），需要桥接层做类型转换 |
+| gRPC 可选构建 | Windows 开发环境无 Conan 时仍可编译 C 业务逻辑库 + 测试 |
+| 凭证参数透传 | `credential_type` + `credential_key` 参数从 gRPC 请求直接传到 C 业务逻辑 |
+
+**通信协议**：Java → C 引擎使用 gRPC（Protobuf），连接超时 3s / 读取超时 30s
+
 ## 1.3 模块依赖关系
 
 ```
@@ -203,6 +264,7 @@ admin → web → service → dao → model → common
 ┌──────────────────────────────────────────────────────────────────────┐
 │                         变更驱动自动模式                               │
 │  Git Webhook → Java(/webhook) → gRPC → C引擎(ComputeDiff) → MySQL  │
+│       C引擎分层: gRPC Server(C++17) → Bridge(extern "C") → C Logic  │
 │       → HTTP → Python AI(风险评估) → MySQL → 自动匹配用例 → 生成任务  │
 │       → RabbitMQ → Playwright执行 → 结果回传MQ → WebSocket → 前端     │
 ├──────────────────────────────────────────────────────────────────────┤
@@ -213,6 +275,13 @@ admin → web → service → dao → model → common
 │                         实时推送                                       │
 │  MQ Consumer → TaskProgressWebSocketHandler → ConcurrentHashMap      │
 │              → broadcast() / sendToSession() → Vue前端               │
+├──────────────────────────────────────────────────────────────────────┤
+│                    C 引擎 gRPC 数据流                                  │
+│  Java gRPC Client → C引擎 gRPC Server(C++17, port 9090)             │
+│       ComputeDiff: DiffRequest(7字段) → Bridge → diff_engine(C17)    │
+│       AnalyzeImpact: ImpactRequest(6字段) → Bridge → impact_analyzer  │
+│       HealthCheck: → healthy=true + version="1.0.0-skeleton"         │
+│       TLS: ENGINE_USE_TLS 环境变量开关 + ENGINE_CERT/KEY_PATH        │
 ├──────────────────────────────────────────────────────────────────────┤
 │                    Agent 编排数据流（Phase 1 引入）                     │
 │  Java → HTTP → Python AI MasterAgent                                │

@@ -24,3 +24,11 @@
 | **Agent 记忆** | 无会话上下文保持 | 短期记忆（Redis）+ 长期记忆（MySQL/Milvus） | Phase 3 |
 | **Agent 对话** | 仅支持单次请求-响应 | 新增对话式 Agent API，支持多轮交互 | Phase 3 |
 | **Tool 注册** | 无工具抽象 | 统一 Tool 接口 + 装饰器注册 | Phase 1 |
+| **C 引擎 TLS 实现** | gRPC Server TLS 模式降级为明文，打印 WARN | 集成 OpenSSL/Schannel 实现 TLS 服务端凭据 | Phase 1 |
+| **C 引擎 Diff 真实计算** | `diff_engine_compute()` 返回占位数据 | 集成 libgit2 实现真实 diff 计算 | Phase 1 |
+| **C 引擎影响分析真实实现** | `impact_analyzer_analyze()` 返回占位数据 | 集成 tree-sitter 依赖链分析 | Phase 1 |
+| **C 引擎依赖图构建** | `dependency_graph_build()` 返回 0 | 集成 tree-sitter AST 解析 + 依赖图构建 | Phase 1 |
+| **C 引擎日志集成** | spdlog 已声明但未使用 | 替换 `std::cout/cerr` 为 spdlog 异步日志 | Phase 1 |
+| **C 引擎 Docker 非 root** | Dockerfile 未指定非 root 用户 | 添加 `USER nonroot` 指令 | Phase 1 |
+| **C 引擎 Protobuf 版本对齐** | Conan 解析 protobuf/5.29.6，Java 侧 4.29.3 | 验证序列化兼容性，必要时 `override=True` | Phase 1 |
+| **C 引擎 Windows gRPC 构建** | Conan 在 Windows 下安装 gRPC 存在兼容性问题 | 推荐使用 Docker/Linux 构建 gRPC Server | Phase 2 |

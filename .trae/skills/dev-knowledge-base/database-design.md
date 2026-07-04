@@ -1,4 +1,4 @@
-# 九、数据库表设计规范
+# 二、数据库表设计规范
 
 > 本文件定义 DeltaTest 项目所有数据库表的公共字段标准、字段顺序、命名规则和约束规范。
 >
@@ -8,9 +8,9 @@
 
 ---
 
-## 9.1 公共字段标准定义
+## 2.1 公共字段标准定义
 
-### 所有表必须包含的公共字段
+### 2.1.1 所有表必须包含的公共字段
 
 | 字段名 | 数据类型 | 约束 | 默认值 | 标准注释 |
 |--------|---------|------|--------|---------|
@@ -19,16 +19,16 @@
 | `created_at` | DATETIME | NOT NULL DEFAULT CURRENT_TIMESTAMP | CURRENT_TIMESTAMP | `'创建时间'` |
 | `updated_at` | DATETIME | NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP | CURRENT_TIMESTAMP | `'更新时间'` |
 
-### 字段说明
+### 2.1.2 字段说明
 
 - **id**：主键，使用雪花算法（MyBatis-Plus `IdType.ASSIGN_ID`）由应用层生成，**不使用 AUTO_INCREMENT**
 - **is_deleted**：逻辑删除标记，所有表必须包含且建立 `idx_is_deleted` 索引
 - **created_at**：记录创建时间，由数据库 `DEFAULT CURRENT_TIMESTAMP` 自动填充，与 MyBatis-Plus `MetaObjectHandler` INSERT 填充对齐
 - **updated_at**：记录更新时间，由数据库 `ON UPDATE CURRENT_TIMESTAMP` 自动更新，与 MyBatis-Plus `MetaObjectHandler` INSERT_UPDATE 填充对齐
 
-## 9.2 表分类与公共字段要求
+## 2.2 表分类与公共字段要求
 
-### 业务主表（必须包含全部 4 个公共字段）
+### 2.2.1 业务主表（必须包含全部 4 个公共字段）
 
 所有非关联表均为业务主表，必须包含 `id` + `is_deleted` + `created_at` + `updated_at`。
 
@@ -46,7 +46,7 @@ CREATE TABLE sys_user (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统用户';
 ```
 
-### 关联表（必须包含 id + is_deleted + created_at）
+### 2.2.2 关联表（必须包含 id + is_deleted + created_at）
 
 多对多关联表必须包含 `id` + `is_deleted` + `created_at`，`updated_at` 可选。
 
@@ -66,7 +66,7 @@ CREATE TABLE sys_user_role (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色关联';
 ```
 
-### 不可变记录表（updated_at 可省略）
+### 2.2.3 不可变记录表（updated_at 可省略）
 
 以下类型的表语义上记录创建后不再修改，可省略 `updated_at`：
 - 提交记录（git_commit）
@@ -76,7 +76,7 @@ CREATE TABLE sys_user_role (
 
 **判定规则**：如果表的业务字段在创建后不会被 UPDATE，则可省略 `updated_at`。
 
-## 9.3 字段顺序规范
+## 2.3 字段顺序规范
 
 ```
 id → 业务字段 → is_deleted → created_at → updated_at
@@ -87,7 +87,7 @@ id → 业务字段 → is_deleted → created_at → updated_at
 - `created_at` 放在 `is_deleted` 之后
 - `updated_at` 放在 `created_at` 之后（如果存在）
 
-## 9.4 id 字段注释规范
+## 2.4 id 字段注释规范
 
 | 表类型 | 注释格式 | 示例 |
 |--------|---------|------|
@@ -96,7 +96,7 @@ id → 业务字段 → is_deleted → created_at → updated_at
 
 **禁止**使用通用注释 `'ID'`，必须包含业务语义。
 
-## 9.5 特殊业务时间字段
+## 2.5 特殊业务时间字段
 
 某些表可能需要额外的业务时间字段（如 `analyzed_at`、`marked_at`），这些字段**不能替代** `created_at`，应作为独立业务字段保留。
 

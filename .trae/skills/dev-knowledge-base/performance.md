@@ -81,3 +81,16 @@
 | **多阶段 Docker** | uv builder 阶段 + slim runtime 阶段，镜像体积最小化 |
 | **超时意识** | `LLM_TIMEOUT=55s`，在 Java 60s 读取超时内返回 |
 | **Ruff 集成** | Lint + Format 一体化工具，替代 flake8 + black + isort |
+
+## 5.8 C 计算引擎层
+
+| 措施 | 实现 |
+|------|------|
+| **C17 纯 C 业务逻辑** | 零 C++ 开销，无名称修饰/异常/RTTI，最小运行时依赖 |
+| **Protobuf 二进制序列化** | 比 JSON 更小的序列化体积和更快的编解码，Java↔C 通信高效 |
+| **gRPC 长连接复用** | Java 侧 `ManagedChannel` 单例 Bean，复用 TCP 长连接 |
+| **静态链接** | gRPC/Protobuf 静态链接（Conan `shared=False`），运行时零额外依赖 |
+| **gRPC 可选构建** | `ENABLE_GRPC=OFF` 时跳过 gRPC 编译，C 业务逻辑库可独立编译测试 |
+| **多阶段 Docker** | `conanio/gcc12` 构建 → `debian:bookworm-slim` 运行，镜像精简 |
+| **条件编译** | `GRPC_AVAILABLE` 宏控制 gRPC 代码编译，无依赖时零开销 |
+| **位独立代码** | `POSITION_INDEPENDENT_CODE ON`，支持 Linux 共享库链接 |

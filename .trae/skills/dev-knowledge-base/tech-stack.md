@@ -66,6 +66,28 @@
 | **测试** | pytest | 8.3+ | 异步测试 + pytest-asyncio |
 | **Mock** | respx | 0.22+ | httpx 请求 Mock |
 
+**C 计算引擎：**
+
+| 层级 | 技术 | 版本 | 用途 |
+|------|------|------|------|
+| **语言标准** | C17 / C++17 | - | 业务逻辑用 C17，gRPC Server 用 C++17 |
+| **构建系统** | CMake | 3.28+ | 跨平台构建配置 |
+| **依赖管理** | Conan | 2.x | 第三方依赖安装 + CMakeDeps/CMakeToolchain 生成 |
+| **RPC** | gRPC (grpc++) | 1.69.0 | C++ gRPC Server 实现 |
+| **序列化** | Protobuf | 4.29.3+ | Protobuf 消息定义 + 代码生成 |
+| **日志** | spdlog | 1.15.1 | 高性能异步日志 |
+| **容器** | Docker | - | 多阶段构建（conanio/gcc12 → debian:bookworm-slim） |
+| **测试** | CTest | - | CMake 集成测试框架 |
+
+**Phase 1 计划依赖：**
+
+| 依赖 | 版本 | 用途 |
+|------|------|------|
+| libgit2 | 1.9.0 | Git 仓库操作（clone/pull/diff） |
+| cjson | 1.7.18 | JSON 解析 |
+| pcre2 | 10.44 | 正则表达式匹配 |
+| tree-sitter | - | AST 解析 + 依赖图构建 |
+
 ## 3.2 Spring Security 6 安全链
 
 ```java
@@ -98,6 +120,9 @@ SecurityFilterChain:
 ## 3.4 gRPC 服务契约（Protobuf）
 
 ```protobuf
+syntax = "proto3";
+package delta.engine.v1;
+
 service CodeAnalysisService {
   rpc ComputeDiff(DiffRequest) returns (DiffResponse);      // 代码差异计算
   rpc AnalyzeImpact(ImpactRequest) returns (ImpactResponse); // 影响范围分析
@@ -110,6 +135,41 @@ service CodeAnalysisService {
 - `java_package = "com.dwl.grpc.engine"` → 统一包路径
 - 响应含 `code + message` 标准化结构
 - `repeated` 用于文件差异列表、影响范围列表
+- `credential_type` + `credential_key` 用于 Git 仓库认证透传
+
+**请求消息字段**：
+
+| 消息 | 字段 | 类型 | 说明 |
+|------|------|------|------|
+| DiffRequest | repo_id | int64 | 仓库 ID |
+| DiffRequest | repo_url | string | 仓库 URL |
+| DiffRequest | branch | string | 分支名称 |
+| DiffRequest | start_commit | string | 起始提交 |
+| DiffRequest | end_commit | string | 结束提交 |
+| DiffRequest | credential_type | string | 凭证类型（ssh/https/token） |
+| DiffRequest | credential_key | string | 凭证密钥 |
+| ImpactRequest | repo_id | int64 | 仓库 ID |
+| ImpactRequest | repo_url | string | 仓库 URL |
+| ImpactRequest | branch | string | 分支名称 |
+| ImpactRequest | changed_files | repeated string | 变更文件列表 |
+| ImpactRequest | credential_type | string | 凭证类型 |
+| ImpactRequest | credential_key | string | 凭证密钥 |
+
+**C 引擎 gRPC 构建**：
+
+| 构建模式 | CMake 选项 | 依赖条件 | 构建产物 |
+|----------|-----------|----------|----------|
+| 仅 C 逻辑 | `-DENABLE_GRPC=OFF` | 无需 Conan | `libdelta_engine_core.a` + 2 CTest |
+| 自动降级 | `-DENABLE_GRPC=ON`（默认） | 无 Protobuf | `libdelta_engine_core.a` + 2 CTest（WARNING） |
+| 完整构建 | `-DENABLE_GRPC=ON` + Conan | Protobuf/gRPC 可用 | `libdelta_engine_core.a` + `delta-test-engine` 可执行文件 + 3 CTest |
+
+**CMake Presets**：
+
+| Preset | 用途 | gRPC | 工具链 |
+|--------|------|------|--------|
+| `mingw-debug` | Windows 日常开发 | OFF | MinGW64 (GCC 8.1.0) |
+| `mingw-release` | Windows Release | OFF | MinGW64 (GCC 8.1.0) |
+| `conan-release` | 完整 gRPC 构建 | ON | MinGW64 + Conan Toolchain |
 
 ## 3.5 RabbitMQ 拓扑
 

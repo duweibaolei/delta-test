@@ -1,0 +1,43 @@
+# ============================================================
+# DeltaTest C Engine - Git 忽略规则
+# DeltaTest C Engine - Git Ignore Rules
+# ============================================================
+
+# ==================== 构建产物 / Build Artifacts ====================
+build/
+Build/
+out/
+
+# ==================== Conan 生成文件 / Conan Generated Files ====================
+generated/
+*.cmake
+!CMakeLists.txt
+
+# ==================== CMake 缓存 / CMake Cache ====================
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# ==================== 编译产物 / Compilation Artifacts ====================
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.exe
+
+# ==================== IDE 文件 / IDE Files ====================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ==================== 系统文件 / System Files ====================
+.DS_Store
+Thumbs.db
+
+# ==================== Conan 本地缓存 / Conan Local Cache ====================
+.conan2/

@@ -104,3 +104,31 @@ Signature: HMAC-SHA256(base64(header) + "." + base64(payload), secret)
 
 - 后端 JWT 无状态认证，无需 CSRF Token
 - 前端通过 `Authorization` 头传递 Token，非 Cookie 自动携带
+
+## 6.7 C 引擎安全
+
+**gRPC 通信安全：**
+
+| 策略 | 实现 |
+|------|------|
+| **TLS 开关** | `ENGINE_USE_TLS` 环境变量控制，开发环境明文，生产环境 TLS |
+| **证书配置** | `ENGINE_CERT_PATH` + `ENGINE_KEY_PATH` 环境变量指定服务端证书/私钥 |
+| **Java 侧对齐** | `${grpc.client.engine.use-tls:false}` 配置 + JDK 系统信任库 + 自定义 CA |
+| **骨架阶段** | TLS 模式仅打印 WARN 并降级为明文，Phase 1 完整实现 |
+
+**凭证安全：**
+
+| 策略 | 实现 |
+|------|------|
+| **凭证透传** | `credential_type` + `credential_key` 从 Java gRPC Client → C 引擎桥接层 → 业务逻辑 |
+| **内存安全** | C 引擎不持久化凭证，函数调用结束后字符串引用自动释放 |
+| **日志脱敏** | 骨架阶段凭证参数标记 `(void)` 不使用，Phase 1 需确保日志不打印 credential_key |
+
+**Docker 安全：**
+
+| 策略 | 实现 |
+|------|------|
+| **多阶段构建** | 构建阶段（conanio/gcc12，含编译器/Conan）与运行阶段（debian:bookworm-slim）隔离 |
+| **最小运行镜像** | 仅安装 `ca-certificates`，无编译器/开发工具 |
+| **非 root 用户** | Phase 1 需添加 `USER nonroot` 指令 |
+| **端口限制** | 仅暴露 9090 端口（gRPC） |

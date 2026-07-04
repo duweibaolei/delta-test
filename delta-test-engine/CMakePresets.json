@@ -1,0 +1,86 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "mingw-debug",
+      "displayName": "MinGW Debug (no gRPC)",
+      "description": "仅构建 C 业务逻辑库和测试，不需要 Conan/gRPC 依赖 / Build C business logic only, no Conan/gRPC required",
+      "generator": "MinGW Makefiles",
+      "binaryDir": "${sourceDir}/cmake-build-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER": "G:/software/Development/mingw64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "G:/software/Development/mingw64/bin/g++.exe",
+        "CMAKE_MAKE_PROGRAM": "G:/software/Development/mingw64/bin/mingw32-make.exe",
+        "ENABLE_GRPC": "OFF",
+        "BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "mingw-release",
+      "displayName": "MinGW Release (no gRPC)",
+      "description": "Release 构建 C 业务逻辑库 / Release build for C business logic only",
+      "generator": "MinGW Makefiles",
+      "binaryDir": "${sourceDir}/cmake-build-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "G:/software/Development/mingw64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "G:/software/Development/mingw64/bin/g++.exe",
+        "CMAKE_MAKE_PROGRAM": "G:/software/Development/mingw64/bin/mingw32-make.exe",
+        "ENABLE_GRPC": "OFF",
+        "BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "conan-release",
+      "displayName": "Conan + gRPC Release",
+      "description": "完整 gRPC 服务器构建，需要先执行 conan install / Full gRPC server build, requires conan install first",
+      "generator": "MinGW Makefiles",
+      "binaryDir": "${sourceDir}/build/conan-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "G:/software/Development/mingw64/bin/gcc.exe",
+        "CMAKE_CXX_COMPILER": "G:/software/Development/mingw64/bin/g++.exe",
+        "CMAKE_MAKE_PROGRAM": "G:/software/Development/mingw64/bin/mingw32-make.exe",
+        "ENABLE_GRPC": "ON",
+        "BUILD_TESTS": "ON"
+      },
+      "toolchainFile": "${sourceDir}/build/conan-release/conan_toolchain.cmake"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "mingw-debug",
+      "configurePreset": "mingw-debug"
+    },
+    {
+      "name": "mingw-release",
+      "configurePreset": "mingw-release"
+    },
+    {
+      "name": "conan-release",
+      "configurePreset": "conan-release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "mingw-debug",
+      "configurePreset": "mingw-debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "mingw-release",
+      "configurePreset": "mingw-release",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

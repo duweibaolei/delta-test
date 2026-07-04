@@ -35,6 +35,13 @@
 | Python函数名 | snake_case | `assess_risk()`, `get_risk_service()` |
 | Python常量 | UPPER_SNAKE_CASE | `RISK_ASSESSMENT_SYSTEM_PROMPT`, `ENGINE_UNAVAILABLE` |
 | Python枚举 | UpperCamelCase 枚举值 | `RiskLevel.HIGH`, `ErrorCode.AI_UNAVAILABLE` |
+| C头文件 | snake_case + `.h` 后缀 | `diff_engine.h`, `impact_analyzer.h`, `bridge.h` |
+| C源文件 | snake_case + `.c` / `.cpp` | `diff_engine.c`, `grpc_server.cpp` |
+| C函数名 | snake_case + 模块前缀 | `diff_engine_compute()`, `bridge_compute_diff()` |
+| C结构体 | UpperCamelCase | `DiffResult`, `ImpactResult` |
+| C宏/常量 | UPPER_SNAKE_CASE | `DELTA_ENGINE_DIFF_ENGINE_H` |
+| C测试文件 | `test_` 前缀 + snake_case | `test_diff_engine.c`, `test_grpc_server.cpp` |
+| CMake target | snake_case | `delta_engine_core`, `delta-test-engine` |
 
 ## 2.2 类后缀约定
 
@@ -58,6 +65,8 @@
 | `Service` | Python 业务服务 | services/ |
 | `Request` | Python 请求 DTO | models/requests.py |
 | `VO` | Python 响应数据结构 | 内嵌于各 API 返回 |
+| `Result` | C 桥接层返回结构体 | include/bridge.h |
+| `Impl` | C++ gRPC 服务实现类 | src/grpc_server.cpp |
 
 ## 2.3 代码格式化规则
 
@@ -89,6 +98,19 @@
 - **import 顺序**：标准库 → 第三方 → `app.*`（Ruff `I` 规则自动排序）
 - **类型注解**：所有公共函数必须有类型注解（mypy `strict = true`）
 - **中文标点**：允许 docstring/comment 中使用中文全角标点（Ruff 忽略 RUF001/RUF002/RUF003）
+
+**C 计算引擎：**
+
+- **缩进**：4 空格
+- **编码**：UTF-8
+- **行宽**：无硬限制，但函数签名过长时换行对齐
+- **C 标准**：C17（业务逻辑 `.c` 文件），C++17（gRPC Server `.cpp` 文件）
+- **警告级别**：`-Wall -Wextra -Wpedantic`（GCC/Clang），`/W4`（MSVC）
+- **未使用参数**：使用 `(void)param;` 显式抑制，不使用 `__attribute__((unused))`
+- **头文件保护**：使用 `#ifndef DELTA_ENGINE_MODULE_H` / `#define` / `#endif` 宏保护，不使用 `#pragma once`
+- **C/C++ 兼容**：头文件使用 `#ifdef __cplusplus extern "C" { #endif` 包裹
+- **import 顺序**：项目头文件 → C 标准库 → 第三方库
+- **CMake 格式**：大写命令（`add_library`），2 空格缩进，注释用 `# ====================`
 
 ## 2.4 注释规范（双语注释）
 
@@ -158,6 +180,29 @@ Performs risk assessment based on change analysis results, returns placeholder d
 - **行内注释**：`# 中文 / English` 双语，业务关键逻辑处必须添加
 - **分隔注释**：`# ==================== 分区名 / Section Name ====================`
 
+**C 计算引擎：**
+
+```c
+/**
+ * @file diff_engine.c
+ * Diff 计算模块实现
+ * Diff Computation Module Implementation
+ * <p>
+ * 接收 commit 范围，调用 libgit2 计算 diff，输出变更文件列表与变更行号。
+ * Receives commit range, calls libgit2 to compute diff, outputs changed file list and line numbers.
+ * </p>
+ *
+ * @author DeltaTest
+ */
+```
+
+- **文件注释**：Doxygen + 双语描述 + `<p>` 段落分隔 + `@author DeltaTest`
+- **函数注释**：Doxygen + 双语简述 + `@param` + `@return`
+- **字段注释**：行内双语 `/**< 中文名 / English name */`
+- **行内注释**：`/* 中文 / English */` 双语，业务关键逻辑处必须添加
+- **分隔注释**：`/* ==================== 分区名 / Section Name ==================== */`
+- **C++ 头文件保护**：`#ifdef __cplusplus` 内的函数同样需要 Doxygen 双语注释
+
 ## 2.5 Swagger 注解规范
 
 ```java
@@ -225,3 +270,42 @@ class R(BaseModel, Generic[T]):
 | 路由元信息 | `meta.title`（页面标题）、`meta.requiresAuth`（是否需认证） |
 | 守卫逻辑 | 全局 `beforeEach` 检查 `useUserStore().isLoggedIn` |
 | 命名路由 | 所有路由必须设置 `name` 属性，编程式导航使用 `name` 而非 `path` |
+
+## 2.8 C 引擎编码规范
+
+**模块分层规范：**
+
+| 规范 | 说明 |
+|------|------|
+| gRPC Server 用 C++17 | `grpc_server.cpp` + `main.cpp`，可引用 gRPC/Protobuf 头文件 |
+| 业务逻辑用 C17 | `diff_engine.c` / `impact_analyzer.c` / `dependency_graph.c`，仅使用 C 标准库 |
+| 桥接层用 `extern "C"` | `bridge.h` / `bridge.c`，提供 C/C++ 兼容接口 |
+| C 库零 C++ 依赖 | `delta_engine_core` 静态库不链接 gRPC/Protobuf，可独立编译 |
+
+**桥接层设计规范：**
+
+| 规范 | 说明 |
+|------|------|
+| 结构体定义 | 在 `bridge.h` 中定义，C/C++ 共享（`DiffResult`, `ImpactResult`） |
+| 函数声明 | 在 `bridge.h` 中用 `extern "C"` 声明，C/C++ 均可调用 |
+| 参数类型 | 仅使用 C 兼容类型（`int`, `long long`, `const char*`, `const char**`） |
+| 返回类型 | 使用桥接层结构体（`DiffResult`, `ImpactResult`），不返回 Protobuf 类型 |
+| 委托模式 | `bridge_compute_diff()` → `diff_engine_compute()`，桥接层只做转发 |
+
+**CMake 构建规范：**
+
+| 规范 | 说明 |
+|------|------|
+| gRPC 可选 | `option(ENABLE_GRPC ...)` + `find_package(... QUIET)` + `if(GRPC_AVAILABLE)` |
+| C 库始终构建 | `delta_engine_core` 不依赖 gRPC，放在 `if(GRPC_AVAILABLE)` 之外 |
+| 测试条件构建 | gRPC 测试仅在 `GRPC_AVAILABLE` 时构建 |
+| Proto 代码生成 | `add_custom_command` 手动调用 `protoc`，不使用 `CMAKE_AUTOMOC` |
+| 静态链接 | gRPC/Protobuf 静态链接（Conan `shared=False`），运行时无需额外 DLL |
+
+**Windows 构建注意事项：**
+
+| 问题 | 原因 | 解决方案 |
+|------|------|----------|
+| MinGW `ld` 路径空格报错 | CLion 自带 MinGW 安装路径含空格 | 使用无空格路径的独立 MinGW64 |
+| Cygwin gcc 不兼容 | Cygwin 编译器与 MinGW Makefiles 生成器不兼容 | 显式指定 `-DCMAKE_C_COMPILER` 和 `-DCMAKE_CXX_COMPILER` |
+| Conan 缓存损坏 | Windows 下 Conan 缓存权限/锁文件问题 | `conan cache clean` 或删除 `.conan2/` 重装 |
