@@ -1,0 +1,25 @@
+{
+    "maven.excludedFolders": [
+        "**/.*",
+        "**/node_modules",
+        "**/target",
+        "**/bin",
+        "**/archetype-resources"
+    ],
+    "maven.settingsFile": "G:\\software\\Development\\apache-maven\\conf\\FullyDevelop\\settings-delta-test.xml",
+    "workbench.colorTheme": "Default Dark+",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.configuration.maven.userSettings": "G:\\software\\Development\\apache-maven\\conf\\FullyDevelop\\settings-delta-test.xml",
+    "java.debug.settings.hotCodeReplace": "auto",
+    "java.dependency.packagePresentation": "hierarchical",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-17",
+            "path": "G:\\software\\Development\\JAVA-JDK\\JAVA17",
+            "default": true
+        }
+    ],
+    "java.jdt.ls.java.home": "G:\\software\\Development\\JAVA-JDK\\JAVA17",
+    "trae.tab.enableAutoRename": false
+}
