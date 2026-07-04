@@ -1,11 +1,12 @@
 package com.dwl.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dwl.model.base.BaseEntity;
+import com.dwl.common.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @TableName("defect_record")
 @Schema(description = "缺陷记录 / Defect Record")
 public class DefectRecord extends BaseEntity {

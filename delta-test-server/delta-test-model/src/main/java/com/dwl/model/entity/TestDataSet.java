@@ -1,9 +1,10 @@
 package com.dwl.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dwl.model.base.BaseEntity;
+import com.dwl.common.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
  * @author DeltaTest
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

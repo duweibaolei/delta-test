@@ -1,11 +1,12 @@
 package com.dwl.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dwl.model.base.BaseEntity;
+import com.dwl.common.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @TableName("test_report")
 @Schema(description = "测试报告 / Test Report")
 public class TestReport extends BaseEntity {

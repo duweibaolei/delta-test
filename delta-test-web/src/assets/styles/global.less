@@ -1,0 +1,48 @@
+/**
+ * 全局样式
+ * Global Styles
+ * <p>
+ * DeltaTest 前端全局样式定义
+ * DeltaTest frontend global style definitions
+ * </p>
+ *
+ * @author DeltaTest
+ */
+
+/* ==================== CSS 变量 / CSS Variables ==================== */
+:root {
+  --primary-color: #1890ff;
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --error-color: #f5222d;
+  --font-size-base: 14px;
+  --border-radius: 6px;
+  --layout-header-height: 64px;
+  --layout-sider-width: 240px;
+  --layout-sider-collapsed-width: 80px;
+}
+
+/* ==================== 滚动条 / Scrollbar ==================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ==================== 链接 / Links ==================== */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+
+  &:hover {
+    color: #40a9ff;
+  }
+}

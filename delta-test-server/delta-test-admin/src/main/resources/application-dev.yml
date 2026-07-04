@@ -30,6 +30,12 @@ grpc:
     engine:
       host: localhost
       port: 9090
+      use-tls: false
+      # trust-cert-path: # 开发环境无需TLS，无需配置 / No TLS in dev, no need to configure
+
+# ==================== CORS配置 / CORS Configuration ====================
+cors:
+  allowed-origins: "*"
 
 # ==================== 开发环境日志级别 / Dev Log Level ====================
 logging:

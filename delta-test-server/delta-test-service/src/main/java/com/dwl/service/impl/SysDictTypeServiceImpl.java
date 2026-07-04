@@ -36,7 +36,7 @@ public class SysDictTypeServiceImpl implements SysDictTypeService {
         LambdaQueryWrapper<SysDictType> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(dictType != null && !dictType.isEmpty(), SysDictType::getDictType, dictType)
                .like(dictName != null && !dictName.isEmpty(), SysDictType::getDictName, dictName)
-               .orderByDesc(SysDictType::getCreateTime);
+               .orderByDesc(SysDictType::getCreatedAt);
 
         Page<SysDictType> page = dictTypeMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
 

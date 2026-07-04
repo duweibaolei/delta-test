@@ -1,0 +1,25 @@
+node_modules
+dist
+*.local
+.env.local
+.env.*.local
+
+# Log files / 日志文件
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files / 编辑器目录和文件
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Auto-generated / 自动生成
+src/components.d.ts
+src/auto-imports.d.ts

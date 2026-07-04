@@ -37,7 +37,7 @@ public class SysRepositoryServiceImpl implements SysRepositoryService {
     public PageResult<RepositoryVO> pageRepositories(String repoName, int pageNum, int pageSize) {
         LambdaQueryWrapper<SysRepository> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(repoName != null && !repoName.isEmpty(), SysRepository::getRepoName, repoName)
-               .orderByDesc(SysRepository::getCreateTime);
+               .orderByDesc(SysRepository::getCreatedAt);
 
         Page<SysRepository> page = repositoryMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
 

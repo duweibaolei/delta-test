@@ -3,6 +3,8 @@ package com.dwl.common.exception;
 import com.dwl.common.result.ErrorCode;
 import lombok.Getter;
 
+import java.io.Serial;
+
 /**
  * 业务异常
  * Business Exception
@@ -21,6 +23,7 @@ public class BusinessException extends RuntimeException {
      * 序列化版本号
      * Serial version UID
      */
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**

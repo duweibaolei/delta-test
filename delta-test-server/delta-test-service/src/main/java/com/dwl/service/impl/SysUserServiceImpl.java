@@ -196,7 +196,7 @@ public class SysUserServiceImpl implements SysUserService {
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(username != null && !username.isEmpty(), SysUser::getUsername, username)
                .eq(status != null, SysUser::getStatus, status)
-               .orderByDesc(SysUser::getCreateTime);
+               .orderByDesc(SysUser::getCreatedAt);
 
         Page<SysUser> page = userMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
 

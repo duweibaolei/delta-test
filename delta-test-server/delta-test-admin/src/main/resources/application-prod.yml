@@ -32,6 +32,13 @@ grpc:
     engine:
       host: engine-svc.deltatest-prod
       port: 9090
+      use-tls: true
+      # 自定义CA证书路径，为空则使用JDK系统默认信任库 / Custom CA cert path, empty = JDK system default trust store
+      trust-cert-path: ${GRPC_TRUST_CERT_PATH:}
+
+# ==================== CORS配置 / CORS Configuration ====================
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
 # ==================== 生产环境日志级别 / Prod Log Level ====================
 logging:
