@@ -46,6 +46,21 @@ public final class SecurityUtil {
     }
 
     /**
+     * 获取当前登录用户ID（字符串形式）
+     * Get current login user ID as String from SecurityContext
+     * <p>
+     * 从Spring Security上下文中提取已认证用户的ID字符串。
+     * Extracts the authenticated user's ID as a string from the Spring Security context.
+     * </p>
+     *
+     * @return 当前登录用户ID字符串，未认证时返回null / Current login user ID string, or null if not authenticated
+     */
+    public static String getCurrentUserIdAsString() {
+        Long userId = getCurrentUserId();
+        return userId != null ? userId.toString() : null;
+    }
+
+    /**
      * 获取当前登录用户名
      * Get current login username from SecurityContext
      * <p>

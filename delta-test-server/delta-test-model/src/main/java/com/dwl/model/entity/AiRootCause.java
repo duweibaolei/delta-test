@@ -1,14 +1,14 @@
 package com.dwl.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.dwl.common.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
  * <p>
  * 对应表 ai_root_cause，记录AI对失败用例的根因分析结果。
  * Maps to table ai_root_cause, recording AI root cause analysis results for failed cases.
- * 此表无 updated_at 字段，不继承 BaseEntity。
- * This table has no updated_at column and does not extend BaseEntity.
+ * 继承 BaseEntity，包含公共审计字段。
+ * Extends BaseEntity, including common audit fields.
  * </p>
  *
  * @author DeltaTest
@@ -27,24 +27,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @TableName("ai_root_cause")
 @Schema(description = "AI根因分析 / AI Root Cause Analysis")
-public class AiRootCause implements Serializable {
-
-    /**
-     * 序列化版本号
-     * Serial version UID
-     */
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键ID
-     * Primary key ID
-     */
-    @Schema(description = "主键ID / Primary key ID", example = "1")
-    @TableId(type = IdType.AUTO)
-    private Long id;
+public class AiRootCause extends BaseEntity {
 
     /**
      * 执行记录ID
@@ -87,14 +73,6 @@ public class AiRootCause implements Serializable {
      */
     @Schema(description = "AI模型版本 / AI model version", example = "gpt-4o")
     private String modelVersion;
-
-    /**
-     * 逻辑删除标志: 0-未删除 1-已删除
-     * Logical delete flag: 0-not deleted, 1-deleted
-     */
-    @Schema(description = "逻辑删除标志: 0-未删除 1-已删除 / Logical delete flag: 0-not deleted, 1-deleted")
-    @TableLogic
-    private Integer isDeleted;
 
     /**
      * 分析时间

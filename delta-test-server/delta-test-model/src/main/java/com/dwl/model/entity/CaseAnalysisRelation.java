@@ -1,15 +1,13 @@
 package com.dwl.model.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.dwl.common.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 用例与变更分析关联实体
@@ -17,8 +15,8 @@ import java.time.LocalDateTime;
  * <p>
  * 对应表 case_analysis_relation，标记用例受变更分析影响的程度和处理状态。
  * Maps to table case_analysis_relation, marking the extent and resolution status of cases affected by change analysis.
- * 此表无 updated_at 字段，不继承 BaseEntity，仅包含 createdAt。
- * This table has no updated_at column and does not extend BaseEntity, only contains createdAt.
+ * 继承 BaseEntity，包含公共审计字段。
+ * Extends BaseEntity, including common audit fields.
  * </p>
  *
  * @author DeltaTest
@@ -27,24 +25,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @TableName("case_analysis_relation")
 @Schema(description = "用例与变更分析关联 / Case-Analysis Association")
-public class CaseAnalysisRelation implements Serializable {
-
-    /**
-     * 序列化版本号
-     * Serial version UID
-     */
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键ID
-     * Primary key ID
-     */
-    @Schema(description = "主键ID / Primary key ID", example = "1")
-    @TableId(type = IdType.AUTO)
-    private Long id;
+public class CaseAnalysisRelation extends BaseEntity {
 
     /**
      * 用例ID
@@ -73,20 +57,4 @@ public class CaseAnalysisRelation implements Serializable {
      */
     @Schema(description = "是否已处理: 1-是 0-否 / Whether resolved", example = "0")
     private Integer resolved;
-
-    /**
-     * 逻辑删除标志: 0-未删除 1-已删除
-     * Logical delete flag: 0-not deleted, 1-deleted
-     */
-    @Schema(description = "逻辑删除标志: 0-未删除 1-已删除 / Logical delete flag: 0-not deleted, 1-deleted")
-    @TableLogic
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     * Created timestamp
-     */
-    @Schema(description = "创建时间 / Created timestamp")
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdAt;
 }

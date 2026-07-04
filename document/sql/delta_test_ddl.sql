@@ -11,7 +11,7 @@
 
 -- 1.1 系统用户
 CREATE TABLE sys_user (
-    id              BIGINT          NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+    id              BIGINT          NOT NULL COMMENT '用户ID',
     username        VARCHAR(64)     NOT NULL COMMENT '用户名',
     password        VARCHAR(128)    NOT NULL COMMENT '密码(加密)',
     real_name       VARCHAR(64)     DEFAULT NULL COMMENT '真实姓名',
@@ -30,7 +30,7 @@ CREATE TABLE sys_user (
 
 -- 1.2 系统角色
 CREATE TABLE sys_role (
-    id          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '角色ID',
+    id          BIGINT      NOT NULL COMMENT '角色ID',
     role_code   VARCHAR(64) NOT NULL COMMENT '角色编码',
     role_name   VARCHAR(64) NOT NULL COMMENT '角色名称',
     description VARCHAR(256) DEFAULT NULL COMMENT '描述',
@@ -45,7 +45,7 @@ CREATE TABLE sys_role (
 
 -- 1.3 系统权限
 CREATE TABLE sys_permission (
-    id              BIGINT      NOT NULL AUTO_INCREMENT COMMENT '权限ID',
+    id              BIGINT      NOT NULL COMMENT '权限ID',
     permission_code VARCHAR(128) NOT NULL COMMENT '权限编码',
     permission_name VARCHAR(64)  NOT NULL COMMENT '权限名称',
     resource_type   VARCHAR(32)  NOT NULL COMMENT '资源类型: menu-菜单 button-按钮 api-接口',
@@ -63,10 +63,12 @@ CREATE TABLE sys_permission (
 
 -- 1.4 用户角色关联
 CREATE TABLE sys_user_role (
-    id          BIGINT  NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id          BIGINT  NOT NULL COMMENT '用户角色关联ID',
     user_id     BIGINT  NOT NULL COMMENT '用户ID',
     role_id     BIGINT  NOT NULL COMMENT '角色ID',
     is_deleted  TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_user_role (user_id, role_id),
     KEY idx_role_id (role_id),
@@ -75,10 +77,12 @@ CREATE TABLE sys_user_role (
 
 -- 1.5 角色权限关联
 CREATE TABLE sys_role_permission (
-    id            BIGINT  NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id            BIGINT  NOT NULL COMMENT '角色权限关联ID',
     role_id       BIGINT  NOT NULL COMMENT '角色ID',
     permission_id BIGINT  NOT NULL COMMENT '权限ID',
     is_deleted    TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_role_permission (role_id, permission_id),
     KEY idx_permission_id (permission_id),
@@ -87,7 +91,7 @@ CREATE TABLE sys_role_permission (
 
 -- 1.6 环境配置
 CREATE TABLE sys_environment (
-    id              BIGINT      NOT NULL AUTO_INCREMENT COMMENT '环境ID',
+    id              BIGINT      NOT NULL COMMENT '环境ID',
     env_code        VARCHAR(64) NOT NULL COMMENT '环境编码: test/staging/production',
     env_name        VARCHAR(64) NOT NULL COMMENT '环境名称',
     base_url        VARCHAR(256) NOT NULL COMMENT '基础URL',
@@ -103,7 +107,7 @@ CREATE TABLE sys_environment (
 
 -- 1.7 Git仓库配置
 CREATE TABLE sys_repository (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '仓库ID',
+    id              BIGINT       NOT NULL COMMENT '仓库ID',
     repo_name       VARCHAR(128) NOT NULL COMMENT '仓库名称',
     repo_url        VARCHAR(512) NOT NULL COMMENT '仓库地址',
     branch_default  VARCHAR(128) NOT NULL DEFAULT 'main' COMMENT '默认分支',
@@ -122,7 +126,7 @@ CREATE TABLE sys_repository (
 
 -- 1.8 字典类型
 CREATE TABLE sys_dict_type (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '字典类型ID',
+    id              BIGINT       NOT NULL COMMENT '字典类型ID',
     dict_type       VARCHAR(64)  NOT NULL COMMENT '字典类型编码(唯一标识)',
     dict_name       VARCHAR(128) NOT NULL COMMENT '字典类型名称',
     description     VARCHAR(256) DEFAULT NULL COMMENT '描述',
@@ -138,7 +142,7 @@ CREATE TABLE sys_dict_type (
 
 -- 1.9 字典数据
 CREATE TABLE sys_dict_data (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '字典数据ID',
+    id              BIGINT       NOT NULL COMMENT '字典数据ID',
     dict_type       VARCHAR(64)  NOT NULL COMMENT '所属字典类型编码',
     dict_label      VARCHAR(128) NOT NULL COMMENT '字典标签(显示值)',
     dict_value      VARCHAR(128) NOT NULL COMMENT '字典值(实际值)',
@@ -163,7 +167,7 @@ CREATE TABLE sys_dict_data (
 
 -- 2.1 Git提交记录
 CREATE TABLE git_commit (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '提交记录ID',
+    id              BIGINT       NOT NULL COMMENT '提交记录ID',
     repo_id         BIGINT       NOT NULL COMMENT '所属仓库ID',
     commit_hash     VARCHAR(40)  NOT NULL COMMENT 'Commit Hash(SHA-1)',
     branch          VARCHAR(128) NOT NULL COMMENT '分支名',
@@ -177,6 +181,7 @@ CREATE TABLE git_commit (
     trigger_source  VARCHAR(16)  NOT NULL DEFAULT 'auto' COMMENT '触发来源: auto-Webhook自动 manual-手动触发',
     is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_repo_hash (repo_id, commit_hash),
     KEY idx_branch (repo_id, branch),
@@ -186,7 +191,7 @@ CREATE TABLE git_commit (
 
 -- 2.2 变更分析
 CREATE TABLE change_analysis (
-    id                  BIGINT       NOT NULL AUTO_INCREMENT COMMENT '分析ID',
+    id                  BIGINT       NOT NULL COMMENT '分析ID',
     analysis_no         VARCHAR(32)  NOT NULL COMMENT '分析编号: CA-YYYYMMDD-NNNN',
     repo_id             BIGINT       NOT NULL COMMENT '仓库ID',
     branch              VARCHAR(128) NOT NULL COMMENT '分支名',
@@ -215,10 +220,12 @@ CREATE TABLE change_analysis (
 
 -- 2.3 变更分析与提交关联
 CREATE TABLE change_analysis_commit (
-    id              BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id              BIGINT NOT NULL COMMENT '变更分析与提交关联ID',
     analysis_id     BIGINT NOT NULL COMMENT '分析ID',
     commit_id       BIGINT NOT NULL COMMENT '提交记录ID',
     is_deleted      TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_analysis_commit (analysis_id, commit_id),
     KEY idx_commit_id (commit_id),
@@ -227,7 +234,7 @@ CREATE TABLE change_analysis_commit (
 
 -- 2.4 影响范围
 CREATE TABLE affected_scope (
-    id              BIGINT      NOT NULL AUTO_INCREMENT COMMENT '影响范围ID',
+    id              BIGINT      NOT NULL COMMENT '影响范围ID',
     analysis_id     BIGINT      NOT NULL COMMENT '所属分析ID',
     scope_type      VARCHAR(32) NOT NULL COMMENT '范围类型: frontend_page/frontend_component/backend_api/backend_service/database_table',
     scope_name      VARCHAR(256) NOT NULL COMMENT '范围名称',
@@ -235,6 +242,7 @@ CREATE TABLE affected_scope (
     selected_for_regression TINYINT NOT NULL DEFAULT 1 COMMENT '是否选入回归范围: 1-是 0-否',
     is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     created_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     KEY idx_analysis_id (analysis_id),
     KEY idx_scope_type (scope_type),
@@ -248,7 +256,7 @@ CREATE TABLE affected_scope (
 
 -- 3.1 页面元素对象库
 CREATE TABLE page_element (
-    id                  BIGINT       NOT NULL AUTO_INCREMENT COMMENT '元素ID',
+    id                  BIGINT       NOT NULL COMMENT '元素ID',
     element_code        VARCHAR(128) NOT NULL COMMENT '元素编码(别名)',
     element_name        VARCHAR(128) NOT NULL COMMENT '元素名称',
     page_name           VARCHAR(128) DEFAULT NULL COMMENT '所属页面',
@@ -271,7 +279,7 @@ CREATE TABLE page_element (
 
 -- 3.2 测试用例
 CREATE TABLE test_case (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '用例ID',
+    id              BIGINT       NOT NULL COMMENT '用例ID',
     case_no         VARCHAR(32)  NOT NULL COMMENT '用例编号: TC-NNNN',
     case_name       VARCHAR(256) NOT NULL COMMENT '用例名称',
     module_name     VARCHAR(64)  DEFAULT NULL COMMENT '所属模块',
@@ -299,7 +307,7 @@ CREATE TABLE test_case (
 
 -- 3.3 用例步骤
 CREATE TABLE case_step (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '步骤ID',
+    id              BIGINT       NOT NULL COMMENT '步骤ID',
     case_id         BIGINT       NOT NULL COMMENT '用例ID',
     step_order      INT          NOT NULL COMMENT '步骤顺序(从1开始)',
     element_id      BIGINT       DEFAULT NULL COMMENT '操作元素ID',
@@ -320,7 +328,7 @@ CREATE TABLE case_step (
 
 -- 3.4 用例版本历史
 CREATE TABLE case_version (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '版本ID',
+    id              BIGINT       NOT NULL COMMENT '版本ID',
     case_id         BIGINT       NOT NULL COMMENT '用例ID',
     version         INT          NOT NULL COMMENT '版本号',
     snapshot_json   JSON         NOT NULL COMMENT '用例快照(含步骤完整数据)',
@@ -328,6 +336,7 @@ CREATE TABLE case_version (
     modified_by     BIGINT       DEFAULT NULL COMMENT '修改人ID',
     is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_case_version (case_id, version),
     KEY idx_case_id (case_id),
@@ -336,11 +345,12 @@ CREATE TABLE case_version (
 
 -- 3.5 用例标签
 CREATE TABLE case_tag (
-    id          BIGINT      NOT NULL AUTO_INCREMENT COMMENT '标签ID',
+    id          BIGINT      NOT NULL COMMENT '标签ID',
     tag_name    VARCHAR(64) NOT NULL COMMENT '标签名称',
     tag_color   VARCHAR(16) DEFAULT NULL COMMENT '标签颜色',
     is_deleted  TINYINT     NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     created_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at  DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_tag_name (tag_name),
     KEY idx_is_deleted (is_deleted)
@@ -348,10 +358,12 @@ CREATE TABLE case_tag (
 
 -- 3.6 用例标签关联
 CREATE TABLE case_tag_relation (
-    id      BIGINT NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id      BIGINT NOT NULL COMMENT '用例标签关联ID',
     case_id BIGINT NOT NULL COMMENT '用例ID',
     tag_id  BIGINT NOT NULL COMMENT '标签ID',
     is_deleted  TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_case_tag (case_id, tag_id),
     KEY idx_tag_id (tag_id),
@@ -360,7 +372,7 @@ CREATE TABLE case_tag_relation (
 
 -- 3.7 业务链路
 CREATE TABLE business_link (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '链路ID',
+    id              BIGINT       NOT NULL COMMENT '链路ID',
     link_no         VARCHAR(32)  NOT NULL COMMENT '链路编号: BL-NNNN',
     link_name       VARCHAR(256) NOT NULL COMMENT '链路名称',
     description     TEXT         DEFAULT NULL COMMENT '链路描述',
@@ -380,7 +392,7 @@ CREATE TABLE business_link (
 
 -- 3.8 链路节点
 CREATE TABLE link_node (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '节点ID',
+    id              BIGINT       NOT NULL COMMENT '节点ID',
     link_id         BIGINT       NOT NULL COMMENT '所属链路ID',
     node_order      INT          NOT NULL COMMENT '节点顺序',
     node_type       VARCHAR(32)  NOT NULL COMMENT '节点类型: frontend_page/backend_api/backend_service/database_table',
@@ -389,6 +401,7 @@ CREATE TABLE link_node (
     assert_rule     VARCHAR(512) DEFAULT NULL COMMENT '断言规则',
     is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     KEY idx_link_id_order (link_id, node_order),
     KEY idx_is_deleted (is_deleted)
@@ -396,10 +409,12 @@ CREATE TABLE link_node (
 
 -- 3.9 用例与链路关联
 CREATE TABLE case_link_relation (
-    id          BIGINT  NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id          BIGINT  NOT NULL COMMENT '用例与链路关联ID',
     case_id     BIGINT  NOT NULL COMMENT '用例ID',
     link_id     BIGINT  NOT NULL COMMENT '链路ID',
     is_deleted  TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_case_link (case_id, link_id),
     KEY idx_link_id (link_id),
@@ -408,13 +423,14 @@ CREATE TABLE case_link_relation (
 
 -- 3.10 用例与变更分析关联(受影响标记)
 CREATE TABLE case_analysis_relation (
-    id              BIGINT  NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id              BIGINT  NOT NULL COMMENT '用例与变更分析关联ID',
     case_id         BIGINT  NOT NULL COMMENT '用例ID',
     analysis_id     BIGINT  NOT NULL COMMENT '分析ID',
     affected_type   VARCHAR(32) NOT NULL DEFAULT 'impacted' COMMENT '影响类型: impacted-受影响 need_update-需更新断言 need_new-需新增',
     resolved        TINYINT NOT NULL DEFAULT 0 COMMENT '是否已处理: 1-是 0-否',
     is_deleted      TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_case_analysis (case_id, analysis_id),
     KEY idx_analysis_id (analysis_id),
@@ -424,7 +440,7 @@ CREATE TABLE case_analysis_relation (
 
 -- 3.11 测试数据集
 CREATE TABLE test_data_set (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '数据集ID',
+    id              BIGINT       NOT NULL COMMENT '数据集ID',
     set_name        VARCHAR(128) NOT NULL COMMENT '数据集名称',
     description     VARCHAR(256) DEFAULT NULL COMMENT '描述',
     data_json       JSON         NOT NULL COMMENT '数据内容(键值对JSON)',
@@ -440,7 +456,7 @@ CREATE TABLE test_data_set (
 
 -- 3.12 环境变量
 CREATE TABLE env_variable (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '变量ID',
+    id              BIGINT       NOT NULL COMMENT '变量ID',
     env_id          BIGINT       DEFAULT NULL COMMENT '环境ID(NULL表示全局)',
     var_key         VARCHAR(128) NOT NULL COMMENT '变量键',
     var_value       VARCHAR(512) NOT NULL COMMENT '变量值',
@@ -460,7 +476,7 @@ CREATE TABLE env_variable (
 
 -- 4.1 执行节点
 CREATE TABLE exec_node (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '节点ID',
+    id              BIGINT       NOT NULL COMMENT '节点ID',
     node_name       VARCHAR(64)  NOT NULL COMMENT '节点名称',
     node_host       VARCHAR(256) NOT NULL COMMENT '节点地址',
     node_port       INT          NOT NULL COMMENT '节点端口',
@@ -478,7 +494,7 @@ CREATE TABLE exec_node (
 
 -- 4.2 测试任务
 CREATE TABLE test_task (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '任务ID',
+    id              BIGINT       NOT NULL COMMENT '任务ID',
     task_no         VARCHAR(32)  NOT NULL COMMENT '任务编号: TK-NNNN',
     task_name       VARCHAR(256) NOT NULL COMMENT '任务名称',
     trigger_source  VARCHAR(16)  NOT NULL DEFAULT 'auto' COMMENT '触发来源: auto-变更自动 manual-手动 scheduled-定时',
@@ -512,10 +528,12 @@ CREATE TABLE test_task (
 
 -- 4.3 任务与用例关联
 CREATE TABLE task_case_relation (
-    id              BIGINT  NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id              BIGINT  NOT NULL COMMENT '任务与用例关联ID',
     task_id         BIGINT  NOT NULL COMMENT '任务ID',
     case_id         BIGINT  NOT NULL COMMENT '用例ID',
     is_deleted      TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_task_case (task_id, case_id),
     KEY idx_case_id (case_id),
@@ -524,7 +542,7 @@ CREATE TABLE task_case_relation (
 
 -- 4.4 任务执行记录(单条用例的执行实例)
 CREATE TABLE task_execution (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '执行ID',
+    id              BIGINT       NOT NULL COMMENT '执行ID',
     task_id         BIGINT       NOT NULL COMMENT '任务ID',
     case_id         BIGINT       NOT NULL COMMENT '用例ID',
     node_id         BIGINT       DEFAULT NULL COMMENT '执行节点ID',
@@ -550,7 +568,7 @@ CREATE TABLE task_execution (
 
 -- 4.5 执行步骤结果
 CREATE TABLE execution_step_result (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id              BIGINT       NOT NULL COMMENT '执行步骤结果ID',
     execution_id    BIGINT       NOT NULL COMMENT '执行记录ID',
     step_order      INT          NOT NULL COMMENT '步骤序号',
     action_type     VARCHAR(32)  NOT NULL COMMENT '动作类型',
@@ -562,6 +580,7 @@ CREATE TABLE execution_step_result (
     locator_used    VARCHAR(32)  DEFAULT NULL COMMENT '使用的定位策略: primary/backup',
     is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     KEY idx_execution_id (execution_id),
     KEY idx_execution_step (execution_id, step_order),
@@ -575,7 +594,7 @@ CREATE TABLE execution_step_result (
 
 -- 5.1 测试报告
 CREATE TABLE test_report (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '报告ID',
+    id              BIGINT       NOT NULL COMMENT '报告ID',
     report_no       VARCHAR(32)  NOT NULL COMMENT '报告编号: RPT-YYYYMMDD-NNNN',
     task_id         BIGINT       NOT NULL COMMENT '关联任务ID',
     report_type     VARCHAR(32)  NOT NULL DEFAULT 'task' COMMENT '报告类型: task-任务报告 link-链路分析报告 change-变更质量报告',
@@ -605,10 +624,12 @@ CREATE TABLE test_report (
 
 -- 5.2 执行结果与报告关联
 CREATE TABLE report_execution_relation (
-    id              BIGINT  NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id              BIGINT  NOT NULL COMMENT '报告与执行结果关联ID',
     report_id       BIGINT  NOT NULL COMMENT '报告ID',
     execution_id    BIGINT  NOT NULL COMMENT '执行记录ID',
     is_deleted      TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_report_execution (report_id, execution_id),
     KEY idx_execution_id (execution_id),
@@ -617,15 +638,17 @@ CREATE TABLE report_execution_relation (
 
 -- 5.3 AI根因分析
 CREATE TABLE ai_root_cause (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id              BIGINT       NOT NULL COMMENT 'AI根因分析ID',
     execution_id    BIGINT       NOT NULL COMMENT '执行记录ID',
     report_id       BIGINT       DEFAULT NULL COMMENT '报告ID',
     possible_cause  TEXT         NOT NULL COMMENT 'AI分析可能原因',
     confidence      INT          NOT NULL DEFAULT 0 COMMENT '置信度(0-100)',
     fix_suggestion  TEXT         DEFAULT NULL COMMENT '修复建议',
     model_version   VARCHAR(32)  DEFAULT NULL COMMENT 'AI模型版本',
-    is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     analyzed_at     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '分析时间',
+    is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     KEY idx_execution_id (execution_id),
     KEY idx_report_id (report_id),
@@ -634,13 +657,15 @@ CREATE TABLE ai_root_cause (
 
 -- 5.4 手动失败原因标记
 CREATE TABLE manual_failure_mark (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id              BIGINT       NOT NULL COMMENT '手动失败标记ID',
     execution_id    BIGINT       NOT NULL COMMENT '执行记录ID',
     failure_reason  VARCHAR(32)  NOT NULL COMMENT '失败原因: bug-业务缺陷 flaky-用例失效 env-环境问题',
     description     TEXT         DEFAULT NULL COMMENT '补充说明',
     marked_by       BIGINT       NOT NULL COMMENT '标记人ID',
-    is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     marked_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '标记时间',
+    is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
+    created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_execution (execution_id),
     KEY idx_failure_reason (failure_reason),
@@ -649,7 +674,7 @@ CREATE TABLE manual_failure_mark (
 
 -- 5.5 缺陷记录
 CREATE TABLE defect_record (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT '缺陷ID',
+    id              BIGINT       NOT NULL COMMENT '缺陷ID',
     defect_no       VARCHAR(32)  NOT NULL COMMENT '缺陷编号: BUG-NNNN',
     defect_title    VARCHAR(256) NOT NULL COMMENT '缺陷标题',
     severity        VARCHAR(16)  NOT NULL DEFAULT 'major' COMMENT '严重程度: critical/major/minor',
@@ -676,7 +701,7 @@ CREATE TABLE defect_record (
 
 -- 5.6 质量趋势统计(日聚合)
 CREATE TABLE quality_daily_stats (
-    id              BIGINT       NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    id              BIGINT       NOT NULL COMMENT '质量日统计ID',
     stat_date       DATE         NOT NULL COMMENT '统计日期',
     total_cases     INT          NOT NULL DEFAULT 0 COMMENT '总用例数',
     total_executed  INT          NOT NULL DEFAULT 0 COMMENT '执行用例数',
@@ -690,6 +715,7 @@ CREATE TABLE quality_daily_stats (
     hybrid_cases    INT          NOT NULL DEFAULT 0 COMMENT '混合来源用例数',
     is_deleted      TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0-未删除 1-已删除',
     created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (id),
     UNIQUE KEY uk_stat_date (stat_date),
     KEY idx_is_deleted (is_deleted)

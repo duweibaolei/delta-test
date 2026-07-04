@@ -65,8 +65,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Long userId = claims.get("userId", Long.class);
 
                 // 设置认证信息 / Set authentication info
+                // principal=userId(Long), credentials=token(String) 以便 SecurityUtil.getCurrentUserId() 正确获取
+                // principal=userId(Long), credentials=token(String) so SecurityUtil.getCurrentUserId() works correctly
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(username, userId, new ArrayList<>());
+                        new UsernamePasswordAuthenticationToken(userId, token, new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (ExpiredJwtException e) {
