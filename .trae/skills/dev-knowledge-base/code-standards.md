@@ -1,4 +1,4 @@
-# 二、代码规范与风格指南
+# 四、代码规范与风格指南
 
 > 本文件定义 DeltaTest 项目所有语言的命名约定、格式化规则、注释规范和 API 注解规范。
 >
@@ -9,12 +9,18 @@
 
 ---
 
-## 2.1 命名约定
+## 4.1 命名约定
 
 | 类别 | 规范 | 示例 |
 |------|------|------|
 | 包名 | 全小写，模块前缀 `com.dwl` | `com.dwl.service.impl` |
 | 前端目录 | kebab-case，领域前缀 | `api/`, `views/login/`, `stores/` |
+| 前端视图 | `src/views/{module}/index.vue` | `views/login/index.vue`, `views/dashboard/index.vue` |
+| 前端布局 | PascalCase | `MainLayout.vue` |
+| 前端Store | kebab-case.ts | `stores/user.ts` → 导出 `useUserStore` |
+| 前端API | kebab-case.ts | `api/auth.ts` → 导出 `loginApi` |
+| 前端路由名 | PascalCase | `Dashboard`, `TestCase`, `Login` |
+| 前端API函数 | camelCase + `Api` 后缀 | `loginApi()`, `refreshTokenApi()` |
 | 类名 | UpperCamelCase + 领域后缀 | `SysUserServiceImpl`, `LoginDTO`, `UserVO` |
 | 方法名 | lowerCamelCase，动词开头 | `getByUsername()`, `createUser()`, `pageUsers()` |
 | 常量 | UPPER_SNAKE_CASE | `LOGICAL_DELETE_DELETED`, `TASK_EXECUTE_KEY` |
@@ -43,7 +49,7 @@
 | C测试文件 | `test_` 前缀 + snake_case | `test_diff_engine.c`, `test_grpc_server.cpp` |
 | CMake target | snake_case | `delta_engine_core`, `delta-test-engine` |
 
-## 2.2 类后缀约定
+## 4.2 类后缀约定
 
 | 后缀 | 含义 | 层级 |
 |------|------|------|
@@ -68,7 +74,7 @@
 | `Result` | C 桥接层返回结构体 | include/bridge.h |
 | `Impl` | C++ gRPC 服务实现类 | src/grpc_server.cpp |
 
-## 2.3 代码格式化规则
+## 4.3 代码格式化规则
 
 **Java 后端：**
 
@@ -99,6 +105,19 @@
 - **类型注解**：所有公共函数必须有类型注解（mypy `strict = true`）
 - **中文标点**：允许 docstring/comment 中使用中文全角标点（Ruff 忽略 RUF001/RUF002/RUF003）
 
+**Vue 前端：**
+
+- **缩进**：2 空格
+- **编码**：UTF-8
+- **TypeScript 严格模式**：strict: true + noUncheckedIndexedAccess
+- **组件风格**：`<script setup lang="ts">` Composition API，禁止 Options API
+- **样式**：`<style scoped lang="less">`，scoped + Less
+- **Pinia**：Composition API 风格（defineStore('name', () => {...})），禁止 Options API
+- **组件自动导入**：unplugin-vue-components + AntDesignVueResolver({ importStyle: 'less' })
+- **API 自动导入**：unplugin-auto-import（Vue/VueRouter/Pinia API）
+- **错误码约定**：1004 = Token 过期，1005 = Token 无效（http.ts 拦截器处理）
+- **路由 meta 约定**：title（中英双语）/icon（Ant Design 图标名）/requiresAuth
+
 **C 计算引擎：**
 
 - **缩进**：4 空格
@@ -112,7 +131,7 @@
 - **import 顺序**：项目头文件 → C 标准库 → 第三方库
 - **CMake 格式**：大写命令（`add_library`），2 空格缩进，注释用 `# ====================`
 
-## 2.4 注释规范（双语注释）
+## 4.4 注释规范（双语注释）
 
 **核心原则**：所有类、接口、公共方法和字段必须有**中英双语注释**。前后端一致。
 
@@ -203,7 +222,7 @@ Performs risk assessment based on change analysis results, returns placeholder d
 - **分隔注释**：`/* ==================== 分区名 / Section Name ==================== */`
 - **C++ 头文件保护**：`#ifdef __cplusplus` 内的函数同样需要 Doxygen 双语注释
 
-## 2.5 Swagger 注解规范
+## 4.5 Swagger 注解规范
 
 ```java
 @Tag(name = "用户管理", description = "用户管理 / User Management")          // Controller级
@@ -213,7 +232,7 @@ Performs risk assessment based on change analysis results, returns placeholder d
 @Parameter(description = "用户ID / User ID", required = true)              // 参数级
 ```
 
-## 2.6 FastAPI 注解规范
+## 4.6 FastAPI 注解规范
 
 ```python
 # 路由级
@@ -239,7 +258,7 @@ class R(BaseModel, Generic[T]):
 
 **注解风格**：`summary` 和 `description` 采用 `"中文 / English"` 格式，Pydantic `Field.description` 同样 `"中文名 / English name"`，与 Java `@Tag`/`@Operation`/`@Schema` 保持一致。
 
-## 2.7 Vue 前端组件与 API 规范
+## 4.7 Vue 前端组件与 API 规范
 
 **组件编写规范：**
 
@@ -271,7 +290,7 @@ class R(BaseModel, Generic[T]):
 | 守卫逻辑 | 全局 `beforeEach` 检查 `useUserStore().isLoggedIn` |
 | 命名路由 | 所有路由必须设置 `name` 属性，编程式导航使用 `name` 而非 `path` |
 
-## 2.8 C 引擎编码规范
+## 4.8 C 引擎编码规范
 
 **模块分层规范：**
 

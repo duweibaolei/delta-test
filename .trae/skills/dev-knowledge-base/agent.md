@@ -1,4 +1,4 @@
-# 十、智能体架构设计
+# 八、智能体架构设计
 
 > 本文件定义 DeltaTest 项目智能体（Agent）模块的架构设计、能力矩阵、集成方案、API 契约与实施路线图。
 >
@@ -10,9 +10,9 @@
 
 ---
 
-## 10.1 架构概述
+## 8.1 架构概述
 
-### 10.1.1 架构选型：Master-Slave 协作模式
+### 8.1.1 架构选型：Master-Slave 协作模式
 
 DeltaTest 智能体采用 **Master-Slave 协作模式**：一个 Master Agent（Orchestrator）作为唯一对外入口，负责意图理解、任务分解、Sub-Agent 调度与结果聚合；5 个 Sub-Agent 各自封装单一 AI 能力，彼此无依赖，只与 Master 通信。
 
@@ -42,7 +42,7 @@ Java Backend (HTTP REST, 5s/60s timeout)
 └───────────────────────────────────────────────┘
 ```
 
-### 10.1.2 Agent 通信协议
+### 8.1.2 Agent 通信协议
 
 | 维度 | 设计 | 说明 |
 |------|------|------|
@@ -51,7 +51,7 @@ Java Backend (HTTP REST, 5s/60s timeout)
 | Sub-Agent 间通信 | **禁止直接通信** | 需要协作的场景由 Master 编排（例如风险分析后调用语义匹配查找关联用例） |
 | Java ↔ Master Agent | HTTP REST（JSON） | 复用现有 5 个端点路径不变，Agent 层为内部增强 |
 
-### 10.1.3 记忆系统
+### 8.1.3 记忆系统
 
 | 类型 | 存储 | 键模式 | 内容 | TTL | 阶段 |
 |------|------|--------|------|-----|------|
@@ -64,9 +64,9 @@ Java Backend (HTTP REST, 5s/60s timeout)
 
 ---
 
-## 10.2 智能体能力矩阵
+## 8.2 智能体能力矩阵
 
-### 10.2.1 Sub-Agent 能力定义
+### 8.2.1 Sub-Agent 能力定义
 
 | 维度 | RiskAnalysisAgent | ChangeSummaryAgent | RootCauseAgent | CaseGenerationAgent | SemanticMatchAgent |
 |------|---|---|---|---|---|
@@ -78,7 +78,7 @@ Java Backend (HTTP REST, 5s/60s timeout)
 | **错误处理** | 降级为基于文件数量的规则引擎 | 降级为文件列表拼接摘要 | 降级为返回错误信息原文 | 降级为返回空步骤模板 | 降级为关键字匹配 |
 | **对应现有代码** | `risk_service.py` + `prompts/risk_assessment.py` | `summary_service.py` + `prompts/summary.py` | `root_cause_service.py` + `prompts/root_cause.py` | `case_gen_service.py` + `prompts/case_generation.py` | `embedding_service.py` |
 
-### 10.2.2 Master Agent 能力定义
+### 8.2.2 Master Agent 能力定义
 
 | 维度 | MasterAgent |
 |------|---|
@@ -90,9 +90,9 @@ Java Backend (HTTP REST, 5s/60s timeout)
 
 ---
 
-## 10.3 与现有系统集成
+## 8.3 与现有系统集成
 
-### 10.3.1 与 Java 后端集成
+### 8.3.1 与 Java 后端集成
 
 | 集成点 | 方式 | 说明 |
 |--------|------|------|
@@ -102,7 +102,7 @@ Java Backend (HTTP REST, 5s/60s timeout)
 | 新增 Java 端点（Phase 3） | `POST /api/agent/chat`、`GET /api/agent/session/{sessionId}` | 对话式 Agent 交互入口 |
 | 新增 DTO | `AgentChatDTO`、`AgentChatVO` | 对话请求/响应数据结构 |
 
-### 10.3.2 与 Python AI 服务集成
+### 8.3.2 与 Python AI 服务集成
 
 扩展 FastAPI 目录结构，新增 `agents/`、`memory/`、`tools/` 目录：
 
@@ -148,7 +148,7 @@ delta-test-ai/app/
 
 **分层原则**：保留 `services/` 层作为对外接口，`agents/` 层作为内部编排层。Service 调用 Agent，而非 Agent 替换 Service，确保 Java 后端的调用方式不变。
 
-### 10.3.3 与 RabbitMQ 管道集成
+### 8.3.3 与 RabbitMQ 管道集成
 
 | 场景 | 触发方式 | 说明 |
 |------|----------|------|
@@ -156,7 +156,7 @@ delta-test-ai/app/
 | Agent 分析异步触发（Phase 2） | 新增队列 `delta.test.agent.trigger` | Java 投递 Agent 分析任务，Python 消费执行 |
 | Agent 结果通知 | 现有 WebSocket 推送 | Agent 分析完成后通过 `TaskProgressWebSocketHandler` 通知前端 |
 
-### 10.3.4 Agent 结果回写数据库
+### 8.3.4 Agent 结果回写数据库
 
 | Agent | 结果写入表 | 映射字段 |
 |-------|-----------|----------|
@@ -169,9 +169,9 @@ delta-test-ai/app/
 
 ---
 
-## 10.4 智能体 API 契约
+## 8.4 智能体 API 契约
 
-### 10.4.1 新增 HTTP 端点
+### 8.4.1 新增 HTTP 端点
 
 | 方法 | 路径 | 说明 | 阶段 |
 |------|------|------|------|
@@ -180,7 +180,7 @@ delta-test-ai/app/
 | `POST` | `/api/agent/trigger` | 触发 Agent 分析任务（异步） | Phase 2 |
 | `GET` | `/api/agent/task/{taskId}/status` | 查询 Agent 任务状态 | Phase 2 |
 
-### 10.4.2 Request/Response DTO
+### 8.4.2 Request/Response DTO
 
 ```python
 class AgentChatRequest(BaseModel):
@@ -211,7 +211,7 @@ class AgentTaskStatusResponse(BaseModel):
     results: dict = Field(default_factory=dict, description="已完成结果 / Completed results")
 ```
 
-### 10.4.3 WebSocket 流式通道
+### 8.4.3 WebSocket 流式通道
 
 复用现有 `/ws/task-progress` 端点，新增消息类型：
 
@@ -222,9 +222,9 @@ class AgentTaskStatusResponse(BaseModel):
 
 ---
 
-## 10.5 智能体工具定义
+## 8.5 智能体工具定义
 
-### 10.5.1 工具清单
+### 8.5.1 工具清单
 
 | 工具名 | 类型 | 可用 Agent | 说明 | 实现方式 |
 |--------|------|-----------|------|----------|
@@ -237,7 +237,7 @@ class AgentTaskStatusResponse(BaseModel):
 | `EmbeddingTool` | 计算 | SemanticMatch | 文本向量化 | 本地 sentence-transformers |
 | `MilvusSearchTool` | 检索 | SemanticMatch | 向量相似度搜索 | pymilvus 客户端 |
 
-### 10.5.2 工具注册与发现机制
+### 8.5.2 工具注册与发现机制
 
 采用**装饰器注册模式**：
 
@@ -256,9 +256,9 @@ class GitDiffTool(BaseTool):
 
 ---
 
-## 10.6 智能体记忆与上下文
+## 8.6 智能体记忆与上下文
 
-### 10.6.1 短期记忆结构（Redis）
+### 8.6.1 短期记忆结构（Redis）
 
 ```json
 {
@@ -276,13 +276,13 @@ class GitDiffTool(BaseTool):
 }
 ```
 
-### 10.6.2 历史模式学习
+### 8.6.2 历史模式学习
 
 - 学习场景：某模块变更 → 常见受影响用例 → 自动提升匹配权重
 - 反馈信号：`ManualFailureMark` 作为人类反馈，训练 Agent 调整分析策略
 - 存储位置：`agent_memory` 表（Phase 3 实现）
 
-### 10.6.3 跨会话知识持久化
+### 8.6.3 跨会话知识持久化
 
 | 持久化目标 | 存储位置 | 说明 |
 |-----------|----------|------|
@@ -293,9 +293,9 @@ class GitDiffTool(BaseTool):
 
 ---
 
-## 10.7 智能体决策逻辑
+## 8.7 智能体决策逻辑
 
-### 10.7.1 意图路由规则
+### 8.7.1 意图路由规则
 
 | 触发场景 | Intent | 调度的 Sub-Agent | 阶段 |
 |----------|--------|-----------------|------|
@@ -305,7 +305,7 @@ class GitDiffTool(BaseTool):
 | 用户输入页面描述 | `case_generation` | CaseGeneration | Phase 2 |
 | 用户对话式提问 | `chat` | Master 自行处理或路由 | Phase 3 |
 
-### 10.7.2 编排策略
+### 8.7.2 编排策略
 
 | 策略 | 场景 | 示例 |
 |------|------|------|
@@ -313,7 +313,7 @@ class GitDiffTool(BaseTool):
 | **并行编排** | Agent 间无依赖 | RiskAnalysis + ChangeSummary（两者独立，可并行执行） |
 | **条件编排** | 满足条件才触发 | 仅当 `risk_level >= medium` 时才触发 SemanticMatch |
 
-### 10.7.3 降级与回退策略
+### 8.7.3 降级与回退策略
 
 | 异常场景 | 降级策略 |
 |----------|----------|
@@ -322,7 +322,7 @@ class GitDiffTool(BaseTool):
 | 工具调用超时 | 跳过该工具，使用已有上下文继续推理 |
 | 多次重试失败 | 标记任务为 `failed`，通知前端人工介入 |
 
-### 10.7.4 Human-in-the-Loop 检查点
+### 8.7.4 Human-in-the-Loop 检查点
 
 | 检查点 | 触发时机 | 用户操作 | 对应字段 |
 |--------|----------|----------|----------|
@@ -333,9 +333,9 @@ class GitDiffTool(BaseTool):
 
 ---
 
-## 10.8 智能体配置
+## 8.8 智能体配置
 
-### 10.8.1 LLM 模型选择
+### 8.8.1 LLM 模型选择
 
 | Agent | 推荐模型 | 原因 |
 |-------|---------|------|
@@ -346,7 +346,7 @@ class GitDiffTool(BaseTool):
 | CaseGenerationAgent | `gpt-4o` | 需要结构化输出生成 |
 | SemanticMatchAgent | 不使用 LLM | 纯向量检索 |
 
-### 10.8.2 参数配置
+### 8.8.2 参数配置
 
 ```python
 # Agent 全局配置 / Agent Global Configuration (app/core/config.py)
@@ -366,7 +366,7 @@ AGENT_ROOT_CAUSE_MODEL: str = ""
 AGENT_CASE_GEN_MODEL: str = ""
 ```
 
-### 10.8.3 超时与重试策略
+### 8.8.3 超时与重试策略
 
 | 配置项 | 值 | 说明 |
 |--------|-----|------|
@@ -377,9 +377,9 @@ AGENT_CASE_GEN_MODEL: str = ""
 
 ---
 
-## 10.9 安全考量
+## 8.9 安全考量
 
-### 10.9.1 Agent 权限边界
+### 8.9.1 Agent 权限边界
 
 | 规则 | 说明 |
 |------|------|
@@ -388,7 +388,7 @@ AGENT_CASE_GEN_MODEL: str = ""
 | Sub-Agent 只能使用声明时可用的 Tool | 不可动态获取未授权 Tool |
 | Master Agent 拥有全部工具权限 | 但不可绕过 Java 后端权限校验 |
 
-### 10.9.2 敏感数据处理
+### 8.9.2 敏感数据处理
 
 | 措施 | 说明 |
 |------|------|
@@ -397,7 +397,7 @@ AGENT_CASE_GEN_MODEL: str = ""
 | 敏感文件脱敏 | 发送到 LLM 前可选脱敏文件路径 |
 | 对话历史精简 | 不存储完整代码内容，仅保留摘要 |
 
-### 10.9.3 审计追踪
+### 8.9.3 审计追踪
 
 所有 Agent 调用记录写入 `agent_tool_call` 表：
 
@@ -414,7 +414,7 @@ AGENT_CASE_GEN_MODEL: str = ""
 
 ---
 
-## 10.10 实施路线图
+## 8.10 实施路线图
 
 ### Phase 1（变更驱动自动闭环）
 

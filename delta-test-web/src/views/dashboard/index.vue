@@ -13,7 +13,7 @@
       </a-col>
       <a-col :span="6">
         <a-card>
-          <a-statistic title="高风险变更 / High Risk" :value="0" value-style="color: #cf1322">
+          <a-statistic title="高风险变更 / High Risk" :value="0" :value-style="{ color: '#cf1322' }">
             <template #prefix><WarningOutlined /></template>
           </a-statistic>
         </a-card>
@@ -66,7 +66,7 @@ import {
 } from '@ant-design/icons-vue'
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .dashboard-page {
   /* 占位，后续迭代填充 / Placeholder, will be filled in later iterations */
 }

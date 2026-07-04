@@ -71,6 +71,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { message } from 'ant-design-vue'
+import type { Rule } from 'ant-design-vue/es/form'
 import { UserOutlined, LockOutlined, ThunderboltOutlined } from '@ant-design/icons-vue'
 import { useUserStore } from '@/stores/user'
 
@@ -88,7 +89,7 @@ const loginForm = reactive({
 })
 
 /** 表单校验规则 / Form validation rules */
-const loginRules = {
+const loginRules: Record<string, Rule[]> = {
   username: [
     { required: true, message: t('usernameRequired'), trigger: 'blur' },
   ],

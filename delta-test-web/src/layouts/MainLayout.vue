@@ -126,8 +126,8 @@ watch(
  * 菜单点击事件
  * Menu click event
  */
-function onMenuClick({ key }: { key: string }): void {
-  router.push(key)
+function onMenuClick({ key }: { key: string | number }): void {
+  router.push(String(key))
 }
 
 /**

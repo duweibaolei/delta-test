@@ -1,4 +1,4 @@
-# 四、开发流程与最佳实践
+# 五、开发流程与最佳实践
 
 > 本文件定义 DeltaTest 项目的构建流程、响应体规范、异常处理策略、分层架构和配置管理。
 >
@@ -9,7 +9,7 @@
 
 ---
 
-## 4.1 构建流程
+## 5.1 构建流程
 
 **Java 后端：**
 
@@ -154,7 +154,7 @@ docker run -d -p 9090:9090 delta-test-engine:1.0.0-skeleton
 - Docker 多阶段构建：`conanio/gcc12`（Conan 安装依赖 + CMake 编译）→ `debian:bookworm-slim`（精简运行）
 - `conanfile.py` 中 `cmake` 工具依赖已注释（使用系统 CMake），避免 Conan 缓存问题
 
-## 4.2 统一响应体规范
+## 5.2 统一响应体规范
 
 所有 API 返回值包装为 `R<T>`：
 
@@ -179,7 +179,7 @@ docker run -d -p 9090:9090 delta-test-engine:1.0.0-skeleton
 | 4xxx | 测试报告模块 |
 | 5xxx | 引擎与 AI 服务 |
 
-## 4.3 异常处理策略
+## 5.3 异常处理策略
 
 ```
 Controller → Service 抛出 BusinessException(ErrorCode)
@@ -195,7 +195,7 @@ Controller → Service 抛出 BusinessException(ErrorCode)
 | `HttpMessageNotReadableException` | 400 | 请求体格式错误 |
 | `Exception` (兜底) | 500 | 内部错误 + 日志堆栈 |
 
-## 4.4 分层架构最佳实践
+## 5.4 分层架构最佳实践
 
 ```
 Controller（入参校验 @Valid + 路由）
@@ -212,7 +212,7 @@ Database
 - **Mapper**：纯数据访问，当前阶段全部继承 `BaseMapper<T>` 零自定义 SQL
 - **Entity→VO 转换**：`BeanUtils.copyProperties()` + 手动补充关联数据
 
-## 4.5 配置管理
+## 5.5 配置管理
 
 ```yaml
 application.yml        ← 基础配置（环境变量占位符 ${VAR:default}）

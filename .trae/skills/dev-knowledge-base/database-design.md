@@ -121,7 +121,7 @@ CREATE TABLE ai_root_cause (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='AI根因分析';
 ```
 
-## 9.6 索引规范
+## 2.6 索引规范
 
 | 规则 | 说明 |
 |------|------|
@@ -131,7 +131,7 @@ CREATE TABLE ai_root_cause (
 | 外键字段建立索引 | 如 `KEY idx_role_id (role_id)` |
 | 不使用数据库外键约束 | 由应用层保证数据一致性 |
 
-## 9.7 通用建表规范
+## 2.7 通用建表规范
 
 | 规则 | 说明 |
 |------|------|
