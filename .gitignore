@@ -26,3 +26,21 @@ dist-ssr
 /.trae/
 /.vscode/
 *target/
+
+# ==================== Python / Python ====================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+ENV/
+*.egg-info/
+*.egg
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
