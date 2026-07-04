@@ -1,361 +1,252 @@
-# DeltaTest - 双模式驱动的 Web 自动化测试平台
-
-[English](#english-version) | 中文
+DeltaTest - 双模式驱动的智能 Web 自动化测试平台
+一款融合 Java + Vue + Python + C 多技术栈的企业级自动化测试平台，支持「变更驱动自动闭环」与「手动录入触发」双模式，覆盖代码变更分析、用例管理、任务调度、执行管控、质量报告全链路。
+既是可落地的测试提效工具，也是多语言协同架构的工程化学习范本。
 
 ---
+📌 目录
+- [项目定位](#项目定位)
+- [核心特性](#核心特性)
+- [技术栈全景](#技术栈全景)
+- [整体架构](#整体架构)
+- [快速开始](#快速开始)
+- [模块说明](#模块说明)
+- [开发路线图](#开发路线图)
+- [文档体系](#文档体系)
 
-## 项目简介
+---
+📌 项目定位
+DeltaTest 是一款面向研发团队的 Web 自动化测试平台，核心定位为双模式驱动的测试全链路闭环系统：
+- 变更驱动模式：通过 Git Webhook 自动感知代码变更，完成差异分析、风险评估、用例匹配、任务执行全流程自动化，实现测试左移
+- 手动触发模式：支持可视化用例管理、手动创建执行任务、生成质量报告，适配常规回归测试场景
+  项目采用分层解耦的多语言架构，兼顾生产落地实用性与架构学习价值，既可以直接用于中小团队测试提效，也可以作为企业级全栈项目的学习参考。
 
-DeltaTest 是一个双模式驱动的 Web 自动化测试平台，支持传统测试用例管理的同时，还集成了 AI 能力来增强测试效率。平台采用微服务架构，后端基于 Spring Boot + MyBatis Plus，前端使用 Vue 3 + TypeScript，AI 服务基于 Python FastAPI 构建。
+---
+✨ 核心特性
+1. 双模式驱动，统一底座
+   自动闭环与手动触发复用同一套用例、任务、执行、报告体系，一套底座覆盖两种业务场景，避免重复建设。
+2. 全链路测试闭环
+   覆盖「代码变更分析 → 风险评估 → 用例匹配 → 任务调度 → 执行管控 → 质量报告 → 根因分析」完整测试生命周期。
+3. 多语言协同架构
+- Java 承载业务调度与数据一致性保障
+- C 语言负责高性能代码差异计算
+- Python 承载 AI 智能分析能力
+- Vue 提供现代化前端交互体验
+  不同语言各司其职，通过标准协议通信，无技术栈绑定。
+4. AI 智能测试赋能
+   内置大模型接入能力，支持：
+- 代码变更风险自动定级
+- 测试用例智能生成
+- 执行失败根因分析
+- 测试报告智能总结
+5. 企业级工程规范
+   严格的单向分层依赖、统一响应体与错误码体系、全链路中英双语注释、标准化命名约定，符合团队协作开发标准。
+6. 实时执行可视化
+   基于 WebSocket 实现任务执行进度、日志、结果的实时推送，前端秒级展示执行状态。
 
-## 核心特性
+---
+🛠️ 技术栈全景
+Java 后端
+分类
+技术选型
+版本
+核心框架
+Spring Boot
+3.4.1
+安全框架
+Spring Security + JWT
+6.x
+ORM 框架
+MyBatis-Plus
+3.5.9
+跨语言通信
+gRPC + Protobuf
+1.69.0
+消息队列
+Spring AMQP (RabbitMQ)
+-
+缓存
+Spring Data Redis (Lettuce)
+-
+对象映射
+MapStruct
+1.6.3
+工具增强
+Lombok + Hutool
+1.18.36 / 5.8.34
+API 文档
+SpringDoc OpenAPI
+2.8.3
+Vue 前端
+分类
+技术选型
+版本
+核心框架
+Vue 3 (Composition API)
+3.5.x
+构建工具
+Vite
+6.x
+类型系统
+TypeScript
+5.8.x
+UI 组件库
+Ant Design Vue
+4.x
+状态管理
+Pinia
+2.x
+路由管理
+Vue Router
+4.x
+HTTP 客户端
+Axios
+1.x
+代码规范
+ESLint + Prettier
+9.x / 3.x
+Python AI 服务
+分类
+技术选型
+版本
+Web 框架
+FastAPI
+0.115+
+ASGI 服务器
+Uvicorn
+0.34+
+数据校验
+Pydantic
+2.10+
+配置管理
+pydantic-settings
+2.7+
+包管理
+uv
+0.11+
+代码规范
+Ruff
+0.9+
+类型检查
+mypy (strict 模式)
+1.14+
+测试框架
+pytest
+8.3+
+基础设施
+- 数据库：MySQL 8.x
+- 缓存：Redis 7.x
+- 消息队列：RabbitMQ 3.x
+- 对象存储：MinIO
+- 向量数据库：Milvus（规划中）
 
-- **双模式测试驱动**：支持传统手工测试用例管理和 AI 辅助测试
-- **智能用例生成**：基于页面描述自动生成测试步骤与断言
-- **变更影响分析**：分析代码变更的影响范围并评估风险
-- **根因分析**：智能分析测试失败的可能原因
-- **任务调度**：支持定时和触发式的测试任务执行
-- **实时 WebSocket 推送**：测试进度和日志实时推送
-- **完整的权限体系**：基于 RBAC 的用户和角色管理
+---
+🏗️ 整体架构
+模块依赖关系
+严格遵循单向向下依赖原则，无循环依赖，各模块可独立编译与扩展：
+delta-test-admin (启动入口)
+→ delta-test-web (Web表现层)
+→ delta-test-service (业务逻辑层)
+→ delta-test-dao (数据访问层)
+→ delta-test-model (数据模型层)
+→ delta-test-common (通用基础设施)
 
-## 技术架构
+    delta-test-grpc-client (跨语言通信)
+    delta-test-mq (消息队列模块)
+核心数据流
+变更驱动自动链路
+Git Webhook → Java Webhook接口 → gRPC调用C引擎计算差异
+→ Python AI风险评估 → 自动匹配用例 → 生成执行任务
+→ RabbitMQ分发任务 → Playwright执行节点消费
+→ 结果/日志回传MQ → WebSocket实时推送前端
+手动触发链路
+Vue前端 → HTTP REST → Java后端CRUD管理
+→ 手动创建任务 → RabbitMQ分发 → 执行节点执行
+→ 结果回传 → 生成质量报告 → 前端可视化展示
 
-### 后端技术栈
-
-| 组件 | 技术 |
-|------|------|
-| 框架 | Spring Boot 3.x |
-| 数据库 | MySQL + MyBatis Plus |
-| 消息队列 | RabbitMQ |
-| 认证 | JWT + Spring Security |
-| API 文档 | Swagger (OpenAPI 3.0) |
-| 远程调用 | gRPC |
-
-### 前端技术栈
-
-| 组件 | 技术 |
-|------|------|
-| 框架 | Vue 3 + Composition API |
-| 语言 | TypeScript |
-| 构建工具 | Vite |
-| 状态管理 | Pinia |
-| HTTP 客户端 | Axios |
-| UI 组件 | Ant Design Vue |
-
-### AI 服务技术栈
-
-| 组件 | 技术 |
-|------|------|
-| 框架 | FastAPI |
-| 语言 | Python 3.12 |
-| 包管理 | UV |
-| 容器化 | Docker |
-
-## 项目结构
-
-```
-delta-test/
-├── delta-test-ai/                 # AI 服务 (Python FastAPI)
-│   ├── app/
-│   │   ├── api/                   # API 路由
-│   │   ├── core/                  # 核心配置
-│   │   ├── models/                # 数据模型
-│   │   ├── prompts/               # AI 提示词
-│   │   ├── services/              # 业务服务
-│   │   └── utils/                 # 工具类
-│   ├── tests/                     # 测试用例
-│   ├── Dockerfile
-│   └── docker-compose.yml
-│
-├── delta-test-server/             # 后端服务 (Java Spring Boot)
-│   ├── delta-test-admin/          # 主应用入口
-│   ├── delta-test-common/         # 公共组件
-│   ├── delta-test-dao/            # 数据访问层
-│   ├── delta-test-grpc-client/    # gRPC 客户端
-│   ├── delta-test-model/          # 数据模型
-│   ├── delta-test-mq/             # 消息队列
-│   ├── delta-test-service/        # 业务服务层
-│   └── delta-test-web/            # Web 控制层
-│
-├── delta-test-web/                # 前端应用 (Vue 3)
-│   ├── src/
-│   │   ├── api/                   # API 接口
-│   │   ├── assets/                # 静态资源
-│   │   ├── components/            # 公共组件
-│   │   ├── layouts/               # 布局组件
-│   │   ├── router/                # 路由配置
-│   │   ├── stores/                # 状态管理
-│   │   ├── utils/                 # 工具函数
-│   │   └── views/                 # 页面视图
-│   └── package.json
-│
-└── document/                      # 文档
-    ├── archetype/                 # UI 原型
-    └── sql/                       # 数据库脚本
-```
-
-## 快速开始
-
-### 前置要求
-
+---
+🚀 快速开始
+环境要求
 - JDK 17+
-- Maven 3.8+
-- Node.js 18+
-- pnpm 8+
-- MySQL 8.0+
-- RabbitMQ 3.12+
+- Node.js 18+ / pnpm 10.x
+- Python 3.12+ / uv
+- Docker & Docker Compose（推荐，一键启动依赖）
+1. 一键启动基础设施
+   使用项目根目录 docker-compose.yml 一键启动 MySQL、Redis、RabbitMQ 等依赖：
+   docker-compose up -d
+2. 启动 Java 后端
+# 编译全项目
+mvn clean compile
 
-### 后端服务启动
-
-1. 创建数据库并执行 SQL 脚本：
-
-```bash
-mysql -u root -p < document/sql/delta_test_ddl.sql
-```
-
-2. 修改配置文件 `delta-test-server/delta-test-admin/src/main/resources/application-dev.yml`，配置数据库和 Redis 连接信息。
-
-3. 编译并启动后端服务：
-
-```bash
-cd delta-test-server
-mvn clean install -DskipTests
+# 启动应用
 cd delta-test-admin
-java -jar target/delta-test-admin.jar
-```
-
-服务启动后访问 `http://localhost:8080`
-
-### AI 服务启动
-
-```bash
-cd delta-test-ai
-
-# 安装依赖
-uv sync
-
-# 启动服务
-uv run uvicorn app.main:app --reload
-```
-
-AI 服务启动后访问 `http://localhost:8000`，API 文档位于 `http://localhost:8000/docs`
-
-### 前端启动
-
-```bash
-cd delta-test-web
-
-# 安装依赖
-pnpm install
-
-# 启动开发服务器
-pnpm dev
-```
-
-前端启动后访问 `http://localhost:5173`
-
-### Docker Compose 启动（推荐）
-
-```bash
-# 启动后端和 AI 服务
-cd delta-test-ai
-docker-compose up -d
-
-# 启动前端
-cd delta-test-web
-docker-compose up -d
-```
-
-## API 文档
-
-平台提供完整的 RESTful API 文档，通过 Swagger UI 访问：
-
-- 后端 API：`http://localhost:8080/swagger-ui.html`
-- AI 服务 API：`http://localhost:8000/docs`
-
-### 主要 API 模块
-
-| 模块 | 路径 | 说明 |
-|------|------|------|
-| 认证管理 | `/api/auth/*` | 登录、刷新 Token、登出 |
-| 用户管理 | `/api/system/users` | 用户 CRUD |
-| 角色管理 | `/api/system/roles` | 角色与权限管理 |
-| 环境管理 | `/api/system/environments` | 测试环境配置 |
-| 仓库管理 | `/api/system/repositories` | Git 仓库配置 |
-| 字典管理 | `/api/system/dict-*` | 系统字典 |
-| 用例管理 | `/api/case/*` | 测试用例管理 |
-| 任务管理 | `/api/task/*` | 测试任务调度 |
-| 报告管理 | `/api/report/*` | 测试报告 |
-| AI 服务 | `/api/*-generation`, `/api/risk-assessment`, `/api/root-cause`, `/api/summary` | AI 能力接口 |
-
-## 核心数据模型
-
-### 测试用例 (TestCase)
-
-```java
-- id: Long              // 主键
-- caseName: String      // 用例名称
-- caseDesc: String      // 用例描述
-- caseStatus: CaseStatus    // 用例状态
-- sourceType: SourceType    // 来源类型
-- priority: Integer     // 优先级
-- tags: List<CaseTag>  // 标签
-- steps: List<CaseStep>    // 测试步骤
-- createBy: Long        // 创建人
-- createTime: LocalDateTime  // 创建时间
-- updateTime: LocalDateTime  // 更新时间
-- deleted: Integer      // 逻辑删除
-```
-
-### 测试任务 (TestTask)
-
-```java
-- id: Long              // 主键
-- taskName: String      // 任务名称
-- taskDesc: String     // 任务描述
-- taskStatus: TaskStatus   // 任务状态
-- triggerSource: TriggerSource  // 触发来源
-- envId: Long          // 环境 ID
-- execConfig: ExecConfig    // 执行配置
-- caseIds: List<Long>  // 关联用例
-- createBy: Long       // 创建人
-- createTime: LocalDateTime  // 创建时间
-```
-
-### 变更分析 (ChangeAnalysis)
-
-```java
-- id: Long              // 主键
-- repoId: Long          // 仓库 ID
-- branch: String        // 分支
-- commitHash: String    // 提交哈希
-- changeFiles: String   // 变更文件列表
-- riskLevel: RiskLevel  // 风险等级
-- aiSummary: String     // AI 分析摘要
-- affectedScopes: List<AffectedScope>  // 影响范围
-- createTime: LocalDateTime  // 创建时间
-```
-
-## AI 能力
-
-### 1. 用例生成
-
-根据页面 URL 和描述自动生成测试步骤和断言。
-
-```bash
-POST /api/case-generation
-{
-  "pageUrl": "https://example.com/login",
-  "pageDescription": "用户登录页面，包含用户名、密码输入框和登录按钮",
-  "requirement": "验证登录功能正常"
-}
-```
-
-### 2. 风险评估
-
-基于代码变更分析结果进行风险评估。
-
-```bash
-POST /api/risk-assessment
-{
-  "changedFiles": ["src/main/java/com/example/UserService.java"],
-  "changeDescription": "修改了用户密码加密逻辑"
-}
-```
-
-### 3. 根因分析
-
-分析测试失败的可能原因。
-
-```bash
-POST /api/root-cause
-{
-  "caseName": "用户登录测试",
-  "errorMessage": "ElementClickInterceptedException",
-  "executionLog": "..."
-}
-```
-
-### 4. 变更摘要
-
-生成变更说明与测试建议。
-
-```bash
-POST /api/summary
-{
-  "changedFiles": ["src/main/java/..."],
-  "diffContent": "..."
-}
-```
-
-## 消息队列
-
-平台使用 RabbitMQ 实现异步任务处理，主要队列：
-
-| 队列名 | 说明 |
-|--------|------|
-| task.execute.queue | 任务执行队列 |
-| task.result.queue | 任务结果队列 |
-| task.log.queue | 任务日志队列 |
-
-## 许可证
-
-本项目基于 MIT 许可证开源，详见 [LICENSE](./LICENSE) 文件。
+mvn spring-boot:run
+- 后端地址：http://localhost:8080
+- API 文档：http://localhost:8080/swagger-ui.html
+3. 启动 Vue 前端
+   cd delta-test-web
+   pnpm install
+   pnpm dev
+- 前端地址：http://localhost:5173
+- 默认账号：admin / admin123
+4. 启动 Python AI 服务
+   cd delta-test-ai
+   uv sync --extra dev
+   uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+- AI 服务地址：http://localhost:8000
+- 接口文档：http://localhost:8000/docs
 
 ---
+📂 模块说明
+1. Java 后端（delta-test-server）
+   8 个 Maven 子模块的分层单体架构：
+- delta-test-common：通用基类、异常、结果封装、工具类、常量枚举
+- delta-test-model：数据库实体、DTO、VO 纯 POJO 定义
+- delta-test-dao：MyBatis-Plus Mapper 数据访问层
+- delta-test-service：业务接口与实现、事务控制
+- delta-test-web：REST 控制器、安全配置、WebSocket、接口文档
+- delta-test-grpc-client：C 语言计算引擎 gRPC 客户端
+- delta-test-mq：RabbitMQ 生产者、消费者、消息体定义
+- delta-test-admin：Spring Boot 启动入口、配置文件
+2. Vue 前端（delta-test-web）
+   标准前后端分离工程化架构：
+- views/：页面组件，覆盖工作台、变更分析、用例管理、任务中心、质量报告
+- api/：与后端接口一一对应的 API 调用层
+- stores/：Pinia 状态管理，用户认证与 Token 持久化
+- router/：路由配置与全局权限守卫
+- utils/：Axios 封装、通用工具函数
+3. Python AI 服务（delta-test-ai）
+   独立解耦的 AI 能力服务：
+- app/api/：FastAPI 路由，风险评估、用例生成、根因分析等接口
+- app/services/：AI 业务逻辑实现
+- app/prompts/：大模型 Prompt 模板
+- app/core/：LLM 封装、配置管理
+- app/models/：请求 / 响应 DTO、枚举定义
 
-## English Version
+---
+🗺️ 开发路线图
+Phase 1 核心闭环（进行中）
+- 手动测试全链路闭环：用例管理 → 任务创建 → Playwright 执行 → 报告展示
+- LLM 真实接入，完成风险评估、用例生成基础能力
+- 前端核心页面功能落地，完善交互体验
+- 部署文档与一键启动脚本完善
+  Phase 2 智能增强
+- 打通 Git Webhook 变更驱动自动闭环
+- 上线测试失败根因分析、对话式测试助手
+- 完善安全体系：WebSocket 认证、Token 黑名单、权限细化
+- 新增执行节点分布式调度能力
+  Phase 3 生态扩展
+- 接入向量检索，实现用例语义匹配与知识库沉淀
+- 插件化扩展，支持更多测试引擎与大模型厂商
+- 多租户与企业级权限体系
+- 国际化完整方案与社区生态建设
 
-# DeltaTest - Dual-Mode Web Automation Testing Platform
-
-DeltaTest is a powerful dual-mode web automation testing platform that combines traditional test case management with AI-enhanced capabilities. Built with a microservices architecture, it features a Spring Boot backend, Vue 3 frontend, and Python AI service.
-
-## Key Features
-
-- **Dual-Mode Testing**: Traditional test case management with AI assistance
-- **Smart Case Generation**: Auto-generate test steps and assertions from page descriptions
-- **Change Impact Analysis**: Analyze code changes and assess risk levels
-- **Root Cause Analysis**: Intelligent failure analysis
-- **Task Scheduling**: Scheduled and triggered test execution
-- **Real-time Updates**: WebSocket-based progress and log streaming
-- **RBAC Security**: Complete user and role management
-
-## Tech Stack
-
-- **Backend**: Spring Boot 3.x, MyBatis Plus, MySQL, RabbitMQ
-- **Frontend**: Vue 3, TypeScript, Vite, Ant Design Vue
-- **AI Service**: Python 3.12, FastAPI, UV
-
-## Quick Start
-
-### Backend
-
-```bash
-# Create database and run SQL script
-mysql -u root -p < document/sql/delta_test_ddl.sql
-
-# Build and run
-cd delta-test-server
-mvn clean install -DskipTests
-java -jar delta-test-admin/target/delta-test-admin.jar
-```
-
-### AI Service
-
-```bash
-cd delta-test-ai
-uv sync
-uv run uvicorn app.main:app --reload
-```
-
-### Frontend
-
-```bash
-cd delta-test-web
-pnpm install
-pnpm dev
-```
-
-## License
-
-MIT License - see [LICENSE](./LICENSE) file.
+---
+📚 文档体系
+完整项目文档位于仓库根目录 docs/ 目录：
+- [架构设计](./.trae/skills/项目规范/architecture.md)：模块划分、依赖关系、数据流设计
+- [代码规范](./.trae/skills/项目规范/code-standards.md)：多语言命名约定、格式化规则、注释规范
+- [技术栈说明](./.trae/skills/项目规范/tech-stack.md)：框架版本、中间件配置、核心集成方案
+- [开发流程](./.trae/skills/项目规范/dev-workflow.md)：构建命令、分层最佳实践、配置管理
+- [性能优化](./.trae/skills/项目规范/performance.md)：各层级性能优化策略与实现
+- [安全方案](./.trae/skills/项目规范/security.md)：认证体系、授权规则、数据安全
+- [待改进项](./.trae/skills/项目规范/improvements.md)：已知规划与演进方向

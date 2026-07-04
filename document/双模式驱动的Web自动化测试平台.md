@@ -193,6 +193,8 @@ graph TB
 
 Python AI 服务、C 高性能计算引擎、Playwright 执行节点均**不感知触发模式**，只接收标准化输入、输出标准化结果，自动模式与手动模式完全复用同一套底层能力。
 
+Python AI 服务内部采用 **Master-Slave Agent 架构**：MasterAgent 负责意图路由与结果聚合，5 个 Sub-Agent（RiskAnalysis / ChangeSummary / RootCause / CaseGeneration / SemanticMatch）各自封装单一 AI 能力。Agent 间通过进程内 async call 通信，各 Agent 可通过 Tool 框架调用 Java 后端 API 获取上下文数据。详细设计参见 [agent.md](../.trae/skills/项目规范/agent.md)。
+
 > **注意**：以下场景可能产生模式差异，需在业务层适配而非能力层改造——
 > - 手动模式需要**实时日志推送**（自动模式仅需完成通知），由 Java 层通过 WebSocket 转发执行节点日志
 > - 手动模式预留**单步调试**扩展点（Phase 3），不影响当前执行引擎设计
@@ -303,7 +305,50 @@ sequenceDiagram
 
 ---
 
-## 六、双模式协同与冲突解决机制
+## 六、智能体协同机制
+
+### 1. Agent 架构概览
+
+Python AI 服务采用 **Master-Slave Agent 架构**，一个 MasterAgent 统一负责意图理解与结果聚合，5 个 Sub-Agent 各自封装单一 AI 能力：
+
+| Agent | 角色 | 触发场景 |
+|-------|------|----------|
+| **MasterAgent** | 意图路由 + 编排 + 聚合 | 所有 AI 请求的统一入口 |
+| **RiskAnalysisAgent** | 代码变更风险等级评估 | Webhook 自动触发 / 手动分析 |
+| **ChangeSummaryAgent** | 变更摘要与测试建议 | Webhook 自动触发 / 手动分析 |
+| **RootCauseAgent** | 失败根因分析与修复建议 | 任务执行失败自动触发 / 手动标记 |
+| **CaseGenerationAgent** | 测试用例自动生成 | AI 生成用例 / 手动辅助 |
+| **SemanticMatchAgent** | 语义匹配关联用例 | 变更分析后自动匹配 / 手动搜索 |
+
+### 2. Agent 编排策略
+
+| 策略 | 场景 | 示例 |
+|------|------|------|
+| 并行编排 | Agent 间无依赖 | RiskAnalysis + ChangeSummary 同时执行 |
+| 串行编排 | 后序依赖前序结果 | RiskAnalysis → SemanticMatch |
+| 条件编排 | 满足条件才触发 | risk_level >= medium 时触发 SemanticMatch |
+
+### 3. Human-in-the-Loop 检查点
+
+| 检查点 | 说明 |
+|--------|------|
+| 风险等级调整 | AI 产出 risk_level 后，用户可手动调整（对应 riskLevelManual 字段） |
+| 用例确认 | CaseGenerationAgent 生成用例后需人工确认才入库 |
+| 失败标记 | RootCauseAgent 分析后，人工 ManualFailureMark 作为反馈闭环 |
+
+### 4. Agent 降级策略
+
+| 异常场景 | 降级方案 |
+|----------|----------|
+| LLM 调用失败 | 降级到规则引擎（当前 mock 逻辑即为降级实现） |
+| Python AI 不可用 | Java 后端返回降级结果（ErrorCode.AI_UNAVAILABLE） |
+| 工具调用超时 | 跳过该工具，使用已有上下文继续推理 |
+
+> 详细 Agent 设计规范参见 [agent.md](../.trae/skills/项目规范/agent.md)
+
+---
+
+## 七、双模式协同与冲突解决机制
 
 ### 1. 资产协同规则
 
@@ -326,7 +371,7 @@ sequenceDiagram
 
 ---
 
-## 七、异常流程与补偿机制
+## 八、异常流程与补偿机制
 
 | 异常场景 | 检测方式 | 补偿策略 |
 |----------|----------|----------|
@@ -339,7 +384,7 @@ sequenceDiagram
 
 ---
 
-## 八、部署架构概览
+## 九、部署架构概览
 
 ### 1. 服务部署视图
 
@@ -403,7 +448,7 @@ graph TB
 
 ---
 
-## 九、演进路线
+## 十、演进路线
 
 | 阶段 | 目标 | 核心交付 | 预期成果 |
 |------|------|----------|----------|
