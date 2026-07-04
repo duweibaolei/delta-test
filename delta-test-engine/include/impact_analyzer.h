@@ -17,6 +17,10 @@
 
 #include "bridge.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * 执行影响范围分析 / Execute impact scope analysis
  * <p>
@@ -42,5 +46,9 @@ ImpactResult impact_analyzer_analyze(
     const char* credential_type,
     const char* credential_key
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DELTA_ENGINE_IMPACT_ANALYZER_H */

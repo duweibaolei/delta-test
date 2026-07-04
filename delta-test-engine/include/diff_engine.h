@@ -17,6 +17,10 @@
 
 #include "bridge.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * 执行代码差异计算 / Execute code diff computation
  * <p>
@@ -42,5 +46,9 @@ DiffResult diff_engine_compute(
     const char* credential_type,
     const char* credential_key
 );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DELTA_ENGINE_DIFF_ENGINE_H */

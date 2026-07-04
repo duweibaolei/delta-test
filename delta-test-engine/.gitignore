@@ -7,6 +7,9 @@
 build/
 Build/
 out/
+cmake-build-debug/
+cmake-build-release/
+cmake-build-verify/
 
 # ==================== Conan 生成文件 / Conan Generated Files ====================
 generated/

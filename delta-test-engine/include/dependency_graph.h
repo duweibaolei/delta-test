@@ -15,6 +15,10 @@
 #ifndef DELTA_ENGINE_DEPENDENCY_GRAPH_H
 #define DELTA_ENGINE_DEPENDENCY_GRAPH_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * 构建依赖图（占位实现）
  * Build dependency graph (placeholder implementation)
@@ -27,5 +31,9 @@
  * @return 0 成功，非0 失败 / 0 success, non-zero failure
  */
 int dependency_graph_build(const char* repo_path);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DELTA_ENGINE_DEPENDENCY_GRAPH_H */

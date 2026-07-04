@@ -74,7 +74,7 @@
 | **构建系统** | CMake | 3.28+ | 跨平台构建配置 |
 | **依赖管理** | Conan | 2.x | 第三方依赖安装 + CMakeDeps/CMakeToolchain 生成 |
 | **RPC** | gRPC (grpc++) | 1.69.0 | C++ gRPC Server 实现 |
-| **序列化** | Protobuf | 4.29.3+ | Protobuf 消息定义 + 代码生成 |
+| **序列化** | Protobuf | 5.29.6 | Protobuf 消息定义 + 代码生成（Conan 解析版本，Java 侧为 4.29.3） |
 | **日志** | spdlog | 1.15.1 | 高性能异步日志 |
 | **容器** | Docker | - | 多阶段构建（conanio/gcc12 → debian:bookworm-slim） |
 | **测试** | CTest | - | CMake 集成测试框架 |

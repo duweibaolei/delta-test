@@ -89,7 +89,7 @@ delta-test-web/
 │   │   ├── task/            任务中心（占位，Phase 1 开发）
 │   │   └── report/          质量报告（占位，Phase 1 开发）
 │   ├── App.vue              根组件（ConfigProvider + zhCN + dayjs locale）
-│   └── main.ts              应用入口（Pinia + Router + Antd）
+│   └── main.ts              应用入口（Pinia + Router，Ant Design Vue 按需自动注册）
 ├── .env / .env.development / .env.production  ← 环境变量
 ├── index.html               HTML 入口
 ├── vite.config.ts           Vite 构建配置（插件 + 代理 + 分包）
@@ -118,7 +118,7 @@ delta-test-ai/
 ├── .env.example                ← 环境变量示例
 ├── Dockerfile                  ← 多阶段构建（uv + slim）
 ├── docker-compose.yml          ← 本地开发
-├── README.md                   ← 项目说明
+├── README.md                   ← 项目说明（待创建）
 ├── app/
 │   ├── main.py                 ← FastAPI 入口（生命周期 + 路由注册）
 │   ├── core/
@@ -195,6 +195,8 @@ delta-test-engine/
 ├── CMakePresets.json       # CMake Preset（mingw-debug / mingw-release / conan-release）
 ├── conanfile.py            # Conan 2.x 依赖声明
 ├── Dockerfile              # 多阶段构建（conanio/gcc12 → debian:bookworm-slim）
+├── .gitignore              # Git 忽略规则（构建产物/Conan/IDE）
+├── README.md               # 项目说明
 ├── proto/
 │   └── code_analysis.proto # gRPC 服务定义（3 个 RPC 方法）
 ├── include/

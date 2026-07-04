@@ -9,10 +9,10 @@ Defines enum types used in the AI service, error codes aligned with Java ErrorCo
 @author DeltaTest
 """
 
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 
-class RiskLevel(str):
+class RiskLevel(str, Enum):
     """
     风险等级
     Risk Level

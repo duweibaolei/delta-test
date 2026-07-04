@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # 从构建阶段复制可执行文件 / Copy executable from build stage
-COPY --from=builder /app/build/Release/delta-test-engine /app/delta-test-engine
+COPY --from=builder /app/build/conan-release/delta-test-engine /app/delta-test-engine
 
 # 环境变量默认值 / Environment variable defaults
 ENV ENGINE_PORT=9090

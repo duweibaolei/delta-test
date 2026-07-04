@@ -32,6 +32,11 @@
 | **LLM 真实调用** | LLMService.generate() 返回 mock 占位 | Phase 1 接入 OpenAI SDK 真实调用 | Phase 1 |
 | **Playwright 执行节点** | 骨架阶段无 Playwright 集成 | Phase 1 搭建 Playwright 执行框架 | Phase 1 |
 | **语义检索** | EmbeddingService 返回 mock 数据 | Phase 3 接入 sentence-transformers + Milvus | Phase 3 |
+| **response_model 缺失** | 所有 API 端点返回 R[dict] 而非强类型 | 定义 Response VO + 声明 response_model | Phase 1 |
+| **CORS 中间件缺失** | main.py 未配置 CORS 中间件 | 添加 CORSMiddleware，origins 通过环境变量注入 | Phase 1 |
+| **全局异常处理器缺失** | 无 Python 版 BusinessException + exception_handler | 实现 AIException + @app.exception_handler | Phase 1 |
+| **Prompt 与 Service 脱节** | prompts/ 定义了模板但 services/ 未引用 | Phase 1 接入 LLM 后统一调用 Prompt 模板 | Phase 1 |
+| **README.md 缺失** | 项目根目录无 README.md | 补充项目说明文档 | Phase 0 |
 
 ## 10.4 智能体待改进
 

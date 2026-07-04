@@ -81,6 +81,13 @@
       "output": {
         "outputOnFailure": true
       }
+    },
+    {
+      "name": "conan-release",
+      "configurePreset": "conan-release",
+      "output": {
+        "outputOnFailure": true
+      }
     }
   ]
 }

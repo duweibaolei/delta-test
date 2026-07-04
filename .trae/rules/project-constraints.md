@@ -1,5 +1,6 @@
 ---
-alwaysApply: true
+alwaysApply: false
+description: 项目全栈开发强制约束规范，覆盖Java后端、数据库、安全、Vue前端、RabbitMQ、gRPC、Python AI、C引擎，所有开发必须严格遵守
 ---
 ## Java 硬约束
 - 包名必须以 com.dwl 开头
@@ -56,10 +57,24 @@ alwaysApply: true
 ## gRPC 硬约束
 - Protobuf 生成代码的 java_package 统一为 com.dwl.grpc.engine，与项目包名前缀一致
 
+## Python AI 硬约束
+- Python 版本 >=3.12，使用 uv 包管理器 + hatchling 构建
+- Lint/格式化统一使用 ruff（替代 flake8+black+isort），mypy strict 模式
+- Pydantic v2 BaseModel 作为 DTO 基类，字段必须使用 Field(...) 声明 description 和 examples
+- 字符串枚举必须继承 str + Enum（如 class RiskLevel(str, Enum)），整型枚举继承 IntEnum
+- 配置管理使用 pydantic-settings BaseSettings + @lru_cache 单例，敏感字段禁止硬编码默认值
+- 服务单例模式：模块级 _xxx_service + get_xxx_service() getter 函数
+- 统一响应体 R[T]（Generic[T]），工厂方法 R.success()/R.error()/R.error_with_code()
+- FastAPI 路由必须声明 tags/summary/description（中英双语），推荐声明 response_model
+- Prompt 模板放在 app/prompts/ 包，使用 SYSTEM + USER 配对常量
+- 测试使用 pytest + pytest-asyncio（asyncio_mode=auto），httpx AsyncClient 异步集成测试
+- 日志使用 loguru，禁止标准 logging
+- Python 源文件必须 UTF-8 无 BOM 编码
+
 ## C 引擎硬约束
 - C 业务逻辑使用 C17 标准，gRPC Server 层使用 C++17 标准
 - 头文件使用 #ifndef 宏保护（DELTA_ENGINE_MODULE_H），不使用 #pragma once
-- C/C++ 桥接层使用 extern "C" 包裹，仅使用 C 兼容类型
+- C/C++ 桥接层使用 extern "C" 包裹，所有 C 头文件必须使用 #ifdef __cplusplus extern "C" { #endif 包裹
 - C 业务逻辑库（delta_engine_core）零 C++ 依赖，可独立编译
 - gRPC 构建可选（ENABLE_GRPC 选项），无 Conan 时仍可编译 C 逻辑
 - 未使用参数使用 (void)param; 显式抑制，不使用 __attribute__((unused))

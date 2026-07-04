@@ -105,7 +105,33 @@ Signature: HMAC-SHA256(base64(header) + "." + base64(payload), secret)
 - 后端 JWT 无状态认证，无需 CSRF Token
 - 前端通过 `Authorization` 头传递 Token，非 Cookie 自动携带
 
-## 6.7 C 引擎安全
+## 6.7 Python AI 服务安全
+
+**配置安全：**
+
+| 策略 | 实现 |
+|------|------|
+| **LLM API Key** | 通过环境变量 `LLM_API_KEY` 注入，.env.example 中注释掉默认值 |
+| **配置管理** | pydantic-settings BaseSettings + .env 文件，case_sensitive=False |
+| **CORS** | 骨架阶段未配置（待 Phase 1 添加 CORSMiddleware） |
+
+**Java → Python 通信安全：**
+
+| 策略 | 实现 |
+|------|------|
+| **内网调用** | Python AI 服务仅监听 8000 端口，不对外暴露 |
+| **超时** | Java 端 HTTP 调用 Python：5s 连接 / 60s 读取 |
+| **Docker 隔离** | docker-compose 中独立容器，JAVA_SERVICE_URL 使用 host.docker.internal |
+
+**LLM 安全：**
+
+| 策略 | 实现 |
+|------|------|
+| **Prompt 注入防护** | 骨架阶段未实现（Phase 1 引入输入清洗） |
+| **输出过滤** | 骨架阶段未实现（Phase 1 引入 JSON Schema 校验） |
+| **API Key 保护** | 环境变量注入，不记录到日志 |
+
+## 6.8 C 引擎安全
 
 **gRPC 通信安全：**
 

@@ -70,7 +70,7 @@
 | **Vite 代理** | 开发环境 `/api` → `localhost:8080`，避免跨域和重复部署 |
 | **Less 预处理** | CSS 变量 + Less 函数，减少重复样式代码 |
 
-## 5.7 Python AI 服务层
+## 7.7 Python AI 服务层
 
 | 措施 | 实现 |
 |------|------|
@@ -92,5 +92,5 @@
 | **静态链接** | gRPC/Protobuf 静态链接（Conan `shared=False`），运行时零额外依赖 |
 | **gRPC 可选构建** | `ENABLE_GRPC=OFF` 时跳过 gRPC 编译，C 业务逻辑库可独立编译测试 |
 | **多阶段 Docker** | `conanio/gcc12` 构建 → `debian:bookworm-slim` 运行，镜像精简 |
-| **条件编译** | `GRPC_AVAILABLE` 宏控制 gRPC 代码编译，无依赖时零开销 |
+| **条件目标** | `GRPC_AVAILABLE` CMake 变量控制 gRPC 目标是否加入构建，无依赖时零开销 |
 | **位独立代码** | `POSITION_INDEPENDENT_CODE ON`，支持 Linux 共享库链接 |

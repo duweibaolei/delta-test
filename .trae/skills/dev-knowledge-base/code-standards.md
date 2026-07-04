@@ -88,7 +88,7 @@
 
 - **缩进**：2 空格
 - **编码**：UTF-8
-- **引号**：单引号（Prettier 默认）
+- **引号**：单引号（项目约定，需配置 Prettier `singleQuote: true`）
 - **分号**：无分号（TypeScript/Vue 风格）
 - **尾逗号**：保留尾逗号（`trailingComma: all`）
 - **import 顺序**：Vue 生态 → 第三方库 → `@/` 别名路径 → 相对路径
@@ -316,6 +316,7 @@ class R(BaseModel, Generic[T]):
 | 规范 | 说明 |
 |------|------|
 | gRPC 可选 | `option(ENABLE_GRPC ...)` + `find_package(... QUIET)` + `if(GRPC_AVAILABLE)` |
+| `GRPC_AVAILABLE` | CMake 配置时变量（由 `find_package` 检测后设置），**不是** C/C++ 预处理器宏，不用于源码 `#ifdef` 条件编译 |
 | C 库始终构建 | `delta_engine_core` 不依赖 gRPC，放在 `if(GRPC_AVAILABLE)` 之外 |
 | 测试条件构建 | gRPC 测试仅在 `GRPC_AVAILABLE` 时构建 |
 | Proto 代码生成 | `add_custom_command` 手动调用 `protoc`，不使用 `CMAKE_AUTOMOC` |

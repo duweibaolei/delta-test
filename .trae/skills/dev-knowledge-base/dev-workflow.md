@@ -66,7 +66,7 @@ pnpm lint
 ```
 
 **构建配置要点**：
-- `pnpm approve-builds` 需批准 `core-js`、`esbuild`、`vue-demi` 的构建脚本
+- `pnpm.onlyBuiltDependencies` 声明需批准构建脚本的依赖（`core-js`、`esbuild`、`vue-demi`）
 - `unplugin-vue-components` 自动生成 `src/components.d.ts` 组件类型声明
 - `unplugin-auto-import` 自动生成 `src/auto-imports.d.ts` API 类型声明
 
@@ -236,8 +236,9 @@ application-prod.yml   ← 生产环境覆盖
 ```
 
 关键环境变量：
-- `VITE_API_BASE_URL`：后端 API 地址（开发环境为空，走 Vite 代理）
-- `VITE_APP_TITLE`：应用标题（`DeltaTest - 双模式驱动的Web自动化测试平台`）
+- `VITE_API_BASE_URL`：后端 API 地址（开发环境为 `http://localhost:8080`，直接请求后端；生产环境为 `/`，依赖 nginx 反向代理）
+- 注：Vite 代理（`/api` → `localhost:8080`）仅在 `VITE_API_BASE_URL` 为空时生效，当前开发环境使用绝对路径直接请求后端
+- `VITE_APP_TITLE`：应用标题（`DeltaTest`，开发环境为 `DeltaTest (Dev)`）
 
 前端配置约定：
 - 所有自定义环境变量必须以 `VITE_` 前缀开头（Vite 要求）
@@ -281,7 +282,7 @@ ENGINE_KEY_PATH=           # 服务端私钥路径（TLS 启用时必填）
 ```toml
 # conanfile.py 依赖配置
 [requirements]
-grpc/1.69.0                 # gRPC Server 依赖
+grpc/1.69.0                 # gRPC Server 依赖（传递依赖 protobuf/5.29.6，Java 侧为 4.29.3，需验证兼容性）
 spdlog/1.15.1               # 高性能异步日志
 
 [options]

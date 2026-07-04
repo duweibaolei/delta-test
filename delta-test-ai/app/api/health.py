@@ -16,12 +16,6 @@ from app.models.response import R
 router = APIRouter(tags=["健康检查 / Health Check"])
 
 
-class HealthVO:
-    """健康检查响应数据 / Health check response data"""
-
-    status: str = "UP"
-
-
 @router.get(
     "/api/health",
     summary="健康检查 / Health Check",

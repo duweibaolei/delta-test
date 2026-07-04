@@ -1,45 +1,107 @@
-# Logs
-logs
+# ============================================================
+# DeltaTest 项目 Git 忽略规则
+# DeltaTest Project Git Ignore Rules
+# ============================================================
+
+# ==================== 日志 / Logs ====================
+logs/
 *.log
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ==================== Java 后端 / Java Backend ====================
+# Maven 构建产物 / Maven build artifacts
+*target/
 
-# Editor directories and files
+# ==================== Vue 前端 / Vue Frontend ====================
+# 依赖与构建产物 / Dependencies and build artifacts
+node_modules/
+dist/
+dist-ssr/
+.vite/
+
+# 本地环境变量 / Local environment variables
+*.local
+.env.local
+.env.*.local
+
+# 自动生成的类型声明 / Auto-generated type declarations
+src/components.d.ts
+src/auto-imports.d.ts
+
+# ==================== Python AI 服务 / Python AI Service ====================
+# 虚拟环境 / Virtual environments
+.venv/
+venv/
+ENV/
+
+# 字节码缓存 / Bytecode cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 工具缓存 / Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 覆盖率报告 / Coverage reports
+.coverage
+htmlcov/
+
+# Python 包元数据 / Python package metadata
+*.egg-info/
+*.egg
+
+# ==================== C 计算引擎 / C Engine ====================
+# CMake 构建目录 / CMake build directories
+build/
+Build/
+out/
+cmake-build-debug/
+cmake-build-release/
+cmake-build-verify/
+
+# Conan 生成文件与缓存 / Conan generated files and cache
+generated/
+*.cmake
+!CMakeLists.txt
+.conan2/
+
+# CMake 缓存 / CMake cache
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# 编译产物 / Compilation artifacts
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.exe
+
+# ==================== 编辑器 / Editors ====================
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
+*.swp
+*.swo
+*~
+
+# ==================== 系统文件 / System Files ====================
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-.vite
-/.vscode/
-*target/
 
-# ==================== Python / Python ====================
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.venv/
-venv/
-ENV/
-*.egg-info/
-*.egg
-dist/
-build/
-.pytest_cache/
-.coverage
-htmlcov/
-.mypy_cache/
-.ruff_cache/
+# ==================== TRAE 配置 / TRAE Config ====================
+.trae/
