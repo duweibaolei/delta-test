@@ -58,11 +58,11 @@
 
 <script setup lang="ts">
 import {
-  CodeOutlined,
-  WarningOutlined,
-  ThunderboltOutlined,
   CheckCircleOutlined,
+  CodeOutlined,
   FileSearchOutlined,
+  ThunderboltOutlined,
+  WarningOutlined,
 } from '@ant-design/icons-vue'
 </script>
 

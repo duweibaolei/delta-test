@@ -1,10 +1,10 @@
 package com.dwl.mq.producer;
 
+import com.dwl.model.dto.ExecConfig;
 import com.dwl.mq.config.RabbitMqConfig;
 import com.dwl.mq.message.TaskExecuteMessage;
 import com.dwl.mq.message.TaskLogMessage;
 import com.dwl.mq.message.TaskResultMessage;
-import com.dwl.model.dto.ExecConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

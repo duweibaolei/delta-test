@@ -8,9 +8,9 @@
  *
  * @author DeltaTest
  */
-import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import type {RouteRecordRaw} from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
+import {useUserStore} from '@/stores/user'
 
 /**
  * 主布局子路由

@@ -8,10 +8,10 @@
  *
  * @author DeltaTest
  */
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import { loginApi, refreshTokenApi } from '@/api/auth'
-import type { LoginDTO, LoginVO } from '@/api/auth'
+import {defineStore} from 'pinia'
+import {computed, ref} from 'vue'
+import type {LoginDTO, LoginVO} from '@/api/auth'
+import {loginApi, refreshTokenApi} from '@/api/auth'
 
 /**
  * Token 存储键名

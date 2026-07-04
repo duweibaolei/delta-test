@@ -8,9 +8,9 @@
  *
  * @author DeltaTest
  */
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { createPinia, setActivePinia } from 'pinia'
-import { useUserStore } from '../user'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
+import {createPinia, setActivePinia} from 'pinia'
+import {useUserStore} from '../user'
 
 // Mock localStorage / 模拟 localStorage
 const localStorageMock = (() => {

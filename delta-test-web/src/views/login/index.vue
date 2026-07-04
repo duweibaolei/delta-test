@@ -68,12 +68,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { message } from 'ant-design-vue'
-import type { Rule } from 'ant-design-vue/es/form'
-import { UserOutlined, LockOutlined, ThunderboltOutlined } from '@ant-design/icons-vue'
-import { useUserStore } from '@/stores/user'
+import {reactive, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {message} from 'ant-design-vue'
+import type {Rule} from 'ant-design-vue/es/form'
+import {LockOutlined, ThunderboltOutlined, UserOutlined} from '@ant-design/icons-vue'
+import {useUserStore} from '@/stores/user'
 
 const router = useRouter()
 const route = useRoute()

@@ -8,7 +8,7 @@
  *
  * @author DeltaTest
  */
-import { post } from '@/utils/http'
+import {post} from '@/utils/http'
 
 /**
  * 登录请求 DTO

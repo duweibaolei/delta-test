@@ -8,7 +8,7 @@
  *
  * @author DeltaTest
  */
-import { describe, it, expect } from 'vitest'
+import {describe, expect, it} from 'vitest'
 import http from '../http'
 
 describe('HTTP 客户端配置 / HTTP Client Configuration', () => {

@@ -8,10 +8,10 @@
  *
  * @author DeltaTest
  */
+import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios'
 import axios from 'axios'
-import type { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
-import { message } from 'ant-design-vue'
-import { useUserStore } from '@/stores/user'
+import {message} from 'ant-design-vue'
+import {useUserStore} from '@/stores/user'
 import router from '@/router'
 
 /**

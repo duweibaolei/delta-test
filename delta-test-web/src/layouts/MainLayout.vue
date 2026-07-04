@@ -88,21 +88,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { message } from 'ant-design-vue'
+import {ref, watch} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {message} from 'ant-design-vue'
 import {
-  DashboardOutlined,
-  CodeOutlined,
-  FileSearchOutlined,
-  ThunderboltOutlined,
   BarChartOutlined,
+  CodeOutlined,
+  DashboardOutlined,
+  FileSearchOutlined,
+  LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  ThunderboltOutlined,
   UserOutlined,
-  LogoutOutlined,
 } from '@ant-design/icons-vue'
-import { useUserStore } from '@/stores/user'
+import {useUserStore} from '@/stores/user'
 
 const router = useRouter()
 const route = useRoute()
