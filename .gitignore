@@ -32,6 +32,9 @@ dist-ssr/
 src/components.d.ts
 src/auto-imports.d.ts
 
+# OpenAPI 自动生成的 API 类型 / OpenAPI auto-generated API types
+src/api/types.generated.ts
+
 # ==================== Python AI 服务 / Python AI Service ====================
 # 虚拟环境 / Virtual environments
 .venv/

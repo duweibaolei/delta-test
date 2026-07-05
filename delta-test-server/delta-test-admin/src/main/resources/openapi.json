@@ -1,0 +1,235 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DeltaTest API",
+    "description": "双模式驱动的Web自动化测试平台 API 文档 / DeltaTest - Dual-mode Web Automation Testing Platform API Documentation",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "http://localhost:8080", "description": "开发环境 / Development" }
+  ],
+  "security": [{ "Bearer JWT": [] }],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "tags": ["健康检查 / Health Check"],
+        "operationId": "health",
+        "summary": "服务健康检查 / Service health check",
+        "description": "检查服务是否正常运行 / Check if the service is running normally",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "健康检查响应 / Health check response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RHealthVO" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["认证管理 / Authentication"],
+        "operationId": "login",
+        "summary": "用户登录 / User login",
+        "description": "用户名密码登录，返回JWT令牌 / Login with username and password, returns JWT token",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginDTO" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登录成功 / Login successful",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RLoginVO" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/refresh": {
+      "post": {
+        "tags": ["认证管理 / Authentication"],
+        "operationId": "refreshToken",
+        "summary": "刷新Token / Refresh token",
+        "description": "使用旧Token获取新Token / Use old token to get new token",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Bearer Token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "刷新成功 / Refresh successful",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RString" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": ["认证管理 / Authentication"],
+        "operationId": "logout",
+        "summary": "退出登录 / Logout",
+        "description": "退出登录，清除服务端会话 / Logout and clear server session",
+        "responses": {
+          "200": {
+            "description": "退出成功 / Logout successful",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RVoid" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "Bearer JWT": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "请输入JWT令牌 / Enter JWT token"
+      }
+    },
+    "schemas": {
+      "LoginDTO": {
+        "type": "object",
+        "required": ["username", "password"],
+        "description": "登录请求 / Login Request",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "用户名 / Username",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "description": "密码 / Password",
+            "example": "123456"
+          }
+        }
+      },
+      "LoginVO": {
+        "type": "object",
+        "required": ["token", "tokenType", "expiresIn", "userId", "username", "nickname"],
+        "description": "登录响应 / Login Response",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "访问令牌 / Access token",
+            "example": "eyJhbGciOiJIUzI1NiJ9..."
+          },
+          "tokenType": {
+            "type": "string",
+            "description": "令牌类型 / Token type",
+            "example": "Bearer"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "format": "int64",
+            "description": "过期时间（秒）/ Expires in (seconds)",
+            "example": 86400
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "用户ID / User ID",
+            "example": 1
+          },
+          "username": {
+            "type": "string",
+            "description": "用户名 / Username",
+            "example": "admin"
+          },
+          "nickname": {
+            "type": "string",
+            "description": "昵称 / Nickname",
+            "example": "管理员"
+          }
+        }
+      },
+      "HealthVO": {
+        "type": "object",
+        "required": ["status", "service", "version"],
+        "description": "健康检查响应 / Health Check Response",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "服务状态 / Service status",
+            "example": "UP"
+          },
+          "service": {
+            "type": "string",
+            "description": "服务名称 / Service name",
+            "example": "delta-test-server"
+          },
+          "version": {
+            "type": "string",
+            "description": "版本号 / Version",
+            "example": "1.0.0-SNAPSHOT"
+          }
+        }
+      },
+      "RVoid": {
+        "type": "object",
+        "description": "统一响应体 / Unified response body",
+        "properties": {
+          "code": { "type": "integer", "description": "响应状态码 / Response status code", "example": 200 },
+          "message": { "type": "string", "description": "响应消息 / Response message", "example": "操作成功" },
+          "data": { "type": "object", "nullable": true },
+          "timestamp": { "type": "integer", "format": "int64", "description": "响应时间戳 / Response timestamp" }
+        }
+      },
+      "RString": {
+        "type": "object",
+        "description": "统一响应体(String) / Unified response body (String)",
+        "properties": {
+          "code": { "type": "integer", "example": 200 },
+          "message": { "type": "string", "example": "操作成功" },
+          "data": { "type": "string", "nullable": true },
+          "timestamp": { "type": "integer", "format": "int64" }
+        }
+      },
+      "RLoginVO": {
+        "type": "object",
+        "description": "统一响应体(LoginVO) / Unified response body (LoginVO)",
+        "properties": {
+          "code": { "type": "integer", "example": 200 },
+          "message": { "type": "string", "example": "操作成功" },
+          "data": { "$ref": "#/components/schemas/LoginVO" },
+          "timestamp": { "type": "integer", "format": "int64" }
+        }
+      },
+      "RHealthVO": {
+        "type": "object",
+        "description": "统一响应体(HealthVO) / Unified response body (HealthVO)",
+        "properties": {
+          "code": { "type": "integer", "example": 200 },
+          "message": { "type": "string", "example": "操作成功" },
+          "data": { "$ref": "#/components/schemas/HealthVO" },
+          "timestamp": { "type": "integer", "format": "int64" }
+        }
+      }
+    }
+  }
+}

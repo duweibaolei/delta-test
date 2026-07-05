@@ -67,6 +67,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 认证相关接口放行 / Permit auth endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+                        // 健康检查接口放行 / Permit health check endpoint
+                        .requestMatchers("/api/health").permitAll()
                         // OpenAPI文档放行 / Permit OpenAPI docs
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                         // WebSocket放行 / Permit WebSocket
