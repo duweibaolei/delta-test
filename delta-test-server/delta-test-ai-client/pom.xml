@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ============================================================
+         delta-test-ai-client AI服务HTTP客户端模块
+         包含：RestTemplate配置、AI服务客户端
+         Contains: RestTemplate configuration, AI service client
+         ============================================================ -->
+
+    <parent>
+        <groupId>com.dwl</groupId>
+        <artifactId>delta-test-server</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>delta-test-ai-client</artifactId>
+    <packaging>jar</packaging>
+    <name>DeltaTest AI Client</name>
+    <description>AI服务HTTP客户端模块 - RestTemplate配置、AI服务客户端</description>
+
+    <dependencies>
+        <!-- ==================== 内部模块 / Internal Modules ==================== -->
+        <dependency>
+            <groupId>com.dwl</groupId>
+            <artifactId>delta-test-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dwl</groupId>
+            <artifactId>delta-test-model</artifactId>
+        </dependency>
+
+        <!-- ==================== Spring Boot Web / RestTemplate ==================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- ==================== Lombok ==================== -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ==================== Spring Boot Test ==================== -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
