@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    DeltaTest Logback 配置
+    DeltaTest Logback Configuration
+
+    开发环境(dev): 使用彩色控制台输出，便于阅读调试
+    Development (dev): Colored console output for easy reading and debugging
+
+    生产环境(prod 及其他): 使用 JSON 结构化日志，便于日志采集和分析
+    Production (prod and others): JSON structured logging for log collection and analysis
+-->
+<configuration>
+
+    <!-- ==================== 公共属性 / Common Properties ==================== -->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="delta-test-server"/>
+    <springProperty scope="context" name="LOG_LEVEL_ROOT" source="logging.level.root" defaultValue="INFO"/>
+    <springProperty scope="context" name="LOG_LEVEL_APP" source="logging.level.com.dwl" defaultValue="DEBUG"/>
+
+    <!-- ==================== 开发环境 Appender / Development Appender ==================== -->
+    <appender name="CONSOLE_DEV" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!-- 彩色日志格式 / Colored log pattern -->
+            <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ==================== 生产环境 Appender (JSON) / Production Appender (JSON) ==================== -->
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <!-- 时间戳格式 / Timestamp format -->
+            <customFields>{"service":"${APP_NAME}"}</customFields>
+            <!-- 包含调用者信息（类名/方法名/行号）/ Include caller info (class/method/line) -->
+            <includeCallerData>true</includeCallerData>
+            <!-- 包含 MDC 上下文 / Include MDC context -->
+            <includeMdc>true</includeMdc>
+            <!-- 包含上下文信息 / Include context info -->
+            <includeStructuredArguments>true</includeStructuredArguments>
+            <!-- 包含标签信息 / Include tags -->
+            <includeTags>true</includeTags>
+            <!-- 字段命名策略 / Field naming strategy -->
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <version>[ignore]</version>
+                <levelValue>[ignore]</levelValue>
+                <level>level</level>
+                <logger>logger</logger>
+                <thread>thread</thread>
+                <message>message</message>
+                <stackTrace>stack_trace</stackTrace>
+                <caller>caller</caller>
+            </fieldNames>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ==================== 开发环境 Profile / Development Profile ==================== -->
+    <springProfile name="dev">
+        <root level="${LOG_LEVEL_ROOT}">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </root>
+        <logger name="com.dwl" level="${LOG_LEVEL_APP}" additivity="false">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </logger>
+    </springProfile>
+
+    <!-- ==================== 生产环境 Profile (JSON) / Production Profile (JSON) ==================== -->
+    <springProfile name="prod">
+        <root level="${LOG_LEVEL_ROOT}">
+            <appender-ref ref="CONSOLE_JSON"/>
+        </root>
+        <logger name="com.dwl" level="${LOG_LEVEL_APP}" additivity="false">
+            <appender-ref ref="CONSOLE_JSON"/>
+        </logger>
+    </springProfile>
+
+    <!-- ==================== 默认 Profile（未指定 spring.profiles.active 时）/ Default Profile ==================== -->
+    <springProfile name="default">
+        <root level="${LOG_LEVEL_ROOT}">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </root>
+        <logger name="com.dwl" level="${LOG_LEVEL_APP}" additivity="false">
+            <appender-ref ref="CONSOLE_DEV"/>
+        </logger>
+    </springProfile>
+
+</configuration>

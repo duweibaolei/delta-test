@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     """日志级别 / Log level"""
     LOG_LEVEL: str = "DEBUG"
 
+    """日志格式：json=结构化JSON，console=彩色可读格式（默认）/ Log format: json=structured JSON, console=colored readable (default)"""
+    LOG_FORMAT: str = "console"
+
     # ==================== Java 后端回调 / Java Backend Callback ====================
 
     """Java 后端服务地址 / Java backend service URL"""

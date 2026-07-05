@@ -100,13 +100,13 @@ management:
       show-details: always
 
 # ==================== 日志配置 / Logging Configuration ====================
+# 日志格式由 logback-spring.xml 管理：dev 环境使用彩色控制台输出，prod 环境使用 JSON 结构化日志
+# Log format is managed by logback-spring.xml: dev uses colored console, prod uses JSON structured logging
 logging:
   level:
     root: INFO
     com.dwl: DEBUG
     com.baomidou.mybatisplus: DEBUG
-  pattern:
-    dateformat: yyyy-MM-dd HH:mm:ss.SSS
 
 # ==================== CORS配置 / CORS Configuration ====================
 cors:

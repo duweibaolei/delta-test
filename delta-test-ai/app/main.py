@@ -16,6 +16,7 @@ from loguru import logger
 
 from app.api import case_generation, health, risk_assessment, root_cause, summary
 from app.core.config import get_settings
+from app.core.logging import setup_logging
 
 
 @asynccontextmanager
@@ -24,17 +25,21 @@ async def lifespan(_app: FastAPI):  # type: ignore[no-untyped-def]
     应用生命周期管理
     Application lifecycle management
     <p>
-    启动时加载配置并记录日志，关闭时清理资源。
-    Loads configuration and logs on startup, cleans up resources on shutdown.
+    启动时初始化日志配置并记录日志，关闭时清理资源。
+    Initializes logging configuration and logs on startup, cleans up resources on shutdown.
     </p>
     """
+    # 初始化日志配置 / Initialize logging configuration
+    setup_logging()
+
     settings = get_settings()
     logger.info(
         "DeltaTest AI 服务启动中 / DeltaTest AI Service starting | "
-        "host={} port={} log_level={}",
+        "host={} port={} log_level={} log_format={}",
         settings.SERVICE_HOST,
         settings.SERVICE_PORT,
         settings.LOG_LEVEL,
+        settings.LOG_FORMAT,
     )
     yield
     logger.info("DeltaTest AI 服务关闭 / DeltaTest AI Service shutting down")

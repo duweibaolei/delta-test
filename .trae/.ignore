@@ -108,3 +108,4 @@ Thumbs.db
 # ==================== TRAE 自身 / TRAE Itself ====================
 # TRAE 配置目录无需索引 / TRAE config directory no need to index
 .trae/
+/exercise/
