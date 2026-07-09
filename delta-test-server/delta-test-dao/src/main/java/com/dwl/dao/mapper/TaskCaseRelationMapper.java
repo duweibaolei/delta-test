@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 任务-用例关联 / Task-Case Association Mapper 接口
  * 任务-用例关联 / Task-Case Association Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface TaskCaseRelationMapper extends BaseMapper<TaskCaseRelation> {

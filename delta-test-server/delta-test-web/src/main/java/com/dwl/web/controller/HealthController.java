@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Provides service health check endpoint, returns service status information.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @RestController
 @RequestMapping("/api/health")

@@ -19,7 +19,7 @@ import java.util.List;
  * Aligned with Python SummaryRequest, used to send change summary requests to the AI service.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder

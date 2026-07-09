@@ -14,7 +14,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
  * Registers WebSocket endpoints and configures allowed origins.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Configuration
 @EnableWebSocket

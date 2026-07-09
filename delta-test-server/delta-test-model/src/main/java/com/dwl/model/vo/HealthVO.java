@@ -17,7 +17,7 @@ import java.io.Serializable;
  * Returns service health status information for frontend and monitoring systems.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder

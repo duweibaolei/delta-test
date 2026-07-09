@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 系统代码仓库 / System Repository Mapper 接口
  * 系统代码仓库 / System Repository Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface SysRepositoryMapper extends BaseMapper<SysRepository> {

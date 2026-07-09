@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 用户角色关联 / User-Role Association Mapper 接口
  * 用户角色关联 / User-Role Association Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface SysUserRoleMapper extends BaseMapper<SysUserRole> {

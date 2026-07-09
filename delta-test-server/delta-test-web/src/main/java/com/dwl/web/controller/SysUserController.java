@@ -2,7 +2,9 @@ package com.dwl.web.controller;
 
 import com.dwl.common.result.PageResult;
 import com.dwl.common.result.R;
+import com.dwl.model.dto.ResetPasswordDTO;
 import com.dwl.model.dto.UserCreateDTO;
+import com.dwl.model.dto.UserStatusDTO;
 import com.dwl.model.dto.UserUpdateDTO;
 import com.dwl.model.vo.UserVO;
 import com.dwl.service.SysUserService;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * 用户管理 控制器
  * User Management Controller
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @RestController
 @RequestMapping("/api/system/users")
@@ -96,8 +98,21 @@ public class SysUserController {
     @Operation(summary = "重置密码", description = "重置密码 / Reset password")
     public R<Void> resetPassword(
             @Parameter(description = "用户ID / User ID", required = true) @PathVariable Long id,
-            @Parameter(description = "新密码 / New password", required = true) @RequestParam String newPassword) {
-        userService.resetPassword(id, newPassword);
+            @Valid @RequestBody ResetPasswordDTO dto) {
+        userService.resetPassword(id, dto.getNewPassword());
+        return R.ok();
+    }
+
+    /**
+     * 更新用户状态
+     * Update user status
+     */
+    @PutMapping("/{id}/status")
+    @Operation(summary = "更新用户状态", description = "更新用户状态 / Update user status")
+    public R<Void> updateStatus(
+            @Parameter(description = "用户ID / User ID", required = true) @PathVariable Long id,
+            @Valid @RequestBody UserStatusDTO dto) {
+        userService.updateStatus(id, dto.getStatus());
         return R.ok();
     }
 }

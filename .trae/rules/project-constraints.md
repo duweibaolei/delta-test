@@ -7,6 +7,7 @@ description: 项目全栈开发强制约束规范，覆盖Java后端、数据库
 - 实体类必须继承 BaseEntity，添加 @EqualsAndHashCode(callSuper=true)
 - 实体类统一使用 Lombok 五件套：@Data + @EqualsAndHashCode(callSuper=true) + @Builder + @NoArgsConstructor + @AllArgsConstructor
 - 所有类/方法/字段必须有中英文双语 Javadoc 注释
+- Javadoc @author 统一使用 ByDWL（禁止使用 DeltaTest 或个人姓名）
 - Controller/DTO/VO 必须有 @Schema/@Operation/@Tag 注解
 - 枚举类也必须使用 @Schema 注解，每个枚举实例必须有中英文双语 Javadoc
 - ID 策略使用 IdType.ASSIGN_ID（雪花算法），禁止 AUTO_INCREMENT
@@ -70,6 +71,7 @@ description: 项目全栈开发强制约束规范，覆盖Java后端、数据库
 - 测试使用 pytest + pytest-asyncio（asyncio_mode=auto），httpx AsyncClient 异步集成测试
 - 日志使用 loguru，禁止标准 logging
 - Python 源文件必须 UTF-8 无 BOM 编码
+- 模块/类/函数 docstring 中 @author 统一使用 ByDWL（禁止使用 DeltaTest 或个人姓名）
 
 ## C 引擎硬约束
 - C 业务逻辑使用 C17 标准，gRPC Server 层使用 C++17 标准
@@ -79,3 +81,4 @@ description: 项目全栈开发强制约束规范，覆盖Java后端、数据库
 - gRPC 构建可选（ENABLE_GRPC 选项），无 Conan 时仍可编译 C 逻辑
 - 未使用参数使用 (void)param; 显式抑制，不使用 __attribute__((unused))
 - 编译警告级别：GCC/Clang -Wall -Wextra -Wpedantic，MSVC /W4
+- Doxygen @author 统一使用 ByDWL（禁止使用 DeltaTest 或个人姓名）

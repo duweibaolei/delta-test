@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 字典数据 / Dictionary Data Mapper 接口
  * 字典数据 / Dictionary Data Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface SysDictDataMapper extends BaseMapper<SysDictData> {

@@ -6,7 +6,7 @@ Risk Assessment Service
 Performs risk assessment based on change analysis results, returns placeholder data in skeleton phase.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 from app.models.enums import RiskLevel

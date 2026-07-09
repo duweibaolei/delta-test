@@ -1,4 +1,4 @@
-package com.dwl.common.result;
+package com.dwl.common.enums;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.Getter;
  * and domain-specific business error codes.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Getter
 @AllArgsConstructor

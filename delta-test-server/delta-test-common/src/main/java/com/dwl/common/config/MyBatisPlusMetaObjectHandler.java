@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Automatically fills audit fields (createdAt, updatedAt) of database entities.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Component

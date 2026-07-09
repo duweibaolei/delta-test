@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * Configures API documentation info and security scheme definition (Bearer JWT).
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Configuration
 public class OpenApiConfig {

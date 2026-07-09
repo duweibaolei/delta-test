@@ -20,21 +20,27 @@ import java.time.Duration;
  * Connection timeout 5s, read timeout 60s, following cross-language interface protocol specification.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Configuration
 public class AiServiceConfig {
 
-    /** AI服务基础URL / AI service base URL */
+    /**
+     * AI服务基础URL / AI service base URL
+     */
     @Value("${ai.service.url:http://localhost:8000}")
     private String aiServiceUrl;
 
-    /** 连接超时（秒） / Connection timeout (seconds) */
+    /**
+     * 连接超时（秒） / Connection timeout (seconds)
+     */
     @Value("${ai.service.connect-timeout:5}")
     private int connectTimeout;
 
-    /** 读取超时（秒） / Read timeout (seconds) */
+    /**
+     * 读取超时（秒） / Read timeout (seconds)
+     */
     @Value("${ai.service.read-timeout:60}")
     private int readTimeout;
 
@@ -53,7 +59,7 @@ public class AiServiceConfig {
     @Bean
     public RestTemplate aiRestTemplate(RestTemplateBuilder builder) {
         log.info("初始化AI服务RestTemplate: url={}, connectTimeout={}s, readTimeout={}s / " +
-                "Initializing AI service RestTemplate: url={}, connectTimeout={}s, readTimeout={}s",
+                        "Initializing AI service RestTemplate: url={}, connectTimeout={}s, readTimeout={}s",
                 aiServiceUrl, connectTimeout, readTimeout,
                 aiServiceUrl, connectTimeout, readTimeout);
 

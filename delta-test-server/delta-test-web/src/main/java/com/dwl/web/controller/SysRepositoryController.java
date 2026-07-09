@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * 仓库管理 控制器
  * Repository Management Controller
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @RestController
 @RequestMapping("/api/system/repositories")

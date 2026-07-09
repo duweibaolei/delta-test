@@ -9,7 +9,7 @@
  * Returns placeholder data in skeleton phase.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #include "impact_analyzer.h"

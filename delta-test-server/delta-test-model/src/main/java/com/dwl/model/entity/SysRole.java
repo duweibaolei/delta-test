@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table sys_role, defining system roles and their basic information.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

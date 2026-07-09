@@ -12,6 +12,13 @@ spring:
   application:
     name: delta-test-server
 
+  # ==================== Flyway 数据库迁移 / Flyway Database Migration ====================
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    encoding: UTF-8
+
   # ==================== 数据源 / DataSource ====================
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -107,6 +114,13 @@ logging:
     root: INFO
     com.dwl: DEBUG
     com.baomidou.mybatisplus: DEBUG
+
+# ==================== AI服务配置 / AI Service Configuration ====================
+ai:
+  service:
+    url: ${AI_SERVICE_URL:http://localhost:8000}
+    connect-timeout: ${AI_SERVICE_CONNECT_TIMEOUT:5}
+    read-timeout: ${AI_SERVICE_READ_TIMEOUT:60}
 
 # ==================== CORS配置 / CORS Configuration ====================
 cors:

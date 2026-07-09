@@ -6,7 +6,7 @@ DeltaTest AI Service Configuration Management
 Type-safe configuration management based on pydantic-settings, supporting env vars and .env files.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 from functools import lru_cache

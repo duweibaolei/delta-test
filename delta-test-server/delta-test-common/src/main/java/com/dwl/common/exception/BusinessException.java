@@ -1,6 +1,6 @@
 package com.dwl.common.exception;
 
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import lombok.Getter;
 
 import java.io.Serial;
@@ -14,7 +14,7 @@ import java.io.Serial;
  * to identify the specific error type.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Getter
 public class BusinessException extends RuntimeException {

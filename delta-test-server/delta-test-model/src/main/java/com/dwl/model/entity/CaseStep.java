@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table case_step, defining each operation and assertion step of a test case.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

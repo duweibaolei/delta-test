@@ -7,7 +7,7 @@
  * Verifies bridge_analyze_impact skeleton implementation return values.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #include <stdio.h>

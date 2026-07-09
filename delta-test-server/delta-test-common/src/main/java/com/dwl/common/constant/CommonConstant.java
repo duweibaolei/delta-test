@@ -9,7 +9,7 @@ package com.dwl.common.constant;
  * pagination defaults, logical delete markers, etc.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 public final class CommonConstant {
 

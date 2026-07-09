@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 缺陷记录 / Defect Record Mapper 接口
  * 缺陷记录 / Defect Record Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface DefectRecordMapper extends BaseMapper<DefectRecord> {

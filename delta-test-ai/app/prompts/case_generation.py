@@ -6,7 +6,7 @@ Test Case Generation Prompt Template
 System and user prompt templates for LLM test case auto-generation.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 CASE_GENERATION_SYSTEM_PROMPT = """\

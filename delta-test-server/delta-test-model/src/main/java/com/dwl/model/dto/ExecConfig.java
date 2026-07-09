@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 执行配置 DTO
  * Execution Configuration DTO
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "执行配置 / Execution Configuration")

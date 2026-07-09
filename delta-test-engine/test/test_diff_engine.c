@@ -7,7 +7,7 @@
  * Verifies bridge_compute_diff skeleton implementation return values.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #include <stdio.h>

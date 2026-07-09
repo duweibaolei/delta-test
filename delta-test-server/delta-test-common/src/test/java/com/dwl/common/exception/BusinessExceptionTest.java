@@ -1,6 +1,6 @@
 package com.dwl.common.exception;
 
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 业务异常 BusinessException 单元测试
  * Business Exception BusinessException Unit Test
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @DisplayName("业务异常 BusinessException / Business Exception BusinessException")
 class BusinessExceptionTest {

@@ -9,7 +9,7 @@
  * calls C business logic through bridge layer.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #include "grpc_server.h"

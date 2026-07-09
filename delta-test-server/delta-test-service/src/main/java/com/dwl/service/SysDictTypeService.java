@@ -8,7 +8,7 @@ import com.dwl.model.vo.DictTypeVO;
  * 字典类型 服务接口
  * Dictionary Type Service Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 public interface SysDictTypeService {
 

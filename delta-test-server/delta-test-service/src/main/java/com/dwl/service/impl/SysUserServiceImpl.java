@@ -3,7 +3,7 @@ package com.dwl.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.common.result.PageResult;
 import com.dwl.dao.mapper.SysRoleMapper;
 import com.dwl.dao.mapper.SysUserMapper;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * 系统用户 服务实现类
  * System User Service Implementation
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service
@@ -87,7 +87,7 @@ public class SysUserServiceImpl implements SysUserService {
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRealName(dto.getNickname());
         user.setEmail(dto.getEmail());
-        user.setStatus(0);
+        user.setStatus(1);
 
         userMapper.insert(user);
 
@@ -241,6 +241,25 @@ public class SysUserServiceImpl implements SysUserService {
         userMapper.updateById(user);
     }
 
+    /**
+     * 更新用户状态
+     * Update user status
+     *
+     * @param id     用户ID / User ID
+     * @param status 状态（1-启用，0-禁用）/ Status (1-enabled, 0-disabled)
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateStatus(Long id, Integer status) {
+        SysUser user = userMapper.selectById(id);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
+        }
+        user.setStatus(status);
+        userMapper.updateById(user);
+        log.info("更新用户状态成功，ID: {}, 状态: {} / User status updated, ID: {}, Status: {}", id, status, id, status);
+    }
+
     // ==================== 私有方法 / Private Methods ====================
 
     /**
@@ -275,6 +294,10 @@ public class SysUserServiceImpl implements SysUserService {
     private UserVO convertToVO(SysUser user) {
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(user, vo);
+
+        // 手动映射字段名不同的属性 / Manually map fields with different names
+        vo.setNickname(user.getRealName());
+        vo.setCreateTime(user.getCreatedAt());
 
         // 查询用户的角色 / Query user's roles
         List<SysUserRole> userRoles = userRoleMapper.selectList(

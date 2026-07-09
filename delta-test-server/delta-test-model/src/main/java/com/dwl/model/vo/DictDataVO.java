@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 字典数据视图对象 VO
  * Dictionary Data View Object
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "字典数据视图对象 / Dictionary Data View Object")

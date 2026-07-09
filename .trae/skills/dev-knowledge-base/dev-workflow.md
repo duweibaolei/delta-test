@@ -6,6 +6,7 @@
 > - 代码规范 → [code-standards.md](./code-standards.md)
 > - 技术栈 → [tech-stack.md](./tech-stack.md)
 > - 安全方案 → [security.md](./security.md)
+> - 开发步骤设计 → `document/开发步骤设计.md`（阶段/里程碑/任务拆分）
 
 ---
 
@@ -64,6 +65,19 @@ pnpm format
 # 代码检查
 pnpm lint
 ```
+
+**前端 API 类型生成**：
+
+```bash
+# 从运行中的 Java 后端生成（需后端启动）
+pnpm api:generate
+
+# 从本地 openapi.json 静态文件生成（无需后端）
+pnpm api:generate:local
+```
+
+- 生成文件：`src/api/types.generated.ts`（已加入 `.gitignore`）
+- 生成工具：`openapi-typescript ^7.13.0`
 
 **构建配置要点**：
 - `pnpm.onlyBuiltDependencies` 声明需批准构建脚本的依赖（`core-js`、`esbuild`、`vue-demi`）
@@ -226,6 +240,30 @@ application-prod.yml   ← 生产环境覆盖
 - RabbitMQ：`RABBITMQ_HOST/PORT/USER/PASSWORD/VHOST`
 - JWT：`JWT_SECRET/EXPIRATION`
 - gRPC：`grpc.client.engine.host/port`
+- AI 服务：`ai.service.url` / `ai.service.connect-timeout` / `ai.service.read-timeout`
+- CORS：`cors.allowed-origins`（`${CORS_ALLOWED_ORIGINS:*}`）
+- Flyway：`spring.flyway.enabled/locations/baseline-on-migrate`
+
+**数据库迁移工作流（Flyway）**：
+
+```bash
+# 迁移脚本命名规则
+V{版本号}__{描述}.sql
+# 示例：V1__create_all_tables.sql, V2__add_xxx_column.sql
+
+# 迁移脚本位置
+delta-test-admin/src/main/resources/db/migration/
+
+# Spring Boot 启动时自动执行迁移
+# 无需手动运行，启动应用即可
+```
+
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| `spring.flyway.enabled` | `true` | 启用 Flyway |
+| `spring.flyway.locations` | `classpath:db/migration` | 迁移脚本目录 |
+| `spring.flyway.baseline-on-migrate` | `true` | 已有数据库首次引入 Flyway 时自动标记 baseline |
+| 禁止修改已执行脚本 | — | Flyway 校验 checksum，修改后启动失败 |
 
 **Vue 前端：**
 

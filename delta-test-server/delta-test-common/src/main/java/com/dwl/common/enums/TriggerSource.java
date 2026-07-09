@@ -13,7 +13,7 @@ import lombok.Getter;
  * manual trigger, and scheduled trigger.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Getter
 @AllArgsConstructor

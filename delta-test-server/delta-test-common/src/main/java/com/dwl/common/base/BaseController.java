@@ -1,6 +1,6 @@
 package com.dwl.common.base;
 
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.common.result.PageResult;
 import com.dwl.common.result.R;
 import com.dwl.common.utils.SecurityUtil;
@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * methods and current login user information retrieval.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Schema(description = "基础控制器 / Base Controller")
 public abstract class BaseController {

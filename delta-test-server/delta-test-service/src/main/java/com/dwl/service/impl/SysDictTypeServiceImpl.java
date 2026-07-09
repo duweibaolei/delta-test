@@ -3,7 +3,7 @@ package com.dwl.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.common.result.PageResult;
 import com.dwl.dao.mapper.SysDictTypeMapper;
 import com.dwl.model.entity.SysDictType;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * 字典类型 服务实现类
  * Dictionary Type Service Implementation
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service

@@ -21,7 +21,7 @@ import java.util.Date;
  * Provides JWT token generation, parsing, and verification capabilities.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Component

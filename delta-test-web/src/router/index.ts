@@ -6,7 +6,7 @@
  * Defines application routing rules, including login page and main layout sub-routes.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import type {RouteRecordRaw} from 'vue-router'
 import {createRouter, createWebHistory} from 'vue-router'
@@ -46,6 +46,12 @@ const mainRoutes: RouteRecordRaw[] = [
     name: 'Report',
     component: () => import('@/views/report/index.vue'),
     meta: { title: '质量报告 / Quality Report', icon: 'BarChartOutlined' },
+  },
+  {
+    path: '/system/user',
+    name: 'SystemUser',
+    component: () => import('@/views/system/user/index.vue'),
+    meta: { title: '用户管理 / User Management', icon: 'UserOutlined' },
   },
 ]
 

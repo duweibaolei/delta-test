@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * AiResponse 单元测试
  * AiResponse Unit Tests
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @DisplayName("AiResponse 单元测试 / AiResponse Unit Tests")
 class AiResponseTest {

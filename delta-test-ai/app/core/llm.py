@@ -6,7 +6,7 @@ LLM Call Wrapper
 Wraps large language model call logic, returns placeholder results in skeleton phase.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 from app.core.config import get_settings

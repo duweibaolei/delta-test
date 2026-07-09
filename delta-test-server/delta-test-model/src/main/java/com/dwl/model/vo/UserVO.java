@@ -12,7 +12,7 @@ import java.util.List;
  * 用户视图对象 VO
  * User View Object
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "用户视图对象 / User View Object")
@@ -34,12 +34,8 @@ public class UserVO implements Serializable {
     private String nickname;
 
     /** 邮箱 / Email */
-    @Schema(description = "邮箱 / Email", example = "admin@deltatest.com")
+    @Schema(description = "邮箱 / Email address", example = "admin@deltatest.com")
     private String email;
-
-    /** 手机号 / Phone number */
-    @Schema(description = "手机号 / Phone number", example = "13800138000")
-    private String phone;
 
     /** 头像URL / Avatar URL */
     @Schema(description = "头像URL / Avatar URL")

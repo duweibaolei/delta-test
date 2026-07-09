@@ -131,7 +131,41 @@ CREATE TABLE ai_root_cause (
 | 外键字段建立索引 | 如 `KEY idx_role_id (role_id)` |
 | 不使用数据库外键约束 | 由应用层保证数据一致性 |
 
-## 2.7 通用建表规范
+**逻辑外键设计模式**：
+
+本项目全部 39 张表均**不使用物理 `FOREIGN KEY` 约束**，采用逻辑外键设计：
+
+| 设计决策 | 原因 |
+|----------|------|
+| 无物理外键 | 便于数据迁移、分库分表、批量导入；避免外键检查导致的性能开销和死锁风险 |
+| 命名约定 | 逻辑外键字段统一使用 `xxx_id` 命名（如 `user_id`、`repo_id`），指向对应表的主键 |
+| 索引保障 | 所有逻辑外键字段建立独立索引（如 `KEY idx_role_id (role_id)`），保证 JOIN 查询性能 |
+| 应用层校验 | 数据一致性由 Java Service 层业务逻辑保证，而非数据库约束 |
+| 关联查询 | 通过 SQL JOIN 实现跨表查询，逻辑外键字段类型与目标表主键类型一致（BIGINT） |
+
+## 2.7 数据库迁移（Flyway）
+
+| 规范 | 说明 |
+|------|------|
+| 迁移脚本位置 | `delta-test-admin/src/main/resources/db/migration/` |
+| 命名规则 | `V{版本号}__{描述}.sql`（双下划线分隔） |
+| 初始迁移 | `V1__create_all_tables.sql` — 39 张表 DDL + 24 种字典类型 + 89 条字典数据 |
+| baseline-on-migrate | `true` — 已有数据库首次引入 Flyway 时自动标记 baseline |
+| 禁止修改已执行脚本 | Flyway 校验 checksum，修改后导致启动失败 |
+
+**表统计**（V1 迁移脚本）：
+
+| 域 | 表数量 | 表名列表 |
+|---|---|---|
+| 一、系统管理域 | 9 | sys_user, sys_role, sys_permission, sys_user_role, sys_role_permission, sys_environment, sys_repository, sys_dict_type, sys_dict_data |
+| 二、代码分析域 | 4 | git_commit, change_analysis, change_analysis_commit, affected_scope |
+| 三、测试管理域 | 12 | page_element, test_case, case_step, case_version, case_tag, case_tag_relation, business_link, link_node, case_link_relation, case_analysis_relation, test_data_set, env_variable |
+| 四、执行管控域 | 5 | exec_node, test_task, task_case_relation, task_execution, execution_step_result |
+| 五、质量报表域 | 6 | test_report, report_execution_relation, ai_root_cause, manual_failure_mark, defect_record, quality_daily_stats |
+| 六、智能体域 | 3 | agent_conversation, agent_memory, agent_tool_call |
+| **合计** | **39** | — |
+
+## 2.8 通用建表规范
 
 | 规则 | 说明 |
 |------|------|

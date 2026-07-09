@@ -7,7 +7,7 @@
  * Starts gRPC server, listens for Java backend requests.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #include "grpc_server.h"

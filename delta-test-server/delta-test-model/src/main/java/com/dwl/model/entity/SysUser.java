@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Maps to table sys_user, storing basic user information and authentication data.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

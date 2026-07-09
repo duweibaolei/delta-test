@@ -12,7 +12,7 @@ import lombok.Getter;
  * Defines the lifecycle states of a test task.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Getter
 @AllArgsConstructor

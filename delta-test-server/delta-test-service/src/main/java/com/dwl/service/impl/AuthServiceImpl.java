@@ -1,7 +1,7 @@
 package com.dwl.service.impl;
 
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.common.utils.JwtUtil;
 import com.dwl.model.dto.LoginDTO;
 import com.dwl.model.entity.SysUser;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
  * Reuses {@link JwtUtil} for token generation and parsing to avoid duplicate key configuration.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service

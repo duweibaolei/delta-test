@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  * Maps to table test_report, managing test report statistics, AI analysis, and conclusion information.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder

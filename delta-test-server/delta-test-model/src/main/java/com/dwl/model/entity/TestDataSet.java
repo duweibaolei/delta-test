@@ -15,7 +15,7 @@ import lombok.*;
  * The dataJson field stores JSON format content as a String type.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

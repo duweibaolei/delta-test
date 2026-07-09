@@ -3,7 +3,7 @@ package com.dwl.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.common.result.PageResult;
 import com.dwl.dao.mapper.SysRepositoryMapper;
 import com.dwl.model.dto.RepositoryCreateDTO;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * 系统代码仓库 服务实现类
  * System Repository Service Implementation
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service

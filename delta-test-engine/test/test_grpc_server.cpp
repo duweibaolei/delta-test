@@ -7,7 +7,7 @@
  * Skeleton phase only verifies compilation. Phase 1 will add real gRPC integration tests.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #include <iostream>

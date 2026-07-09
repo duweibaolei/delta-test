@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 人工失败标记 / Manual Failure Mark Mapper 接口
  * 人工失败标记 / Manual Failure Mark Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface ManualFailureMarkMapper extends BaseMapper<ManualFailureMark> {

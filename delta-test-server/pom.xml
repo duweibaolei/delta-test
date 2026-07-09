@@ -32,6 +32,7 @@
         <module>delta-test-service</module>
         <module>delta-test-web</module>
         <module>delta-test-grpc-client</module>
+        <module>delta-test-ai-client</module>
         <module>delta-test-mq</module>
         <module>delta-test-admin</module>
     </modules>
@@ -57,6 +58,7 @@
         <mapstruct.version>1.6.3</mapstruct.version>
         <lombok.version>1.18.36</lombok.version>
         <testcontainers.version>1.20.4</testcontainers.version>
+        <net.logstash.version>8.0</net.logstash.version>
     </properties>
 
     <dependencyManagement>
@@ -90,6 +92,11 @@
             <dependency>
                 <groupId>com.dwl</groupId>
                 <artifactId>delta-test-grpc-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dwl</groupId>
+                <artifactId>delta-test-ai-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -196,6 +203,13 @@
                 <version>${testcontainers.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- ==================== Logstash Logback Encoder / JSON结构化日志编码器 ==================== -->
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${net.logstash.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

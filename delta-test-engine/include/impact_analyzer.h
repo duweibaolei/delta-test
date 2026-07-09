@@ -9,7 +9,7 @@
  * Returns placeholder data in skeleton phase.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #ifndef DELTA_ENGINE_IMPACT_ANALYZER_H

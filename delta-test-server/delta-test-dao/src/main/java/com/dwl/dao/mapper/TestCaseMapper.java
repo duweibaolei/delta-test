@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 测试用例 / Test Case Mapper 接口
  * 测试用例 / Test Case Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface TestCaseMapper extends BaseMapper<TestCase> {

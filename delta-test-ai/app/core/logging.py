@@ -15,7 +15,7 @@ JSON 日志格式规范 / JSON Log Format Specification:
     "service": "delta-test-ai"
 }
 
-@author DeltaTest
+@author ByDWL
 """
 
 import json

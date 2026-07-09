@@ -6,7 +6,7 @@
  * Unified request/response interceptor configuration, automatically carries Token, handles error codes.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios'
 import axios from 'axios'

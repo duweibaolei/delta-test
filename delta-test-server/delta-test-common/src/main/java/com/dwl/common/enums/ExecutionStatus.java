@@ -12,7 +12,7 @@ import lombok.Getter;
  * Defines the detailed status of test case execution results.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Getter
 @AllArgsConstructor

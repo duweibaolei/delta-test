@@ -2,7 +2,7 @@ package com.dwl.ai.client;
 
 import com.dwl.ai.model.AiResponse;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.model.dto.ai.CaseGenerationDTO;
 import com.dwl.model.dto.ai.RiskAssessmentDTO;
 import com.dwl.model.dto.ai.RootCauseDTO;
@@ -36,7 +36,7 @@ import java.util.Map;
  * because Lombok doesn't automatically copy @Qualifier to constructor parameters.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service

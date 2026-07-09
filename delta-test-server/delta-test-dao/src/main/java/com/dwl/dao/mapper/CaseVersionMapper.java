@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 用例版本 / Case Version Mapper 接口
  * 用例版本 / Case Version Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface CaseVersionMapper extends BaseMapper<CaseVersion> {

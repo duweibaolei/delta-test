@@ -6,7 +6,7 @@ Risk Assessment API Tests
 Tests whether the risk assessment endpoint returns normally.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 import pytest

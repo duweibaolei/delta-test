@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table page_element, managing page element locator information for the system under test.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

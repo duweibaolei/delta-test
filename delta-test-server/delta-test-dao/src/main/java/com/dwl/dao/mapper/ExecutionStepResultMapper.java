@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 执行步骤结果 / Execution Step Result Mapper 接口
  * 执行步骤结果 / Execution Step Result Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface ExecutionStepResultMapper extends BaseMapper<ExecutionStepResult> {

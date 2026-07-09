@@ -9,7 +9,7 @@
  * converts results to bridge layer structs for return.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #include "bridge.h"

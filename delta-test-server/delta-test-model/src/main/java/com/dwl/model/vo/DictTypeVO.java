@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * 字典类型视图对象 VO
  * Dictionary Type View Object
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "字典类型视图对象 / Dictionary Type View Object")

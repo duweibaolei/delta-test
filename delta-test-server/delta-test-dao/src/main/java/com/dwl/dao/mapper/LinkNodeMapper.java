@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 链路节点 / Link Node Mapper 接口
  * 链路节点 / Link Node Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface LinkNodeMapper extends BaseMapper<LinkNode> {

@@ -12,7 +12,7 @@ import java.util.List;
  * 创建用户 DTO
  * Create User DTO
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "创建用户请求 / Create User Request")
@@ -36,12 +36,8 @@ public class UserCreateDTO implements Serializable {
     private String nickname;
 
     /** 邮箱 / Email */
-    @Schema(description = "邮箱 / Email", example = "test@deltatest.com")
+    @Schema(description = "邮箱 / Email address", example = "test@deltatest.com")
     private String email;
-
-    /** 手机号 / Phone number */
-    @Schema(description = "手机号 / Phone number", example = "13800138000")
-    private String phone;
 
     /** 角色ID列表 / Role ID list */
     @Schema(description = "角色ID列表 / Role ID list", example = "[1, 2]")

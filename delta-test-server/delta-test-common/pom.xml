@@ -100,8 +100,6 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>8.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

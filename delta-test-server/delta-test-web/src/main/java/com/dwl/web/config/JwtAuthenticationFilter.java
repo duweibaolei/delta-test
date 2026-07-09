@@ -1,6 +1,6 @@
 package com.dwl.web.config;
 
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.common.result.R;
 import com.dwl.common.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * Reuses {@link JwtUtil} for token parsing to avoid duplicate key configuration.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Component

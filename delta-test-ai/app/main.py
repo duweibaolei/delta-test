@@ -6,7 +6,7 @@ DeltaTest AI Service Application Entry Point
 Entry point for the DeltaTest dual-mode Web automation testing platform AI service, built on FastAPI.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 from contextlib import asynccontextmanager

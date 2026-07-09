@@ -29,6 +29,9 @@
 | **对象存储** | MinIO | 8.5.14 | 报告/截图文件存储 |
 | **向量检索** | Milvus | 2.4.4 | AI 语义相似度搜索 |
 | **测试** | Testcontainers | 1.20.4 | 集成测试容器化 |
+| **日志编码** | logstash-logback-encoder | 8.0 | JSON 结构化日志（prod profile LogstashEncoder） |
+| **数据库迁移** | Flyway | (Boot管理) | 版本化 DDL 迁移（flyway-core + flyway-mysql） |
+| **AI HTTP** | RestTemplate | (Boot管理) | Java→Python AI 服务 HTTP 调用（@Qualifier 多 Bean 注入） |
 
 **Vue 前端：**
 
@@ -46,6 +49,8 @@
 | **预处理** | Less | 4.x | CSS 增强 |
 | **规范** | ESLint + Prettier | 9.x / 3.x | 代码风格统一 |
 | **类型** | vue-tsc | 2.x | 编译期类型校验 |
+| **测试** | Vitest | 3.2.x | 前端单元测试（jsdom + @vitest/coverage-v8） |
+| **API类型** | openapi-typescript | ^7.13.0 | 从 OpenAPI 3.0 规范自动生成 TypeScript 类型定义 |
 | **按需** | unplugin-vue-components | 28.x | Ant Design Vue 按需引入 |
 | **自动** | unplugin-auto-import | 19.x | Vue/Router/Pinia API 自动导入 |
 

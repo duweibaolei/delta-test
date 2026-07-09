@@ -6,7 +6,7 @@ Risk Assessment Prompt Template
 System and user prompt templates for LLM risk assessment.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 RISK_ASSESSMENT_SYSTEM_PROMPT = """\

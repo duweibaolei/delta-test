@@ -14,7 +14,7 @@ import lombok.*;
  * Maps to table test_case, storing basic information and metadata for test cases.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

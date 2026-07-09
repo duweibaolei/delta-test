@@ -6,7 +6,7 @@
  * Tests health check API function request construction and type constraints.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { healthCheckApi } from '../health'

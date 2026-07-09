@@ -1,5 +1,6 @@
 package com.dwl.common.result;
 
+import com.dwl.common.enums.ErrorCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -12,11 +13,11 @@ import java.io.Serializable;
  * <p>
  * 所有API接口返回值的统一包装类，包含状态码、消息、数据和时间戳。
  * Unified wrapper for all API response values, containing status code,
- * message, data, and timestamp.
+ * message, data and timestamp.
  * </p>
  *
  * @param <T> 响应数据泛型 / Response data generic type
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "统一响应体 / Unified API Response Body")

@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table sys_environment, managing basic configuration for test environments.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table env_variable, managing variable key-value configurations for each environment.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

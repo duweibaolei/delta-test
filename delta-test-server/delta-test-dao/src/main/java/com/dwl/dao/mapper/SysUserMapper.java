@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 系统用户 / System User Mapper 接口
  * 系统用户 / System User Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {

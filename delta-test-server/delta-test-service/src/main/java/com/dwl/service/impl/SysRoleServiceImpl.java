@@ -2,7 +2,7 @@ package com.dwl.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.dao.mapper.SysRoleMapper;
 import com.dwl.dao.mapper.SysRolePermissionMapper;
 import com.dwl.dao.mapper.SysUserRoleMapper;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * 系统角色 服务实现类
  * System Role Service Implementation
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service

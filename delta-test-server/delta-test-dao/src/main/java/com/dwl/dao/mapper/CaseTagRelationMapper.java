@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 用例标签关联 / Case-Tag Association Mapper 接口
  * 用例标签关联 / Case-Tag Association Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface CaseTagRelationMapper extends BaseMapper<CaseTagRelation> {

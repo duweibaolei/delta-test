@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table sys_permission, defining permission resources such as menus, buttons, and APIs.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

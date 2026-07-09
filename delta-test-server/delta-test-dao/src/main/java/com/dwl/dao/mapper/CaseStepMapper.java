@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 用例步骤 / Case Step Mapper 接口
  * 用例步骤 / Case Step Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface CaseStepMapper extends BaseMapper<CaseStep> {

@@ -14,7 +14,7 @@ import lombok.*;
  * Maps to table business_link, defining end-to-end business links and their metadata.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

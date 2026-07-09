@@ -6,7 +6,7 @@
  * Tests Axios instance base configuration: baseURL, timeout, headers, withCredentials.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import {describe, expect, it} from 'vitest'
 import http from '../http'

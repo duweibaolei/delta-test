@@ -12,7 +12,7 @@ import lombok.Getter;
  * Defines the current status of a test case, indicating its phase in the lifecycle.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Getter
 @AllArgsConstructor

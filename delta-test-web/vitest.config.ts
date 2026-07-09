@@ -6,7 +6,7 @@
  * Configures test environment, coverage, and path aliases.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import {defineConfig} from 'vitest/config'
 import vue from '@vitejs/plugin-vue'

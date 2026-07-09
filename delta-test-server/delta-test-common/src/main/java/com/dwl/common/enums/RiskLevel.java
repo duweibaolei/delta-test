@@ -12,7 +12,7 @@ import lombok.Getter;
  * Defines the risk level of test cases or defects, including high, medium, and low risk.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Getter
 @AllArgsConstructor

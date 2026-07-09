@@ -20,7 +20,7 @@ import java.util.List;
  * 字典管理 控制器
  * Dictionary Management Controller
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @RestController
 @RequestMapping("/api/system")

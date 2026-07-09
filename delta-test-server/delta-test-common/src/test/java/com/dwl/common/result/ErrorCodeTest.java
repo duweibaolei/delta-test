@@ -1,5 +1,6 @@
 package com.dwl.common.result;
 
+import com.dwl.common.enums.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 错误码枚举 ErrorCode 单元测试
  * Error Code Enumeration ErrorCode Unit Test
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @DisplayName("错误码枚举 ErrorCode / Error Code Enumeration ErrorCode")
 class ErrorCodeTest {

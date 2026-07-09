@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table change_analysis, recording code change analysis results and risk assessment information.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

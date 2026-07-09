@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * Agent长期记忆 / Agent Memory Mapper 接口
  * Agent长期记忆 / Agent Memory Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface AgentMemoryMapper extends BaseMapper<AgentMemory> {

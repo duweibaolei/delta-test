@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 业务链路 / Business Link Mapper 接口
  * 业务链路 / Business Link Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface BusinessLinkMapper extends BaseMapper<BusinessLink> {

@@ -6,7 +6,7 @@ Request DTO Models
 Defines request parameter models for each AI interface, using Pydantic for type validation.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 from pydantic import BaseModel, Field

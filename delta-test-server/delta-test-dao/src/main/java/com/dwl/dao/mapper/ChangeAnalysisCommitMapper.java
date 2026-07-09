@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 变更分析-提交关联 / Change Analysis-Commit Association Mapper 接口
  * 变更分析-提交关联 / Change Analysis-Commit Association Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface ChangeAnalysisCommitMapper extends BaseMapper<ChangeAnalysisCommit> {

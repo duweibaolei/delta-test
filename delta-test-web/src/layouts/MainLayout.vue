@@ -18,6 +18,7 @@
       <!-- 菜单 / Menu -->
       <a-menu
         v-model:selectedKeys="selectedKeys"
+        v-model:openKeys="openKeys"
         theme="dark"
         mode="inline"
         @click="onMenuClick"
@@ -42,6 +43,16 @@
           <BarChartOutlined />
           <span>质量报告</span>
         </a-menu-item>
+        <a-sub-menu key="/system">
+          <template #title>
+            <SettingOutlined />
+            <span>系统管理</span>
+          </template>
+          <a-menu-item key="/system/user">
+            <TeamOutlined />
+            <span>用户管理</span>
+          </a-menu-item>
+        </a-sub-menu>
       </a-menu>
     </a-layout-sider>
 
@@ -99,6 +110,8 @@ import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  SettingOutlined,
+  TeamOutlined,
   ThunderboltOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue'
@@ -114,12 +127,20 @@ const collapsed = ref(false)
 /** 当前选中菜单 / Current selected menu */
 const selectedKeys = ref<string[]>([route.path])
 
+/** 展开的子菜单 / Expanded sub-menus */
+const openKeys = ref<string[]>([])
+
 // 路由变化时更新选中菜单 / Update selected menu on route change
 watch(
   () => route.path,
   (path) => {
     selectedKeys.value = [path]
+    // 自动展开父级子菜单 / Auto-expand parent sub-menu
+    if (path.startsWith('/system')) {
+      openKeys.value = ['/system']
+    }
   },
+  { immediate: true },
 )
 
 /**

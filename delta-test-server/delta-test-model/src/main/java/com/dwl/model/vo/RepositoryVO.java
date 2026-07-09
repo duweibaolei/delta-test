@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * 仓库视图对象 VO
  * Repository View Object
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "仓库视图对象 / Repository View Object")

@@ -9,7 +9,7 @@ import java.util.List;
  * 系统权限 服务接口
  * System Permission Service Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 public interface SysPermissionService {
 

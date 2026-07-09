@@ -33,6 +33,13 @@ grpc:
       use-tls: false
       # trust-cert-path: # 开发环境无需TLS，无需配置 / No TLS in dev, no need to configure
 
+# ==================== AI服务配置 / AI Service Configuration ====================
+ai:
+  service:
+    url: http://localhost:8000
+    connect-timeout: 5
+    read-timeout: 60
+
 # ==================== CORS配置 / CORS Configuration ====================
 cors:
   allowed-origins: "*"

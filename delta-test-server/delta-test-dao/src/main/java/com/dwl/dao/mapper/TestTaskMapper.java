@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 测试任务 / Test Task Mapper 接口
  * 测试任务 / Test Task Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface TestTaskMapper extends BaseMapper<TestTask> {

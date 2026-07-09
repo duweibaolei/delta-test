@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 页面元素 / Page Element Mapper 接口
  * 页面元素 / Page Element Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface PageElementMapper extends BaseMapper<PageElement> {

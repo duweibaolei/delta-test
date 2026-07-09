@@ -6,7 +6,7 @@ Embedding & Semantic Matching Service
 Performs semantic case matching based on Embedding vectors, returns placeholder data in skeleton phase.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 

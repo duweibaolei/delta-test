@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table sys_dict_data, storing specific key-value data items under dictionary types.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

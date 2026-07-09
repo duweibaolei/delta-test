@@ -29,7 +29,7 @@ import java.util.List;
  * Configures JWT filter, CORS, CSRF (disabled for REST), session management, etc.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Configuration
 @EnableWebSecurity

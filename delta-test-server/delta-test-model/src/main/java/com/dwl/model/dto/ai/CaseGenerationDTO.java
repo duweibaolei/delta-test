@@ -18,7 +18,7 @@ import java.io.Serializable;
  * Aligned with Python CaseGenerationRequest, used to send case generation requests to the AI service.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder

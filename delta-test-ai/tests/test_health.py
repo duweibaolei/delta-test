@@ -6,7 +6,7 @@ Health Check API Tests
 Tests whether the health check endpoint returns normally.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 import pytest

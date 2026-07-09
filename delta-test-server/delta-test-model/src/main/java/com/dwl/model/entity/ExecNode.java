@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Maps to table exec_node, managing Playwright execution node registration and heartbeat status.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 报告-执行关联 / Report-Execution Association Mapper 接口
  * 报告-执行关联 / Report-Execution Association Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface ReportExecutionRelationMapper extends BaseMapper<ReportExecutionRelation> {

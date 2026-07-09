@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 受影响范围 / Affected Scope Mapper 接口
  * 受影响范围 / Affected Scope Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface AffectedScopeMapper extends BaseMapper<AffectedScope> {

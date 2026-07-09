@@ -6,7 +6,7 @@ Health Check API
 Provides AI service health check endpoint for Java backend and K8s probes.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 from fastapi import APIRouter

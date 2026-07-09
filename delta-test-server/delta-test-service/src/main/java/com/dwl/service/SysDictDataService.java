@@ -9,7 +9,7 @@ import java.util.List;
  * 字典数据 服务接口
  * Dictionary Data Service Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 public interface SysDictDataService {
 

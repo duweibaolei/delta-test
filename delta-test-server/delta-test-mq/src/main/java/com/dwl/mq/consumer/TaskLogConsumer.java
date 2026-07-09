@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * Consumes task execution log messages, pushes to WebSocket clients.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Component

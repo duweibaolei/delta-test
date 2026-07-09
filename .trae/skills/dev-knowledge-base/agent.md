@@ -17,29 +17,38 @@
 DeltaTest 智能体采用 **Master-Slave 协作模式**：一个 Master Agent（Orchestrator）作为唯一对外入口，负责意图理解、任务分解、Sub-Agent 调度与结果聚合；5 个 Sub-Agent 各自封装单一 AI 能力，彼此无依赖，只与 Master 通信。
 
 ```
-Java Backend (HTTP REST, 5s/60s timeout)
+Java Backend
     │
-    ▼
-┌───────────────────────────────────────────────┐
-│         FastAPI (delta-test-ai)                │
-│                                               │
-│  ┌─────────────────────────────────────────┐  │
-│  │       Master Agent (Orchestrator)       │  │
-│  │  · intent_parsing()   意图理解          │  │
-│  │  · task_decomposition() 任务分解        │  │
-│  │  · sub_agent_dispatch()  Sub调度        │  │
-│  │  · result_aggregation()  结果聚合       │  │
-│  └──────┬────────┬────────┬────────────────┘  │
-│         │        │        │                   │
-│  ┌──────▼──┐ ┌───▼────┐ ┌─▼───────────┐     │
-│  │ Risk    │ │Summary │ │RootCause    │     │
-│  │ Agent   │ │Agent   │ │Agent        │     │
-│  └─────────┘ └────────┘ └─────────────┘     │
-│  ┌──────────┐ ┌──────────────────────────┐   │
-│  │CaseGen   │ │SemanticMatch            │   │
-│  │Agent     │ │Agent (EmbeddingService)  │   │
-│  └──────────┘ └──────────────────────────┘   │
-└───────────────────────────────────────────────┘
+    ├── AiServiceClient (@Qualifier("aiRestTemplate"), 5s/60s)
+    │       │
+    │       ▼
+    │   ┌───────────────────────────────────────────────┐
+    │   │         FastAPI (delta-test-ai)                │
+    │   │                                               │
+    │   │  ┌─────────────────────────────────────────┐  │
+    │   │  │       Master Agent (Orchestrator)       │  │
+    │   │  │  · intent_parsing()   意图理解          │  │
+    │   │  │  · task_decomposition() 任务分解        │  │
+    │   │  │  · sub_agent_dispatch()  Sub调度        │  │
+    │   │  │  · result_aggregation()  结果聚合       │  │
+    │   │  └──────┬────────┬────────┬────────────────┘  │
+    │   │         │        │        │                   │
+    │   │  ┌──────▼──┐ ┌───▼────┐ ┌─▼───────────┐     │
+    │   │  │ Risk    │ │Summary │ │RootCause    │     │
+    │   │  │ Agent   │ │Agent   │ │Agent        │     │
+    │   │  └─────────┘ └────────┘ └─────────────┘     │
+    │   │  ┌──────────┐ ┌──────────────────────────┐   │
+    │   │  │CaseGen   │ │SemanticMatch            │   │
+    │   │  │Agent     │ │Agent (EmbeddingService)  │   │
+    │   │  └──────────┘ └──────────────────────────┘   │
+    │   └───────────────────────────────────────────────┘
+    │
+    ├── EngineGrpcClient (gRPC, 3s/30s)
+    │       │
+    │       ▼
+    │   C Engine (delta-test-engine)
+    │
+    └── AiResponse: code/message/data/timestamp ↔ Python R[T]
 ```
 
 ### 8.1.2 Agent 通信协议
@@ -49,7 +58,7 @@ Java Backend (HTTP REST, 5s/60s timeout)
 | Master ↔ Sub-Agent | **进程内 async function call** | 同一 FastAPI 进程，无额外 RPC 开销；未来可拆为独立 HTTP 服务 |
 | 通信数据结构 | `AgentResult` 数据类 | 包含 `success: bool`、`data: dict`、`error: str | None`、`metadata: dict`（含 model_version、token_usage、latency_ms） |
 | Sub-Agent 间通信 | **禁止直接通信** | 需要协作的场景由 Master 编排（例如风险分析后调用语义匹配查找关联用例） |
-| Java ↔ Master Agent | HTTP REST（JSON） | 复用现有 5 个端点路径不变，Agent 层为内部增强 |
+| Java ↔ Master Agent | HTTP REST（JSON） | 已有 `AiServiceClient`（`@Qualifier("aiRestTemplate")`）作为客户端，5s 连接/60s 读取超时 |
 
 ### 8.1.3 记忆系统
 
@@ -96,6 +105,10 @@ Java Backend (HTTP REST, 5s/60s timeout)
 
 | 集成点 | 方式 | 说明 |
 |--------|------|------|
+| `AiServiceClient`（已有） | **HTTP 客户端** | `com.dwl.ai.client.AiServiceClient`，`@Qualifier("aiRestTemplate")` 注入，封装 5 个 API 方法（healthCheck/assessRisk/generateSummary/analyzeRootCause/generateCase） |
+| `AiResponse`（已有） | **响应模型** | `com.dwl.ai.model.AiResponse`，字段 code/message/data/timestamp 与 Python `R[T]` 完全对齐，`isSuccess()` 判断 `code==200` |
+| `AiServiceConfig`（已有） | **配置类** | `com.dwl.ai.config.AiServiceConfig`，`aiRestTemplate` Bean（5s 连接/60s 读取），`ai.service.url`/`connect-timeout`/`read-timeout` 外化配置 |
+| `/api/health`（已有） | **健康检查** | Java: `HealthController` → `R<HealthVO>` (status/service/version)；Python: `health.py` → `R[dict]` (status: "UP")；AiServiceClient.healthCheck() 可调用 Python 侧 |
 | 现有 5 个 AI 端点 | **不改路径** | `/api/risk-assessment` 等端点路径不变，内部由 Service → Agent 重构 |
 | `ChangeAnalysisService` | **增强** | 新增 `triggerAiAnalysis(Long analysisId)` 方法，按序调用风险评估 + 变更摘要 |
 | `TaskResultConsumer` | **增强** | 任务执行失败时自动触发 RootCauseAgent |
@@ -171,7 +184,19 @@ delta-test-ai/app/
 
 ## 8.4 智能体 API 契约
 
-### 8.4.1 新增 HTTP 端点
+### 8.4.1 HTTP 端点
+
+**已有端点（Phase 0 已实现）：**
+
+| 方法 | 路径 | 说明 | Java 侧 | Python 侧 |
+|------|------|------|----------|-----------|
+| `GET` | `/api/health` | 健康检查（K8s 探针） | `HealthController` → `R<HealthVO>` (status/service/version) | `health.py` → `R[dict]` (status: "UP") |
+| `POST` | `/api/risk-assessment` | 风险评估 | `AiServiceClient.assessRisk()` | `risk_assessment.py` |
+| `POST` | `/api/summary` | 变更摘要 | `AiServiceClient.generateSummary()` | `summary.py` |
+| `POST` | `/api/root-cause` | 根因分析 | `AiServiceClient.analyzeRootCause()` | `root_cause.py` |
+| `POST` | `/api/case-generation` | 用例生成 | `AiServiceClient.generateCase()` | `case_generation.py` |
+
+**新增端点（规划中）：**
 
 | 方法 | 路径 | 说明 | 阶段 |
 |------|------|------|------|

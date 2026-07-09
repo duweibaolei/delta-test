@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  * Defines exchanges, queues, bindings, and message converter.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Configuration
 public class RabbitMqConfig {

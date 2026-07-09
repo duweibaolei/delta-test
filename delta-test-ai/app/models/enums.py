@@ -6,7 +6,7 @@ Enum Definitions
 Defines enum types used in the AI service, error codes aligned with Java ErrorCode 5xxx range.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 from enum import Enum, IntEnum

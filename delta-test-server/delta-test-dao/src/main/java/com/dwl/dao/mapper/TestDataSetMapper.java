@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 测试数据集 / Test Data Set Mapper 接口
  * 测试数据集 / Test Data Set Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface TestDataSetMapper extends BaseMapper<TestDataSet> {

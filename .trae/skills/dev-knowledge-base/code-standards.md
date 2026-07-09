@@ -146,11 +146,11 @@
  * Provides JWT token generation, parsing, and verification capabilities.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 ```
 
-- **类注释**：Javadoc + 双语描述 + `<p>` 段落分隔 + `@author DeltaTest`
+- **类注释**：Javadoc + 双语描述 + `<p>` 段落分隔 + `@author ByDWL`
 - **方法注释**：Javadoc + 双语简述 + `@param` + `@return`
 - **字段注释**：行内双语 `/** 中文名 / English name */`
 - **行内注释**：`// 中文 / English` 双语，业务关键逻辑处必须添加
@@ -167,11 +167,11 @@
  * Manages user login state, token, and user information.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 ```
 
-- **文件注释**：JSDoc + 双语描述 + `<p>` 段落分隔 + `@author DeltaTest`（放在 `<script setup>` 顶部）
+- **文件注释**：JSDoc + 双语描述 + `<p>` 段落分隔 + `@author ByDWL`（放在 `<script setup>` 顶部）
 - **函数注释**：JSDoc + 双语简述 + `@param` + `@returns`
 - **变量注释**：行内双语 `/** 中文名 / English name */`
 - **行内注释**：`// 中文 / English` 双语，业务关键逻辑处必须添加
@@ -188,11 +188,11 @@ Risk Assessment Service
 Performs risk assessment based on change analysis results, returns placeholder data in skeleton phase.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 ```
 
-- **模块注释**：三引号 docstring + 双语描述 + `<p>` 段落分隔 + `@author DeltaTest`
+- **模块注释**：三引号 docstring + 双语描述 + `<p>` 段落分隔 + `@author ByDWL`
 - **类注释**：三引号 docstring + 双语描述 + `<p>` 段落分隔
 - **方法注释**：三引号 docstring + 双语简述 + `Args:` + `Returns:`
 - **字段注释**：行内双语 `"""中文名 / English name"""`
@@ -211,11 +211,11 @@ Performs risk assessment based on change analysis results, returns placeholder d
  * Receives commit range, calls libgit2 to compute diff, outputs changed file list and line numbers.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 ```
 
-- **文件注释**：Doxygen + 双语描述 + `<p>` 段落分隔 + `@author DeltaTest`
+- **文件注释**：Doxygen + 双语描述 + `<p>` 段落分隔 + `@author ByDWL`
 - **函数注释**：Doxygen + 双语简述 + `@param` + `@return`
 - **字段注释**：行内双语 `/**< 中文名 / English name */`
 - **行内注释**：`/* 中文 / English */` 双语，业务关键逻辑处必须添加
@@ -277,7 +277,7 @@ class R(BaseModel, Generic[T]):
 |------|------|
 | 一一对应 | 每个 Java Controller 对应一个前端 API 文件（如 `auth.ts` ↔ `AuthController`） |
 | 函数命名 | camelCase + `Api` 后缀（`loginApi()`, `refreshTokenApi()`） |
-| DTO/VO 类型 | 与 Java 后端 `LoginDTO`/`LoginVO` 同名定义 TypeScript interface |
+| DTO/VO 类型 | 由 openapi-typescript 从 OpenAPI 规范自动生成（`types.generated.ts`），引用 `components['schemas']['XxxDTO']` 类型别名，**禁止手动定义** |
 | 请求方法 | 使用 `@/utils/http.ts` 导出的 `get/post/put/del` 函数 |
 | 错误处理 | 由 Axios 拦截器统一处理，API 层不需 try-catch（除非需特殊逻辑） |
 
@@ -329,3 +329,86 @@ class R(BaseModel, Generic[T]):
 | MinGW `ld` 路径空格报错 | CLion 自带 MinGW 安装路径含空格 | 使用无空格路径的独立 MinGW64 |
 | Cygwin gcc 不兼容 | Cygwin 编译器与 MinGW Makefiles 生成器不兼容 | 显式指定 `-DCMAKE_C_COMPILER` 和 `-DCMAKE_CXX_COMPILER` |
 | Conan 缓存损坏 | Windows 下 Conan 缓存权限/锁文件问题 | `conan cache clean` 或删除 `.conan2/` 重装 |
+
+## 4.9 跨语言集成规范
+
+### 4.9.1 Java→Python HTTP 客户端
+
+| 规范 | 说明 |
+|------|------|
+| 客户端类 | `AiServiceClient`（`com.dwl.ai.client.AiServiceClient`） |
+| 注入方式 | **显式构造器注入 + `@Qualifier`**（不使用 `@RequiredArgsConstructor`，因为 Lombok 不会自动复制 `@Qualifier` 到构造函数参数） |
+| RestTemplate Bean | `AiServiceConfig.aiRestTemplate()`，Bean 名 `aiRestTemplate`，5s 连接 / 60s 读取 |
+| 响应反序列化 | `AiResponse`（code/message/data/timestamp），与 Python `R[T]` 完全对齐 |
+| 配置外化 | `ai.service.url`、`ai.service.connect-timeout`、`ai.service.read-timeout`（application.yml 三环境配置） |
+| 错误处理 | `RestClientException` → `BusinessException(ErrorCode.AI_UNAVAILABLE)`；非 200 响应 → `BusinessException` |
+
+### 4.9.2 Java→C gRPC 客户端
+
+| 规范 | 说明 |
+|------|------|
+| 客户端类 | `EngineGrpcClient`（`com.dwl.grpc.client.EngineGrpcClient`） |
+| 注入方式 | `@RequiredArgsConstructor` + `ManagedChannel` 单例 Bean |
+| 超时配置 | `GrpcClientConfig` 中 ManagedChannel 配置，3s 连接 / 30s 读取 |
+| TLS 开关 | `${grpc.client.engine.use-tls:false}` + JDK 系统信任库 + 自定义 CA |
+| 错误处理 | `StatusRuntimeException` → `BusinessException(ErrorCode.ENGINE_UNAVAILABLE)` |
+
+### 4.9.3 统一响应体三方对齐
+
+| 侧 | 类 | 字段 |
+|---|---|---|
+| Java 后端 | `R<T>` | code(int) / message(String) / data(T) / timestamp(long) |
+| Python AI | `R[T]` | code(int) / message(str) / data(T) / timestamp(int) |
+| Java 反序列化 | `AiResponse` | code(int) / message(String) / data(Object) / timestamp(long) |
+
+### 4.9.4 健康检查端点
+
+| 侧 | 端点 | 响应 | 认证 |
+|---|---|---|---|
+| Java | `GET /api/health` | `R<HealthVO>` (status/service/version) | 无需认证（SecurityConfig permitAll） |
+| Python | `GET /api/health` | `R[dict]` (status: "UP") | 无需认证 |
+
+## 4.10 数据库迁移规范（Flyway）
+
+| 规范 | 说明 |
+|------|------|
+| 迁移脚本命名 | `V{版本号}__{描述}.sql`（双下划线分隔），如 `V1__create_all_tables.sql` |
+| 迁移脚本位置 | `delta-test-admin/src/main/resources/db/migration/` |
+| 配置 | `spring.flyway.enabled=true`、`locations=classpath:db/migration`、`baseline-on-migrate=true` |
+| baseline-on-migrate | 已有数据库首次引入 Flyway 时自动标记 baseline，避免全量重建 |
+| 版本号规则 | 从 `V2` 开始递增，`V1` 为初始全量建表 + 字典数据 |
+| 禁止修改已执行脚本 | Flyway 校验已执行脚本的 checksum，修改后会导致启动失败 |
+
+## 4.11 JSON 结构化日志规范
+
+**Java 后端（logback-spring.xml）：**
+
+| Profile | 编码器 | 输出 |
+|---------|--------|------|
+| dev | `PatternLayoutEncoder` | 彩色控制台（%clr 高亮） |
+| prod | `LogstashEncoder` | JSON 结构化日志（timestamp/level/logger/thread/message/stack_trace/caller） |
+| default | `PatternLayoutEncoder` | 彩色控制台 |
+
+- 自定义字段：`"service": "delta-test-server"`
+- 依赖：`logstash-logback-encoder:8.0`
+
+**Python AI 服务（app/core/logging.py）：**
+
+| `LOG_FORMAT` 环境变量 | 输出 |
+|---|---|
+| `json` | `_json_sink` 自定义 JSON 序列化（timestamp/level/name/message/service/exception_type/exception_message/context） |
+| 其他值（默认 `console`） | loguru 彩色可读格式 |
+
+- 自定义字段：`"service": "delta-test-ai"`
+- 通过 `setup_logging()` 在 `main.py` lifespan 启动时调用
+
+## 4.12 前端 API 类型生成规范（openapi-typescript）
+
+| 规范 | 说明 |
+|------|------|
+| 生成工具 | `openapi-typescript ^7.13.0`（devDependency） |
+| 生成源 | OpenAPI 3.0 规范（Java SpringDoc 运行时输出 / 静态 `openapi.json`） |
+| 生成命令 | `pnpm api:generate`（从运行中后端）/ `pnpm api:generate:local`（从本地 openapi.json） |
+| 生成文件 | `src/api/types.generated.ts`（已加入 `.gitignore`，CI/CD 时生成） |
+| 类型引用 | `import type { components } from '@/api/types.generated'`，导出类型别名如 `export type LoginVO = components['schemas']['LoginVO']` |
+| 禁止手动定义 | API DTO/VO 类型**必须**从生成文件引用，禁止手动创建同名 interface |

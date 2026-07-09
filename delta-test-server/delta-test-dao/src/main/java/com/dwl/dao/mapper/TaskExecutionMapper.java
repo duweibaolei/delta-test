@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 任务执行记录 / Task Execution Record Mapper 接口
  * 任务执行记录 / Task Execution Record Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface TaskExecutionMapper extends BaseMapper<TaskExecution> {

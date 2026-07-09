@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * 认证管理 控制器
  * Authentication Management Controller
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @RestController
 @RequestMapping("/api/auth")

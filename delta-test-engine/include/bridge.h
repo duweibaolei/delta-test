@@ -7,7 +7,7 @@
  * Provides type conversion and calling interface between C business logic and C++ gRPC layer.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 
 #ifndef DELTA_ENGINE_BRIDGE_H

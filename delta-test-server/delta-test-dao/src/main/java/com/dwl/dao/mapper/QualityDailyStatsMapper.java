@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 质量每日统计 / Quality Daily Statistics Mapper 接口
  * 质量每日统计 / Quality Daily Statistics Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface QualityDailyStatsMapper extends BaseMapper<QualityDailyStats> {

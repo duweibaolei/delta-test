@@ -18,7 +18,7 @@ import java.time.LocalDate;
  * Extends BaseEntity, including common audit fields.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder

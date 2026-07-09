@@ -6,7 +6,7 @@
  * Tests login, refresh token, logout API function request construction.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { loginApi, refreshTokenApi, logoutApi } from '../auth'

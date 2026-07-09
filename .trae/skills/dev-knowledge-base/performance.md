@@ -57,6 +57,21 @@
 | **连接复用** | `ManagedChannel` 单例 Bean，复用 TCP 长连接 |
 | **TLS 可切换** | 开发环境 `usePlaintext()`，生产环境 `${grpc.client.engine.use-tls}` 开关 + 自定义 CA 证书 |
 
+## 7.5.1 AI HTTP 层
+
+| 措施 | 实现 |
+|------|------|
+| **专用 RestTemplate** | `@Qualifier("aiRestTemplate")` 独立 Bean，不影响默认 RestTemplate |
+| **超时配置外化** | `ai.service.connect-timeout=5s` / `ai.service.read-timeout=60s`（application.yml 三环境） |
+| **响应体对齐** | `AiResponse` 与 Python `R[T]` 字段完全一致，零转换开销反序列化 |
+
+## 7.5.2 数据库迁移层
+
+| 措施 | 实现 |
+|------|------|
+| **Flyway baseline-on-migrate** | 已有数据库首次引入 Flyway 时自动标记 baseline，避免全量重建 |
+| **启动时自动迁移** | Spring Boot 启动时自动执行 Flyway，无需手动运维 |
+
 ## 7.6 前端层
 
 | 措施 | 实现 |
@@ -66,6 +81,7 @@
 | **路由懒加载** | 所有页面组件 `() => import()` 动态导入，首屏仅加载当前路由组件 |
 | **分包策略** | `manualChunks`：`vue-vendor`（vue/router/pinia）+ `antd-vendor`（antd/icons），优化缓存命中 |
 | **ES2022 目标** | `build.target: es2022`，跳过旧浏览器 polyfill，减小包体积 |
+| **API 类型自动生成** | `openapi-typescript` 从 OpenAPI 规范生成 TypeScript 类型，避免手写类型和前后端不一致导致的重构开销 |
 | **Sourcemap** | 生产环境 `sourcemap: false`，不暴露源码 |
 | **Vite 代理** | 开发环境 `/api` → `localhost:8080`，避免跨域和重复部署 |
 | **Less 预处理** | CSS 变量 + Less 函数，减少重复样式代码 |

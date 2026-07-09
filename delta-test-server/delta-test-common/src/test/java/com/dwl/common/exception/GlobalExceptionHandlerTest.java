@@ -1,18 +1,15 @@
 package com.dwl.common.exception;
 
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.common.result.R;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Path;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -28,7 +25,7 @@ import static org.mockito.Mockito.*;
  * 全局异常处理器 GlobalExceptionHandler 单元测试
  * Global Exception Handler GlobalExceptionHandler Unit Test
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("全局异常处理器 GlobalExceptionHandler / Global Exception Handler GlobalExceptionHandler")

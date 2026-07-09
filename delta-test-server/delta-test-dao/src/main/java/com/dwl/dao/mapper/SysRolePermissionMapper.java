@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 角色权限关联 / Role-Permission Association Mapper 接口
  * 角色权限关联 / Role-Permission Association Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface SysRolePermissionMapper extends BaseMapper<SysRolePermission> {

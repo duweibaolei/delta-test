@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Maps to table test_task, managing test task scheduling, execution progress, and result statistics.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

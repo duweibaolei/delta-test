@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table sys_dict_type, managing classification definitions for various system dictionaries.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

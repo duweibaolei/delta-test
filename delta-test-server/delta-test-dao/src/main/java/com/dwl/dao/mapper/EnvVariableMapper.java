@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 环境变量 / Environment Variable Mapper 接口
  * 环境变量 / Environment Variable Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface EnvVariableMapper extends BaseMapper<EnvVariable> {

@@ -13,7 +13,7 @@ import lombok.*;
  * Maps to table sys_repository, managing Git repository connections, authentication, and webhook configuration.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

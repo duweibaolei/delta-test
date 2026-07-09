@@ -8,7 +8,7 @@ import com.dwl.grpc.engine.HealthCheckResponse;
 import com.dwl.grpc.engine.ImpactRequest;
 import com.dwl.grpc.engine.ImpactResponse;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import io.grpc.ManagedChannel;
 import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ import java.util.List;
  * Phase 1 will add timeout/retry/fallback strategies.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service

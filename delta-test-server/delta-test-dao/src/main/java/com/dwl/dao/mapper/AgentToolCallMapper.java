@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * Agent工具调用记录 / Agent Tool Call Mapper 接口
  * Agent工具调用记录 / Agent Tool Call Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface AgentToolCallMapper extends BaseMapper<AgentToolCall> {

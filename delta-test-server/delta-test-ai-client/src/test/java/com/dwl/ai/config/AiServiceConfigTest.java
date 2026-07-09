@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * AiServiceConfig 单元测试
  * AiServiceConfig Unit Tests
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @DisplayName("AiServiceConfig 单元测试 / AiServiceConfig Unit Tests")
 class AiServiceConfigTest {

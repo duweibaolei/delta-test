@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * JSON 结构化日志配置验证测试
  * JSON Structured Logging Configuration Verification Test
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @DisplayName("JSON结构化日志配置 / JSON Structured Logging Configuration")
 class LoggingConfigurationTest {

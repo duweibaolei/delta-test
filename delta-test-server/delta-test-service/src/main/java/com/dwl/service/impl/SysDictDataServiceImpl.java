@@ -2,7 +2,7 @@ package com.dwl.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.dao.mapper.SysDictDataMapper;
 import com.dwl.model.entity.SysDictData;
 import com.dwl.model.vo.DictDataVO;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * 字典数据 服务实现类
  * Dictionary Data Service Implementation
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service

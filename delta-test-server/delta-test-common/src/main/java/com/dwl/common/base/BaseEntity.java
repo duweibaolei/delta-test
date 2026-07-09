@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * logical delete flag, and audit timestamp fields.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "基础实体类 / Base Entity Class")

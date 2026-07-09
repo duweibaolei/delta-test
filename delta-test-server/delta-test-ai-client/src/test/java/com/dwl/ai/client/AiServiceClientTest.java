@@ -2,7 +2,7 @@ package com.dwl.ai.client;
 
 import com.dwl.ai.model.AiResponse;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.model.dto.ai.CaseGenerationDTO;
 import com.dwl.model.dto.ai.RiskAssessmentDTO;
 import com.dwl.model.dto.ai.RootCauseDTO;
@@ -20,7 +20,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ import static org.mockito.Mockito.when;
  * AiServiceClient 单元测试
  * AiServiceClient Unit Tests
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("AiServiceClient 单元测试 / AiServiceClient Unit Tests")

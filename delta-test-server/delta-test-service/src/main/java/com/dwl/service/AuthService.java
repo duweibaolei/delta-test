@@ -7,7 +7,7 @@ import com.dwl.model.vo.LoginVO;
  * 认证 服务接口
  * Authentication Service Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 public interface AuthService {
 

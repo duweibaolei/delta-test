@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 系统权限 / System Permission Mapper 接口
  * 系统权限 / System Permission Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {

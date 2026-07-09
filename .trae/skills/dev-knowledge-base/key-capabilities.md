@@ -16,6 +16,7 @@
 |------|------|
 | **多语言协作架构** | Java(业务调度) + C(计算引擎/gRPC) + Python(AI/HTTP) + Vue(前端) 四语言协同 |
 | **双模式驱动** | 变更自动闭环 + 手动录入触发，同一底座不同入口 |
+| **跨语言通信** | Java→Python: AiServiceClient(HTTP 5s/60s) + Java→C: EngineGrpcClient(gRPC 3s/30s) + Java→Playwright: RabbitMQ AMQP |
 | **异步消息解耦** | RabbitMQ 分离任务分发/执行/结果/日志四个阶段 |
 | **实时推送** | WebSocket + ConcurrentHashMap 会话管理 |
 | **跨语言接口规范** | REST/WS/gRPC/AMQP 四种协议按场景选型 |
@@ -26,13 +27,15 @@
 | 能力 | 体现 |
 |------|------|
 | **分层架构** | Java: common→model→dao→service→web→admin 严格单向依赖；Vue: views→api→utils/stores→后端 |
-| **统一响应体** | Java `R<T>` + 前端 `ApiResponse<T>` 前后端一致 |
+| **统一响应体** | Java `R<T>` + Python `R[T]` + Java 反序列化 `AiResponse` 三方统一（code/message/data/timestamp） |
 | **配置外化** | Java `${ENV:default}` + Vue `VITE_XXX` 环境变量，12-Factor App 合规 |
-| **API 文档驱动** | SpringDoc OpenAPI 全量注解 + 前端 API 层一一对应 |
+| **API 文档驱动** | SpringDoc OpenAPI 全量注解 + openapi-typescript 自动生成前端类型 |
 | **双语注释** | 中文 + English 双语 Javadoc/JSDoc，国际化团队协作友好 |
+| **JSON 结构化日志** | Java: logback-spring.xml (dev 彩色/prod LogstashEncoder) + Python: LOG_FORMAT 环境变量切换 |
+| **Flyway 数据库迁移** | 版本化 DDL 迁移 + baseline-on-migrate + Spring Boot 启动时自动执行 |
 | **逻辑删除规范** | 全表 `is_deleted` + `idx_is_deleted`，DDL 层统一约束 |
 | **字典数据驱动** | `sys_dict_type` + `sys_dict_data`，枚举字段前端下拉/后端校验统一数据源 |
-| **前端工程化** | Vite + pnpm + TypeScript + ESLint + Prettier，全链路自动化 |
+| **前端工程化** | Vite + pnpm + TypeScript + ESLint + Prettier + openapi-typescript，全链路自动化 |
 
 ## 9.3 安全工程能力
 
@@ -49,8 +52,8 @@
 
 | 能力 | 体现 |
 |------|------|
-| **5 域 34 表** | 系统管理/代码分析/测试管理/执行管控/质量报告 |
-| **24 种字典** | 90 条预置数据，覆盖所有枚举字段 |
+| **6 域 39 表** | 系统管理/代码分析/测试管理/执行管控/质量报告/智能体 |
+| **24 种字典** | 89 条预置数据，覆盖所有枚举字段 |
 | **审计字段** | BaseEntity 统一 `id/isDeleted/createdAt/updatedAt`（Java）/ `id/is_deleted/created_at/updated_at`（DB列） |
 | **乐观锁** | `@Version` 保护高并发更新场景 |
 | **雪花 ID** | `ASSIGN_ID` 分布式主键 |

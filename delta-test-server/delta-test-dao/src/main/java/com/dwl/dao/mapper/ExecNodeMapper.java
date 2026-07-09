@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 执行节点 / Execution Node Mapper 接口
  * 执行节点 / Execution Node Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface ExecNodeMapper extends BaseMapper<ExecNode> {

@@ -2,7 +2,7 @@ package com.dwl.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.dwl.common.exception.BusinessException;
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.dao.mapper.SysEnvironmentMapper;
 import com.dwl.model.dto.EnvironmentCreateDTO;
 import com.dwl.model.entity.SysEnvironment;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * 系统环境 服务实现类
  * System Environment Service Implementation
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Service

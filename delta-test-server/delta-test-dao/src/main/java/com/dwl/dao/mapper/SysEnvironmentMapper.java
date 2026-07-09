@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 系统环境 / System Environment Mapper 接口
  * 系统环境 / System Environment Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface SysEnvironmentMapper extends BaseMapper<SysEnvironment> {

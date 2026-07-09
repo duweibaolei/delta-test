@@ -48,8 +48,9 @@ Signature: HMAC-SHA256(base64(header) + "." + base64(payload), secret)
 |------|------|
 | `/api/auth/**` | 公开（登录/刷新/登出） |
 | `/swagger-ui/**`, `/v3/api-docs/**` | 公开（API 文档） |
+| `/api/health` | 公开（业务健康检查，SecurityConfig permitAll） |
 | `/ws/**` | 公开（WebSocket） |
-| `/actuator/health` | 公开（健康检查） |
+| `/actuator/health` | 公开（Spring Actuator 健康检查） |
 | 其他 `/api/**` | 需认证 |
 
 ## 6.4 JWT 密钥管理
@@ -115,12 +116,23 @@ Signature: HMAC-SHA256(base64(header) + "." + base64(payload), secret)
 | **配置管理** | pydantic-settings BaseSettings + .env 文件，case_sensitive=False |
 | **CORS** | 骨架阶段未配置（待 Phase 1 添加 CORSMiddleware） |
 
+**CORS 配置**：
+
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| `cors.allowed-origins` | `${CORS_ALLOWED_ORIGINS:*}` | 通过环境变量配置允许的来源，默认 `*`（开发环境） |
+| `allowCredentials` | `true` | 支持凭证模式（Cookie/Authorization） |
+| `maxAge` | `3600L` | 预检请求缓存 1 小时 |
+| 配置来源 | `SecurityConfig` → `@Value("${cors.allowed-origins:*}")` → `CorsConfigurationSource` | |
+
 **Java → Python 通信安全：**
 
 | 策略 | 实现 |
 |------|------|
 | **内网调用** | Python AI 服务仅监听 8000 端口，不对外暴露 |
-| **超时** | Java 端 HTTP 调用 Python：5s 连接 / 60s 读取 |
+| **客户端类** | `AiServiceClient`（`com.dwl.ai.client.AiServiceClient`），`@Qualifier("aiRestTemplate")` 专用 Bean |
+| **超时** | Java 端 HTTP 调用 Python：5s 连接 / 60s 读取（`AiServiceConfig.aiRestTemplate()`） |
+| **配置外化** | `ai.service.url`、`ai.service.connect-timeout`、`ai.service.read-timeout` 在 application.yml 三环境配置 |
 | **Docker 隔离** | docker-compose 中独立容器，JAVA_SERVICE_URL 使用 host.docker.internal |
 
 **LLM 安全：**

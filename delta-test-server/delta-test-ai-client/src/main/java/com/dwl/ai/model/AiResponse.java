@@ -20,7 +20,7 @@ import java.util.Map;
  * Contains code, message, data, timestamp fields, consistent with Java R&lt;T&gt; and Python R[T] structure.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder

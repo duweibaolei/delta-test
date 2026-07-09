@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Entry point for the DeltaTest dual-mode Web automation testing platform server.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @SpringBootApplication
 @MapperScan("com.dwl.dao.mapper")

@@ -6,7 +6,7 @@ Change Summary Prompt Template
 System and user prompt templates for LLM change summary generation.
 </p>
 
-@author DeltaTest
+@author ByDWL
 """
 
 SUMMARY_SYSTEM_PROMPT = """\

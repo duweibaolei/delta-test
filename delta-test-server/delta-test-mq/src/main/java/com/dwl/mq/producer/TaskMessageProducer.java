@@ -20,7 +20,7 @@ import java.util.List;
  * Sends task execution, result, and log messages to RabbitMQ.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @Component

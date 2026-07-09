@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * from the Spring Security context.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 public final class SecurityUtil {
 

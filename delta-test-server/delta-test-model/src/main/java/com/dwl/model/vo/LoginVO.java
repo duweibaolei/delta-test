@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 登录响应 VO
  * Login Response VO
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "登录响应 / Login Response")

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * 任务日志消息 DTO
  * Task Log Message DTO
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Schema(description = "任务日志消息 / Task Log Message")

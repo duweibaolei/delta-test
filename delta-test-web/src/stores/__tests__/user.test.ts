@@ -6,7 +6,7 @@
  * Tests core logic of useUserStore: initial state, login, logout, computed properties.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {createPinia, setActivePinia} from 'pinia'

@@ -1,6 +1,6 @@
 package com.dwl.common.exception;
 
-import com.dwl.common.result.ErrorCode;
+import com.dwl.common.enums.ErrorCode;
 import com.dwl.common.result.R;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * converting them into standardized R response bodies.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Slf4j
 @RestControllerAdvice

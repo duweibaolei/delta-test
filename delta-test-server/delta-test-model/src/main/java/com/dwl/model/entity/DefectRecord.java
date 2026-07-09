@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * Maps to table defect_record, managing the lifecycle of defects found during testing.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder

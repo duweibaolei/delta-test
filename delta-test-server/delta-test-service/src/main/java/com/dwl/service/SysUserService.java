@@ -10,7 +10,7 @@ import com.dwl.model.vo.UserVO;
  * 系统用户 服务接口
  * System User Service Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 public interface SysUserService {
 
@@ -86,4 +86,13 @@ public interface SysUserService {
      * @param id 用户ID / User ID
      */
     void updateLastLoginTime(Long id);
+
+    /**
+     * 更新用户状态
+     * Update user status
+     *
+     * @param id     用户ID / User ID
+     * @param status 状态（1-启用，0-禁用）/ Status (1-enabled, 0-disabled)
+     */
+    void updateStatus(Long id, Integer status);
 }

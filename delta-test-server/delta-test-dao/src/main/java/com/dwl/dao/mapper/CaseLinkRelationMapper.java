@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 用例-链路关联 / Case-Link Association Mapper 接口
  * 用例-链路关联 / Case-Link Association Mapper Interface
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Mapper
 public interface CaseLinkRelationMapper extends BaseMapper<CaseLinkRelation> {

@@ -5,6 +5,10 @@
 > **关联文件**：
 > - 安全方案 → [security.md](./security.md)（Token 存储/黑名单等安全相关待办）
 > - 技术栈 → [tech-stack.md](./tech-stack.md)（当前技术选型与版本）
+>
+> **阶段标记**：
+> - ✅ 已完成 / ⬜ 未完成（Phase 0 骨架阶段终态）
+> - Phase 1/2/3 为后续迭代计划
 
 ---
 
@@ -29,33 +33,54 @@
 
 | 项目 | 现状 | 建议 | 阶段 |
 |------|------|------|------|
-| **LLM 真实调用** | LLMService.generate() 返回 mock 占位 | Phase 1 接入 OpenAI SDK 真实调用 | Phase 1 |
-| **Playwright 执行节点** | 骨架阶段无 Playwright 集成 | Phase 1 搭建 Playwright 执行框架 | Phase 1 |
-| **语义检索** | EmbeddingService 返回 mock 数据 | Phase 3 接入 sentence-transformers + Milvus | Phase 3 |
-| **response_model 缺失** | 所有 API 端点返回 R[dict] 而非强类型 | 定义 Response VO + 声明 response_model | Phase 1 |
-| **CORS 中间件缺失** | main.py 未配置 CORS 中间件 | 添加 CORSMiddleware，origins 通过环境变量注入 | Phase 1 |
-| **全局异常处理器缺失** | 无 Python 版 BusinessException + exception_handler | 实现 AIException + @app.exception_handler | Phase 1 |
-| **Prompt 与 Service 脱节** | prompts/ 定义了模板但 services/ 未引用 | Phase 1 接入 LLM 后统一调用 Prompt 模板 | Phase 1 |
-| **README.md 缺失** | 项目根目录无 README.md | 补充项目说明文档 | Phase 0 |
+| **LLM 真实调用** | ⬜ LLMService.generate() 返回 mock 占位 | Phase 1 接入 OpenAI SDK 真实调用 | Phase 1 |
+| **Playwright 执行节点** | ⬜ 骨架阶段无 Playwright 集成 | Phase 1 搭建 Playwright 执行框架 | Phase 1 |
+| **语义检索** | ⬜ EmbeddingService 返回 mock 数据 | Phase 3 接入 sentence-transformers + Milvus | Phase 3 |
+| **response_model 缺失** | ⬜ 所有 API 端点返回 R[dict] 而非强类型 | 定义 Response VO + 声明 response_model | Phase 1 |
+| **CORS 中间件缺失** | ⬜ main.py 未配置 CORS 中间件 | 如需浏览器直连 Python 则添加 CORSMiddleware；当前 Java→Python 为服务端调用（AiServiceClient），无浏览器 CORS 场景，优先级低 | Phase 1 |
+| **全局异常处理器缺失** | ⬜ 无 Python 版 BusinessException + exception_handler | 实现 AIException + @app.exception_handler | Phase 1 |
+| **Prompt 与 Service 脱节** | ⬜ prompts/ 定义了模板但 services/ 未引用 | Phase 1 接入 LLM 后统一调用 Prompt 模板 | Phase 1 |
+| **README.md 缺失** | ⬜ 项目根目录无 README.md | 补充项目说明文档 | Phase 0（未完成） |
 
 ## 10.4 智能体待改进
 
 | 项目 | 现状 | 建议 | 阶段 |
 |------|------|------|------|
-| **Agent 架构** | Python AI 5 个独立 Service，无编排能力 | 引入 Master-Slave Agent 架构，支持意图路由和并行调度 | Phase 1 |
-| **Agent 记忆** | 无会话上下文保持 | 短期记忆（Redis）+ 长期记忆（MySQL/Milvus） | Phase 3 |
-| **Agent 对话** | 仅支持单次请求-响应 | 新增对话式 Agent API，支持多轮交互 | Phase 3 |
-| **Tool 注册** | 无工具抽象 | 统一 Tool 接口 + 装饰器注册 | Phase 1 |
+| **Agent 架构** | ⬜ Python AI 5 个独立 Service，无编排能力 | 引入 Master-Slave Agent 架构，支持意图路由和并行调度 | Phase 1 |
+| **Agent 记忆** | ⬜ 无会话上下文保持 | 短期记忆（Redis）+ 长期记忆（MySQL/Milvus） | Phase 3 |
+| **Agent 对话** | ⬜ 仅支持单次请求-响应 | 新增对话式 Agent API，支持多轮交互 | Phase 3 |
+| **Tool 注册** | ⬜ 无工具抽象 | 统一 Tool 接口 + 装饰器注册 | Phase 1 |
 
 ## 10.5 C 引擎待改进
 
 | 项目 | 现状 | 建议 | 阶段 |
 |------|------|------|------|
-| **TLS 实现** | gRPC Server TLS 模式降级为明文，打印 WARN | 集成 OpenSSL/Schannel 实现 TLS 服务端凭据 | Phase 1 |
-| **Diff 真实计算** | `diff_engine_compute()` 返回占位数据 | 集成 libgit2 实现真实 diff 计算 | Phase 1 |
-| **影响分析真实实现** | `impact_analyzer_analyze()` 返回占位数据 | 集成 tree-sitter 依赖链分析 | Phase 1 |
-| **依赖图构建** | `dependency_graph_build()` 返回 0 | 集成 tree-sitter AST 解析 + 依赖图构建 | Phase 1 |
-| **日志集成** | spdlog 已声明但未使用 | 替换 `std::cout/cerr` 为 spdlog 异步日志 | Phase 1 |
-| **Docker 非 root** | Dockerfile 未指定非 root 用户 | 添加 `USER nonroot` 指令 | Phase 1 |
-| **Protobuf 版本对齐** | Conan 解析 protobuf/5.29.6，Java 侧 4.29.3 | 验证序列化兼容性，必要时 `override=True` | Phase 1 |
-| **Windows gRPC 构建** | Conan 在 Windows 下安装 gRPC 存在兼容性问题 | 推荐使用 Docker/Linux 构建 gRPC Server | Phase 2 |
+| **TLS 实现** | ⬜ gRPC Server TLS 模式降级为明文，打印 WARN | 集成 OpenSSL/Schannel 实现 TLS 服务端凭据 | Phase 1 |
+| **Diff 真实计算** | ⬜ `diff_engine_compute()` 返回占位数据 | 集成 libgit2 实现真实 diff 计算 | Phase 1 |
+| **影响分析真实实现** | ⬜ `impact_analyzer_analyze()` 返回占位数据 | 集成 tree-sitter 依赖链分析 | Phase 1 |
+| **依赖图构建** | ⬜ `dependency_graph_build()` 返回 0 | 集成 tree-sitter AST 解析 + 依赖图构建 | Phase 1 |
+| **日志集成** | ⬜ spdlog 已声明但未使用 | 替换 `std::cout/cerr` 为 spdlog 异步日志 | Phase 1 |
+| **Docker 非 root** | ⬜ Dockerfile 未指定非 root 用户 | 添加 `USER nonroot` 指令 | Phase 1 |
+| **Protobuf 版本对齐** | ⬜ Conan 解析 protobuf/5.29.6，Java 侧 4.29.3 | 验证序列化兼容性，必要时 `override=True` | Phase 1 |
+| **Windows gRPC 构建** | ⬜ Conan 在 Windows 下安装 gRPC 存在兼容性问题 | 推荐使用 Docker/Linux 构建 gRPC Server | Phase 2 |
+
+---
+
+## 10.6 Phase 0 骨架阶段已完成项
+
+> 以下功能已在 Phase 0 骨架阶段实现，对应上述待改进项中的"现状"基础。
+
+| 模块 | 已完成项 | 说明 |
+|------|----------|------|
+| **Java 后端** | ✅ 9 个 Maven 子模块 | 新增 `delta-test-ai-client` 模块（AiServiceClient + AiServiceConfig + AiResponse） |
+| **Java 后端** | ✅ Spring Security 6 + JWT 认证 | 登录/刷新/登出完整闭环，SecurityConfig 过滤器链 |
+| **Java 后端** | ✅ CORS 安全配置 | `cors.allowed-origins` + `allowCredentials` + `maxAge=3600L`，SecurityConfig 统一管理 |
+| **Java 后端** | ✅ Flyway 数据库迁移 | V1 迁移脚本（39 表 + 24 种字典 + 89 条数据），baseline-on-migrate |
+| **Java 后端** | ✅ JSON 结构化日志 | logback-spring.xml (dev PatternLayout / prod LogstashEncoder) |
+| **Java 后端** | ✅ 健康检查端点 | `GET /api/health` → `R<HealthVO>` (status/service/version) |
+| **Java 后端** | ✅ logstash-logback-encoder | 8.0 版本，dependencyManagement 不限 scope，子模块按需声明 |
+| **Vue 前端** | ✅ openapi-typescript 集成 | `pnpm api:generate` 自动生成 TypeScript 类型，禁止手动定义 |
+| **Vue 前端** | ✅ 健康检查页面 | `health.ts` + `healthCheckApi` |
+| **Python AI** | ✅ JSON 结构化日志 | `logging.py` + `LOG_FORMAT` 环境变量切换 |
+| **Python AI** | ✅ 健康检查端点 | `GET /api/health` → `R[dict]` (status: "UP") |
+| **Python AI** | ✅ 配置安全 | `.env` + pydantic-settings + LLM_API_KEY 环境变量注入 |

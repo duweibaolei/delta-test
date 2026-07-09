@@ -1,5 +1,6 @@
 package com.dwl.common.result;
 
+import com.dwl.common.enums.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 统一响应体 R 单元测试
  * Unified Response Body R Unit Test
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @DisplayName("统一响应体 R / Unified Response Body R")
 class RTest {

@@ -10,10 +10,32 @@
  *   pnpm api:generate        - 从运行中的后端生成 / Generate from running backend
  *   pnpm api:generate:local  - 从本地 OpenAPI spec 文件生成 / Generate from local OpenAPI spec file
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 export { loginApi, refreshTokenApi, logoutApi } from './auth'
 export type { LoginDTO, LoginVO } from './auth'
 
 export { healthCheckApi } from './health'
 export type { HealthVO } from './health'
+
+export { listRolesApi } from './role'
+export type { RoleVO as RoleVO } from './role'
+
+export {
+  pageUsersApi,
+  getUserDetailApi,
+  createUserApi,
+  updateUserApi,
+  deleteUserApi,
+  updateUserStatusApi,
+  resetPasswordApi,
+} from './user'
+export type {
+  UserCreateDTO,
+  UserUpdateDTO,
+  UserStatusDTO,
+  ResetPasswordDTO,
+  UserVO,
+  UserPageParams,
+  PageResult as PageResult,
+} from './user'

@@ -19,7 +19,7 @@ import java.util.List;
  * Aligned with Python RiskAssessmentRequest, used to send risk assessment requests to the AI service.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder

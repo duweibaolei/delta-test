@@ -6,7 +6,7 @@
  * DeltaTest Dual-mode Web Automation Testing Platform · Frontend Entry
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import {createApp} from 'vue'
 import {createPinia} from 'pinia'

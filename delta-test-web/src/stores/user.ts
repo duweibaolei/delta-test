@@ -6,7 +6,7 @@
  * Manages user login state, token, and user information.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 import {defineStore} from 'pinia'
 import {computed, ref} from 'vue'

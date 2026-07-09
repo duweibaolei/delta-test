@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  * Extends BaseEntity, including common audit fields.
  * </p>
  *
- * @author DeltaTest
+ * @author ByDWL
  */
 @Data
 @Builder
